@@ -1,0 +1,10 @@
+{
+  "app_name": "OWON",
+  "app_title": "app title",
+  "app_test": "test",
+
+  "app_listView": "ListView",
+  "global_cancel": "Cancel",
+  "global_ok": "OK"
+
+}
