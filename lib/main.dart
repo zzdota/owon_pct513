@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
 import 'package:provider/provider.dart';
 import 'generated/i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,7 +20,7 @@ void main() {
 //          return MqttProvider();
 //        }),
     ],
-    child:   MyApp(),
+    child: MyApp(),
   ));
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
 //          highlightColor: Colors.red
         )
       ),
-      home: WelcomePage(),
+      home: LoginPage(),
 
 //      initialRoute: "/",
 //      routes: <String, WidgetBuilder>{
