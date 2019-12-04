@@ -31,6 +31,9 @@ class _ListPageState extends State<ListPage> {
           leading: Text(""),
           title: Text("List"),
           centerTitle: true,
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.add,color: Colors.white,size: 30,))
+          ],
         ),
         body: ListView.builder(
             itemCount: 20,
@@ -40,9 +43,15 @@ class _ListPageState extends State<ListPage> {
                 padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                 child: Card(
                   shape: const RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Color.fromARGB(255, 90, 90, 90),
+                      width: 1.0,
+                    ),
                       borderRadius: BorderRadius.all(Radius.circular(16.0))),
                   child: FlatButton (
-                    child: Text("hkkljljk"),
+                    child: Text("hkkljljk",style: TextStyle(
+                      color: Colors.white
+                    ),),
                     onPressed: () async{
                       print("button");
                       var url = "https://gn1.owon.com:8443/accsystem/api/json";

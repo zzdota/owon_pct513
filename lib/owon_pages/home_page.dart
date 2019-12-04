@@ -17,7 +17,7 @@ class HomePageState extends State<HomePage> {
 
   TextStyle getStyleWithIndex(int idx) {
     if (idx == _currentIndex) {
-      return TextStyle(color: Theme.of(context).primaryColor);
+      return TextStyle(color: Colors.white);
     } else {
       return TextStyle(color: Colors.grey);
     }
@@ -32,20 +32,20 @@ class HomePageState extends State<HomePage> {
         children: this.tempList,
       ),
       bottomNavigationBar: BottomNavigationBar(
-//        backgroundColor: Colors.black,
+        backgroundColor: Color.fromARGB(255, 28, 28, 28),
         items: [
           BottomNavigationBarItem(
               title: Text(
                 "List",
                 style: getStyleWithIndex(0),
               ),
-              icon: Icon(Icons.home,size: _currentIndex==0?35.0:30.0,)),
+              icon: Icon(Icons.home,size: _currentIndex==0?35.0:30.0,color:_currentIndex==0? Colors.white:Colors.grey,)),
           BottomNavigationBarItem(
               title: Text(
                 "Setting",
                 style: getStyleWithIndex(1),
               ),
-              icon: Icon(Icons.score,size: _currentIndex==1?35.0:30.0)),
+              icon: Icon(Icons.score,size: _currentIndex==1?35.0:30.0,color:_currentIndex==1? Colors.white:Colors.grey,)),
         ],
         currentIndex: _currentIndex,
         onTap: (idx) {

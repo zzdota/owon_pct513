@@ -47,8 +47,9 @@ class MyApp extends StatelessWidget {
 
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-//        primaryColor: Colors.black,
-//        scaffoldBackgroundColor: Colors.black,
+        primaryColor: Color.fromARGB(255, 28, 28, 28),
+        scaffoldBackgroundColor: Colors.black,
+        cardColor: Color.fromARGB(255, 28, 28, 28),
         buttonTheme: ButtonThemeData(
 //          highlightColor: Colors.red
         )
