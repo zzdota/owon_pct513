@@ -19,7 +19,7 @@ void main() {
 //          return MqttProvider();
 //        }),
     ],
-    child: MyApp(),
+    child:   MyApp(),
   ));
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
