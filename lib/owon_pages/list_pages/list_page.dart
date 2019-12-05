@@ -2,37 +2,31 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_providers/theme_provider.dart';
 import '../../owon_utils/owon_log.dart';
 import '../../owon_utils/owon_http.dart';
 import 'package:dio/dio.dart';
-
+import 'package:provider/provider.dart';
+import '../../res/owon_themeColor.dart';
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
 }
 
-/*
-{
-    param =     {
-        account = "86-18559697016";
-        cversion = "2.2.7";
-        os = "iOS_13.2.2";
-        password = 63ab9508485e131f946ce59ab9b3b687;
-    };
-    ts = 628682130;
-    type = "/nt/user/applogin";
-}
-*/
+
 class _ListPageState extends State<ListPage> {
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
           title: Text("List"),
           centerTitle: true,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.add,color: Colors.white,size: 30,))
+            IconButton(icon: Icon(Icons.add,color: OwonColor().getCurrent(context, "textColor"),
+              size: 30,))
           ],
         ),
         body: ListView.builder(
@@ -42,15 +36,15 @@ class _ListPageState extends State<ListPage> {
                 height: 110,
                 padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                 child: Card(
-                  shape: const RoundedRectangleBorder(
+                  shape:  RoundedRectangleBorder(
                     side: BorderSide(
-                      color: Color.fromARGB(255, 90, 90, 90),
+                      color:  OwonColor().getCurrent(context, "borderNormal"),
                       width: 1.0,
                     ),
                       borderRadius: BorderRadius.all(Radius.circular(16.0))),
                   child: FlatButton (
                     child: Text("hkkljljk",style: TextStyle(
-                      color: Colors.white
+                      color:  OwonColor().getCurrent(context, "textColor"),
                     ),),
                     onPressed: () async{
                       print("button");

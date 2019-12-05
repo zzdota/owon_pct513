@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_pages/home_page.dart';
+import '../../owon_providers/theme_provider.dart';
 import '../../owon_utils/owon_log.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -18,17 +20,26 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Center(
         child: Container(
-          child: FlatButton(onPressed: (){
+          child: FlatButton(onPressed: () async{
+            SharedPreferences pre = await SharedPreferences.getInstance();
+            int index = await pre.getInt("themeColor");
+            OwonLog.e("index=$index");
+
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return HomePage();
             }));
-          }, child: Text("点我啊"))
+          }, child: Text("点我啊",style: TextStyle(color: Colors.white,fontSize: 50.0),))
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return HomePage();
-        }));
+      floatingActionButton: FloatingActionButton(onPressed: () async{
+        SharedPreferences pre = await SharedPreferences.getInstance();
+        pre.setInt("themeColor", 0);
+        Provider.of<ThemeProvider>(context).setTheme(0);
+
+
+//        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+//          return HomePage();
+//        }));
       }),
     );
   }
