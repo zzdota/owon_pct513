@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -8,25 +9,27 @@ import '../../owon_utils/owon_http.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 import '../../res/owon_themeColor.dart';
+
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
 }
 
-
 class _ListPageState extends State<ListPage> {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
           title: Text("List"),
           centerTitle: true,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.add,color: OwonColor().getCurrent(context, "textColor"),
-              size: 30,))
+            IconButton(
+                icon: Icon(
+              Icons.add,
+              color: OwonColor().getCurrent(context, "textColor"),
+              size: 30,
+            ))
           ],
         ),
         body: ListView.builder(
@@ -36,38 +39,70 @@ class _ListPageState extends State<ListPage> {
                 height: 110,
                 padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                 child: Card(
-                  shape:  RoundedRectangleBorder(
-                    side: BorderSide(
-                      color:  OwonColor().getCurrent(context, "borderNormal"),
-                      width: 1.0,
-                    ),
-                      borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                  child: FlatButton (
-                    child: Text("hkkljljk",style: TextStyle(
-                      color:  OwonColor().getCurrent(context, "textColor"),
-                    ),),
-                    onPressed: () async{
-                      print("button");
-                      var url = "https://gn1.owon.com:8443/accsystem/api/json";
-                      Map param = Map();
-                      param["account"] = "86-18559697016";
-                      param["cversion"] = "2.2.7";
-                      param["os"] = "iOS_13.2.2";
-                      param["password"] = "63ab9508485e131f946ce59ab9b3b687";
-
-                      var p = Map<String, dynamic>();
-                      p["ts"] = 628682130;
-                      p["type"] = "/nt/user/applogin";
-                      p["param"] = param;
-
-                    OwonHttp.getInstance().post(url, p, (data){
-                      OwonLog.e("===data=$data");
-                    },(e){});
-//                    OwonHttp.getInstance().get("http://www.baidu.com", (data){}, (e){});
-                    },
-                  ),
-                ),
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color:
+                              OwonColor().getCurrent(context, "borderNormal"),
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Image.asset(
+                                "assets/images/launch_icon.png",
+                                fit: BoxFit.contain,
+                                height: 40,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "PCT513",
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: OwonColor()
+                                        .getCurrent(context, "textColor")),
+                              ),
+                            ],
+                          ),
+                          getRightWidget(true)
+                        ],
+                      ),
+                    )),
               );
             }));
+  }
+
+  Widget getRightWidget(bool normal) {
+    if (normal) {
+      return Icon(
+        Icons.keyboard_arrow_right,
+        color: OwonColor().getCurrent(context, "textColor"),
+      );
+    } else {
+      return Row(
+        children: <Widget>[
+          Image.asset(
+            "assets/images/launch_icon.png",
+            fit: BoxFit.contain,
+            height: 20,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "连接断开",
+            style: TextStyle(
+                color: OwonColor().getCurrent(context, "borderDisconnect")),
+          )
+        ],
+      );
+    }
   }
 }

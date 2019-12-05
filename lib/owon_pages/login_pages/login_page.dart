@@ -33,8 +33,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
       floatingActionButton: FloatingActionButton(onPressed: () async{
         SharedPreferences pre = await SharedPreferences.getInstance();
-        pre.setInt("themeColor", 0);
-        Provider.of<ThemeProvider>(context).setTheme(0);
+        pre.setInt("themeColor", 1);
+        Provider.of<ThemeProvider>(context).setTheme(1);
 
 
 //        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
