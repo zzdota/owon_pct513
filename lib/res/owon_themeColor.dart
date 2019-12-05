@@ -31,7 +31,7 @@ class OwonColor {
 
   Color getCurrent(BuildContext context,String key) {
     int index = Provider.of<ThemeProvider>(context).themeIndex;
-    print("------>$index");
+//    print("------>$index");
     return _themeColor[index][key];
   }
 
