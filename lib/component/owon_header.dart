@@ -5,7 +5,7 @@ import '../res/owon_themeColor.dart';
 
 class OwonHeader {
   static Widget header(BuildContext context, String imageUrl, String title,
-  {String subTitle,double fontSize = 30.0,MainAxisAlignment alignment}) {
+  {String subTitle,double fontSize = 30.0,MainAxisAlignment alignment = MainAxisAlignment.center}) {
     return Container(
       child: Row(
         mainAxisAlignment: alignment,
