@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/appearance_page.dart';
@@ -63,7 +64,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
 //      title: "513",
       onGenerateTitle: (BuildContext context) => S.of(context).app_name,
@@ -77,7 +77,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primaryColor: OwonColor().getCurrent(context, "itemColor"),
-          scaffoldBackgroundColor: OwonColor().getCurrent(context, "primaryColor"),
+          scaffoldBackgroundColor:
+              OwonColor().getCurrent(context, "primaryColor"),
           cardColor: OwonColor().getCurrent(context, "itemColor"),
           buttonTheme: ButtonThemeData(
 //          highlightColor: Colors.red

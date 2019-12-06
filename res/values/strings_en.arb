@@ -2,9 +2,17 @@
   "app_name": "OWON",
   "app_title": "app title",
   "app_test": "test",
-
   "app_listView": "ListView",
+
   "global_cancel": "Cancel",
-  "global_ok": "OK"
+  "global_ok": "OK",
+
+  "login_hi": "Hi,",
+  "login_welcome": "Welcome",
+  "login_hint_user": "E-Mail / Phone",
+  "login_hint_psw": "Password",
+  "login_register": "Register",
+  "login_forgot": "Forgot",
+  "login_button": "Login"
 
 }

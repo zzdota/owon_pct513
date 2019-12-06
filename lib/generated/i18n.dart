@@ -27,6 +27,13 @@ class S implements WidgetsLocalizations {
   String get app_title => "app title";
   String get global_cancel => "Cancel";
   String get global_ok => "OK";
+  String get login_button => "Login";
+  String get login_forgot => "Forgot";
+  String get login_hi => "Hi,";
+  String get login_hint_psw => "Password";
+  String get login_hint_user => "E-Mail / Phone";
+  String get login_register => "Register";
+  String get login_welcome => "Welcome";
 }
 
 class $en extends S {
@@ -40,13 +47,31 @@ class $zh extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get app_name => "欧万";
+  String get login_hint_user => "电子邮件/手机号码";
   @override
-  String get app_title => "app 主题文字";
+  String get login_button => "登录";
   @override
-  String get app_test => "测试";
+  String get app_title => "app title";
   @override
-  String get app_listView => "列表";
+  String get global_ok => "确认";
+  @override
+  String get login_hi => "Hi,";
+  @override
+  String get app_test => "test";
+  @override
+  String get login_welcome => "Welcome";
+  @override
+  String get login_register => "注册账号";
+  @override
+  String get app_name => "OWON";
+  @override
+  String get global_cancel => "取消";
+  @override
+  String get login_forgot => "忘记密码";
+  @override
+  String get login_hint_psw => "密码";
+  @override
+  String get app_listView => "ListView";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {

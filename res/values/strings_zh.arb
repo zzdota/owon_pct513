@@ -1,8 +1,18 @@
 {
-  "app_name": "欧万",
-  "app_title": "app 主题文字",
-  "app_test": "测试",
-  "app_listView": "列表"
+  "app_name": "OWON",
+  "app_title": "app title",
+  "app_test": "test",
+  "app_listView": "ListView",
 
+  "global_cancel": "取消",
+  "global_ok": "确认",
+
+  "login_hi": "Hi,",
+  "login_welcome": "Welcome",
+  "login_hint_user": "电子邮件/手机号码",
+  "login_hint_psw": "密码",
+  "login_register": "注册账号",
+  "login_forgot": "忘记密码",
+  "login_button": "登录"
 
 }
