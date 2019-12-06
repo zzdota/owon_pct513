@@ -23,7 +23,7 @@ class _SettingPageState extends State<SettingPage> {
         appBar: AppBar(
           leading: Text(""),
           title: Text("Setting"),
-
+          centerTitle: true,
         ),
         body: ListView.builder(
             itemCount: dataList.length,
