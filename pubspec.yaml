@@ -40,6 +40,7 @@ dependencies:
   cookie_jar: ^1.0.1
   flutter_screenutil: ^0.7.0
   shared_preferences: ^0.5.4+8
+  package_info: ^0.4.0+12
 
 dev_dependencies:
   flutter_test:

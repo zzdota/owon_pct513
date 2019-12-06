@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
+import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/appearance_page.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:provider/provider.dart';

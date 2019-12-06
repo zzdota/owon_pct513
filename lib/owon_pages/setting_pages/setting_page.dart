@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import '../../owon_providers/theme_provider.dart';
 import '../../res/owon_themeColor.dart';
 import '../../res/owon_settingData.dart';
-
+import 'appearance_page.dart';
 class SettingPage extends StatefulWidget {
   @override
   _SettingPageState createState() => _SettingPageState();
@@ -22,7 +23,7 @@ class _SettingPageState extends State<SettingPage> {
         appBar: AppBar(
           leading: Text(""),
           title: Text("Setting"),
-          centerTitle: true,
+
         ),
         body: ListView.builder(
             itemCount: dataList.length,
@@ -30,10 +31,42 @@ class _SettingPageState extends State<SettingPage> {
               return Container(
                 height: 90,
                 padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                child: Card(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                    child: createWidget(index)),
+                child: InkWell(
+                  onTap: (){
+                    switch(index){
+                      case 0:{}
+                      break;
+                      case 1:{
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return AppearancePage();
+                        }));
+                      }
+                      break;
+                      case 2:{}
+                      break;
+                      case 3:{
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return AboutPage();
+                        }));
+                      }
+                      break;
+                      case 4:{}
+                      break;
+                      default:
+                        break;
+                    }
+                  },
+                  child: Card(
+                      shape:  RoundedRectangleBorder(
+                          side: BorderSide(
+                            color:
+                            OwonColor().getCurrent(context, "borderNormal"),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0))
+                      ),
+                      child: createWidget(index)),
+                ),
               );
             }));
   }
@@ -41,7 +74,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget createWidget(int index) {
     var name = dataList[index]["name"];
     var imageUrl = dataList[index]["imageUrl"];
-    return index == 5
+    return index == dataList.length-1
         ? Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16), color: Colors.red),
