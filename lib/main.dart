@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
 
       initialRoute: "/",
       routes: <String, WidgetBuilder>{
-        "/": (context) => LoginPage(),
+        "/": (context) => AppearancePage(),
 
       },
     );

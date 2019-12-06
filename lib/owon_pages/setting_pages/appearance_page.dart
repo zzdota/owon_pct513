@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
+import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../owon_providers/theme_provider.dart';
+import '../../component/owon_header.dart';
+import '../../res/owon_picture.dart';
 class AppearancePage extends StatefulWidget {
   @override
   _AppearancePageState createState() => _AppearancePageState();
@@ -19,7 +23,9 @@ class _AppearancePageState extends State<AppearancePage> {
       ),
       body: Column(
         children: <Widget>[
-          createTop(),
+          SizedBox(height: 40,),
+
+          OwonHeader.header(context,OwonPic.launchIcon,"Appearance",alignment: MainAxisAlignment.center),
           SizedBox(
             height: 30,
           ),

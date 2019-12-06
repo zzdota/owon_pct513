@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: TextField(
                                   controller: _useController, //绑定controller
                                   maxLines: 1, //最多一行
-                                  autofocus: true, //自动获取焦点
+                                  autofocus: false, //自动获取焦点
                                   textAlign: TextAlign.left, //从左到右对齐
                                   style: TextStyle(
                                       color: Colors.white,
@@ -189,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: TextField(
                                   controller: _pwdController, //绑定controller
                                   maxLines: 1, //最多一行
-                                  autofocus: true, //自动获取焦点
+                                  autofocus: false, //自动获取焦点
                                   textAlign: TextAlign.left, //从左到右对齐
                                   style: TextStyle(
                                       color: Colors.white,

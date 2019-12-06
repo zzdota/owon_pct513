@@ -81,16 +81,17 @@ class _SettingPageState extends State<SettingPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(
-                  imageUrl,
-                  width: 30,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
                 Text(
                   name,
                   style: TextStyle(color: Colors.white,fontSize: 16.0),
+                ),
+
+                SizedBox(
+                  width: 10,
+                ),
+                Image.asset(
+                  imageUrl,
+                  width: 30,
                 ),
               ],
             ))
