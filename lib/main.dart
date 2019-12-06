@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
+import 'package:owon_pct513/owon_pages/setting_pages/appearance_page.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:provider/provider.dart';
 import 'generated/i18n.dart';
@@ -80,21 +81,13 @@ class _MyAppState extends State<MyApp> {
           buttonTheme: ButtonThemeData(
 //          highlightColor: Colors.red
               )),
-      home: LoginPage(),
+//      home: LoginPage(),
 
-//      initialRoute: "/",
-//      routes: <String, WidgetBuilder>{
-//        "/": (context) => HomePage(),
-//        "route": (BuildContext context) => DemoRoute(),
-//        "dialog": (BuildContext context) => DemoAlertDialog(),
-//        "timer": (BuildContext context) => DemoTimer(),
-//        "refresh": (BuildContext context) => DemoRefresh(),
-//        "progress": (BuildContext context) => DemoProgressIndicator(),
-//        "canvas": (BuildContext context) => CanvasDemo(),
-//        "card": (BuildContext context) => DemoCard(),
-//        "path": (BuildContext context) => CanvasPathDemo()
+      initialRoute: "/",
+      routes: <String, WidgetBuilder>{
+        "/": (context) => LoginPage(),
 
-//      },
+      },
     );
   }
 }

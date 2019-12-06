@@ -31,16 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           }, child: Text("点我啊",style: TextStyle(color: Colors.white,fontSize: 50.0),))
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () async{
-        SharedPreferences pre = await SharedPreferences.getInstance();
-        pre.setInt("themeColor", 1);
-        Provider.of<ThemeProvider>(context).setTheme(1);
 
-
-//        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-//          return HomePage();
-//        }));
-      }),
     );
   }
 }
