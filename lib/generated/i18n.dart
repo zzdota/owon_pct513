@@ -26,14 +26,24 @@ class S implements WidgetsLocalizations {
   String get app_test => "test";
   String get app_title => "app title";
   String get global_cancel => "Cancel";
+  String get global_get_verify_code => "Get Code";
+  String get global_hint_confirm_password => "Confirm Password";
+  String get global_hint_new_password => "New Password";
+  String get global_hint_password => "Password";
+  String get global_hint_user => "E-Mail / Phone";
+  String get global_hint_verify_code => "Verification Code";
   String get global_ok => "OK";
+  String get global_register => "Register";
   String get login_button => "Login";
   String get login_forgot => "Forgot";
   String get login_hi => "Hi,";
-  String get login_hint_psw => "Password";
-  String get login_hint_user => "E-Mail / Phone";
-  String get login_register => "Register";
+  String get login_privacy1 => "登录或注册即代表阅读并同意";
+  String get login_privacy2 => "隐私条例";
   String get login_welcome => "Welcome";
+  String get reset_psw_confirm => "Confirm";
+  String get reset_psw_password => "Password";
+  String get reset_psw_reset => "Reset";
+  String get reset_psw_title => "Reset Password";
 }
 
 class $en extends S {
@@ -47,7 +57,7 @@ class $zh extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get login_hint_user => "电子邮件/手机号码";
+  String get login_privacy1 => "登录或注册即代表阅读并同意";
   @override
   String get login_button => "登录";
   @override
@@ -57,21 +67,41 @@ class $zh extends S {
   @override
   String get login_hi => "Hi,";
   @override
+  String get reset_psw_title => "重置密码";
+  @override
   String get app_test => "test";
+  @override
+  String get global_hint_password => "密码";
+  @override
+  String get global_hint_confirm_password => "再次确认密码";
   @override
   String get login_welcome => "Welcome";
   @override
-  String get login_register => "注册账号";
+  String get global_hint_verify_code => "输入校验码";
+  @override
+  String get reset_psw_reset => "重置";
+  @override
+  String get reset_psw_password => "密码";
+  @override
+  String get reset_psw_confirm => "确认修改";
   @override
   String get app_name => "OWON";
   @override
   String get global_cancel => "取消";
   @override
+  String get global_register => "注册账号";
+  @override
   String get login_forgot => "忘记密码";
   @override
-  String get login_hint_psw => "密码";
+  String get global_get_verify_code => "校验码";
+  @override
+  String get global_hint_new_password => "输入新密码";
   @override
   String get app_listView => "ListView";
+  @override
+  String get global_hint_user => "电子邮件/手机号码";
+  @override
+  String get login_privacy2 => "隐私条例";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
