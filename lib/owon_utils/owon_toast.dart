@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import '../res/owon_constant.dart';
 
 enum Toast { LENGTH_SHORT, LENGTH_LONG }
 
@@ -23,8 +24,8 @@ class OwonToast {
     int timeInSecForIos = 1,
     double fontSize = 16.0,
     ToastGravity gravity = ToastGravity.CENTER,
-    Color backgroundColor = Colors.grey,
-    Color textColor,
+    Color backgroundColor = OwonConstant.toastBg,//Colors.grey,
+    Color textColor = Colors.white,
     // Function(bool) didTap,
   }) async {
     // this.didTap = didTap;
