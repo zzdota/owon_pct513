@@ -21,8 +21,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _useController = new TextEditingController();
-  final TextEditingController _pwdController = new TextEditingController();
+  final TextEditingController _useController = TextEditingController();
+  final TextEditingController _pwdController = TextEditingController();
   String _countryCode = "+86";
   String _userName = "", _password = "";
 
@@ -85,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 80,
                       child: OwonHeader.header(
                           context, OwonPic.loginBgSmile, S.of(context).login_hi,
+                          width: 140,
                           subTitle: S.of(context).login_welcome),
                     ),
                   ),
@@ -108,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
             Expanded(
               flex: 3,
               child: Container(
-                margin: EdgeInsets.only(top: 50.0),
+                margin: EdgeInsets.only(top: 30.0),
                 child: Stack(
                   children: <Widget>[
                     Positioned(
@@ -132,9 +133,8 @@ class _LoginPageState extends State<LoginPage> {
                                       autofocus: false, //自动获取焦点
                                       textAlign: TextAlign.left, //从左到右对齐
                                       style: TextStyle(
-                                          color: OwonColor().getCurrent(
-                                              context,
-                                              "textColor"),
+                                          color: OwonColor()
+                                              .getCurrent(context, "textColor"),
                                           fontSize: 20.0), //输入内容颜色和字体大小
 //                                  cursorColor: Colors.deepPurple,//光标颜色
                                       keyboardType: TextInputType.text,
@@ -152,6 +152,12 @@ class _LoginPageState extends State<LoginPage> {
                                           color: OwonColor()
                                               .getCurrent(context, "orange"),
                                         ), //左侧图标
+//                                        prefixIcon: SvgPicture.asset(
+//                                            OwonPic.loginUsernameIcon,
+//                                            width: 10,
+//                                            fit: BoxFit.fitWidth,
+//                                            color: OwonColor()
+//                                                .getCurrent(context, "orange")),
                                         hintText: S
                                             .of(context)
                                             .global_hint_user, //hint提示文案
@@ -189,16 +195,15 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: 20, top: 30, right: 20, bottom: 0),
+                                  left: 20, top: 20, right: 20, bottom: 0),
                               child: TextField(
                                   controller: _pwdController, //绑定controller
                                   maxLines: 1, //最多一行
                                   autofocus: false, //自动获取焦点
                                   textAlign: TextAlign.left, //从左到右对齐
                                   style: TextStyle(
-                                      color: OwonColor().getCurrent(
-                                          context,
-                                          "textColor"),
+                                      color: OwonColor()
+                                          .getCurrent(context, "textColor"),
                                       fontSize: 20.0), //输入内容颜色和字体大小
                                   keyboardType: TextInputType.visiblePassword,
                                   decoration: InputDecoration(
@@ -238,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: 20, top: 30, right: 20, bottom: 0),
+                                  left: 20, top: 20, right: 20, bottom: 0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -284,7 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               height: 60.0,
                               margin: EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 30.0),
+                                  left: 20.0, right: 20.0, top: 20.0),
                               child: OwonTextIconButton.icon(
                                   onPressed: _login,
                                   shape: RoundedRectangleBorder(
@@ -304,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                                       TextIconAlignment.iconRightTextLeft),
                             ),
                             Container(
-                              margin: EdgeInsets.only(top: 30.0),
+                              margin: EdgeInsets.only(top: 20.0),
                               child: Text.rich(TextSpan(children: [
                                 TextSpan(
                                     text: S.of(context).login_privacy1,
@@ -335,7 +340,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Positioned(
                     left: -10.0,
-                    bottom: -40.0,
+                    bottom: -50.0,
                     child: Image.asset(OwonPic.loginBgCenterLeftBottom,
                         width: ScreenUtil.getInstance().setWidth(450.0)),
                   ),

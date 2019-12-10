@@ -65,13 +65,20 @@ flutter:
     - assets/images/launch_icon.png
 
     #login
+    - assets/images/login/confirm_psw_icon.svg
     - assets/images/login/login_bg_center_left_bottom.png
     - assets/images/login/login_bg_right_top.png
     - assets/images/login/login_bg_smail_icon.png
     - assets/images/login/login_forgot_psw_icon.svg
     - assets/images/login/login_register_icon.svg
+    - assets/images/login/new_psw_icon.svg
     - assets/images/login/password_icon.svg
+    - assets/images/login/register_header_icon.png
+    - assets/images/login/register_psw_register_icon.svg
+    - assets/images/login/reset_psw_confirm_icon.svg
+    - assets/images/login/reset_psw_header_icon.png
     - assets/images/login/username_icon.svg
+    - assets/images/login/verify_psw_code_icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
