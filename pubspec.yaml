@@ -80,6 +80,35 @@ flutter:
     - assets/images/login/username_icon.svg
     - assets/images/login/verify_psw_code_icon.svg
 
+    - assets/images/list_set/pct_icon@3x.png
+    - assets/images/list_set/warn_black.svg
+
+    - assets/images/list_set/set_sel_black@3x.png
+    - assets/images/list_set/set_sel_white@3x.png
+    - assets/images/list_set/the_sel_black@3x.png
+    - assets/images/list_set/the_sel_white@3x.png
+
+    - assets/images/list_set/set_unsel_black@3x.png
+    - assets/images/list_set/set_unsel_white@3x.png
+    - assets/images/list_set/the_unsel_black@3x.png
+    - assets/images/list_set/the_unsel_white@3x.png
+
+    - assets/images/appearance/appear_black.png
+    - assets/images/appearance/appear_white.png
+    - assets/images/appearance/appear_icon.png
+
+    - assets/images/list_set/set_modifyPsw_b.png
+    - assets/images/list_set/set_modifyPsw_w.png
+    - assets/images/list_set/set_about_b.png
+    - assets/images/list_set/set_about_w.png
+    - assets/images/list_set/set_appear_b.png
+    - assets/images/list_set/set_appear_w.png
+    - assets/images/list_set/set_help_b.png
+    - assets/images/list_set/set_help_w.png
+    - assets/images/list_set/set_map_b.png
+    - assets/images/list_set/set_map_w.png
+    - assets/images/list_set/set_exit.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

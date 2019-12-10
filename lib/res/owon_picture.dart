@@ -18,4 +18,35 @@ class OwonPic {
   static String loginUsernameIcon = "assets/images/login/username_icon.svg";
   static String loginVerifyCodeIcon ="assets/images/login/verify_psw_code_icon.svg";
 
+  static String listPctIcon = "assets/images/list_set/pct_icon@3x.png";
+  static String listWarnIconBlack = "assets/images/list_set/warn_black.svg";
+  static String settingSelBlack = "assets/images/list_set/set_sel_black@3x.png";
+  static String settingSelWhite = "assets/images/list_set/set_sel_white@3x.png";
+  static String theSelBlack = "assets/images/list_set/the_sel_black@3x.png";
+  static String theSelWhite = "assets/images/list_set/the_sel_white@3x.png";
+
+  static String settingUnSelBlack = "assets/images/list_set/set_unsel_black@3x.png";
+  static String settingUnSelWhite = "assets/images/list_set/set_unsel_white@3x.png";
+  static String theUnSelBlack = "assets/images/list_set/the_unsel_black@3x.png";
+  static String theUnSelWhite = "assets/images/list_set/the_unsel_white@3x.png";
+
+  static String appearB = "assets/images/appearance/appear_black.png";
+  static String appearW = "assets/images/appearance/appear_white.png";
+  static String appearI = "assets/images/appearance/appear_icon.png";
+
+  static String setAboutB = "assets/images/list_set/set_about_b.png";
+  static String setAboutW = "assets/images/list_set/set_about_w.png";
+  static String setHelpB = "assets/images/list_set/set_help_b.png";
+  static String setHelpW = "assets/images/list_set/set_help_w.png";
+  static String setMapB = "assets/images/list_set/set_map_b.png";
+  static String setMapW = "assets/images/list_set/set_map_w.png";
+  static String setModifyB = "assets/images/list_set/set_modifyPsw_b.png";
+  static String setModifyW = "assets/images/list_set/set_modifyPsw_w.png";
+  static String setAppearB = "assets/images/list_set/set_appear_b.png";
+  static String setAppearW = "assets/images/list_set/set_appear_w.png";
+  static String setExit = "assets/images/list_set/set_exit.png";
+
+
+
+
 }

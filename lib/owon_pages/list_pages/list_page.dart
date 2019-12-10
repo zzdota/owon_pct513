@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
+import 'package:owon_pct513/res/owon_picture.dart';
 import '../../owon_utils/owon_log.dart';
 import '../../res/owon_themeColor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -90,12 +91,12 @@ class _ListPageState extends State<ListPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Image.asset(
-                                      "assets/images/launch_icon.png",
+                                      OwonPic.listPctIcon,
                                       fit: BoxFit.contain,
-                                      height: 40,
+                                      height: 35,
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      height: 8,
                                     ),
                                     Text(
                                       "PCT513",

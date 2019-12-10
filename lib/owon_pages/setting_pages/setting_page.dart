@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
+import 'package:provider/provider.dart';
 import '../../owon_providers/theme_provider.dart';
 import '../../res/owon_themeColor.dart';
 import '../../res/owon_settingData.dart';
@@ -12,7 +13,6 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   List dataList = loadSettingData;
-
   @override
   void initState() {
     super.initState();
@@ -20,6 +20,7 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
@@ -73,8 +74,10 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget createWidget(int index) {
+    int myIndex = Provider.of<ThemeProvider>(context).themeIndex;
+
     var name = dataList[index]["name"];
-    var imageUrl = dataList[index]["imageUrl"];
+    var imageUrl = myIndex==0?dataList[index]["imageUrl"]:dataList[index]["imageUrlW"];
     return index == dataList.length-1
         ? Container(
             decoration: BoxDecoration(
@@ -92,7 +95,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 Image.asset(
                   imageUrl,
-                  width: 30,
+                  width: 20,
                 ),
               ],
             ))
@@ -104,7 +107,10 @@ class _SettingPageState extends State<SettingPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    SvgPicture.asset(imageUrl,width: 15,),
+                    Image.asset(
+                      imageUrl,
+                      width: 20,
+                    ),
                     SizedBox(
                       width: 20,
                     ),

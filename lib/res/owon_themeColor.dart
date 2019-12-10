@@ -12,7 +12,8 @@ class OwonColor {
       "textColor": Color(0xffffffff), //所有文字色
       "borderNormal": Color(0xff5a5a5a), //item边框色
       "borderDisconnect": Color(0xffed1c24), //离线边框色
-      "tabBarUnselected": Color(0xff757575), //底部tabBar未选中颜色
+      "tabBarUnselected": Color(0xffc3c3c3), //底部tabBar未选中颜色
+      "tabBarSelected": Color(0xffffffff),//底部tabBar选中颜色
       "blue": Color(0xff009fe9), // 登录界面登录按钮色
       "orange": Color(0xfff7ad18), //用户名图标色
     },
@@ -24,6 +25,7 @@ class OwonColor {
       "borderNormal": Color(0xffc3c3c3),
       "borderDisconnect": Color(0xffed1c24),
       "tabBarUnselected": Color(0xff757575),
+      "tabBarSelected": Color(0xff000000),
       "blue": Color(0xff009fe9),
       "orange": Color(0xfff7ad18),
     }

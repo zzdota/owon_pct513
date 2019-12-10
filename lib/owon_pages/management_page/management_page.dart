@@ -41,37 +41,37 @@ Widget getWidget(context) {
     children: <Widget>[
       Expanded(
         child: Container(
-//          color: Colors.red,
+          color: Colors.red,
           child: Row(
             children: <Widget>[
-//              Padding(
-//                padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
-//                child: OwonAdjustTemp(
-//                  title: "Heat To",
-//                  tempTitle: "30.0",
-//                  upBtnPressed: () {
-//                    OwonLog.e("up");
-//                  },
-//                  downBtnPressed: () {
-//                    OwonLog.e("down");
-//                  },
-//                ),
-//              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
+                child: OwonAdjustTemp(
+                  title: "Heat To",
+                  tempTitle: "30.0",
+                  upBtnPressed: () {
+                    OwonLog.e("up");
+                  },
+                  downBtnPressed: () {
+                    OwonLog.e("down");
+                  },
+                ),
+              ),
               Expanded(child: OwonTempHumi()),
 
-//              Padding(
-//                padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
-//                child: OwonAdjustTemp(
-//                  title: "Heat To",
-//                  tempTitle: "30.0",
-//                  upBtnPressed: () {
-//                    OwonLog.e("up");
-//                  },
-//                  downBtnPressed: () {
-//                    OwonLog.e("down");
-//                  },
-//                ),
-//              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+                child: OwonAdjustTemp(
+                  title: "Heat To",
+                  tempTitle: "30.0",
+                  upBtnPressed: () {
+                    OwonLog.e("up");
+                  },
+                  downBtnPressed: () {
+                    OwonLog.e("down");
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -95,7 +95,7 @@ Widget getWidget(context) {
                 rightTitle: "Emergency Heat",
                 onPressed: () {
                   OwonLog.e("----");
-                  OwonBottomSheet.show(context, dataList,maxCount: 9,itemHeight: 50.0).then((val){
+                  OwonBottomSheet.show(context, dataList).then((val){
                                         print("--消失后的回调-->$val");
 
                   });

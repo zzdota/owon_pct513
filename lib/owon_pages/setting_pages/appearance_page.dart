@@ -25,7 +25,7 @@ class _AppearancePageState extends State<AppearancePage> {
         children: <Widget>[
           SizedBox(height: 40,),
 
-          OwonHeader.header(context,OwonPic.launchIcon,"Appearance",alignment: MainAxisAlignment.center),
+          OwonHeader.header(context,OwonPic.appearI,"Appearance",alignment: MainAxisAlignment.center,width: 120),
           SizedBox(
             height: 30,
           ),
@@ -46,7 +46,7 @@ class _AppearancePageState extends State<AppearancePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Image.asset(
-            "assets/images/launch_icon.png",
+            OwonPic.appearB,
             width: 60,
           ),
           SizedBox(
@@ -78,12 +78,12 @@ class _AppearancePageState extends State<AppearancePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          createMiddleItem("assets/images/launch_icon.png", "Dark",Provider.of<ThemeProvider>(context).themeIndex,()async {
+          createMiddleItem(OwonPic.appearB, "Dark",Provider.of<ThemeProvider>(context).themeIndex,()async {
             SharedPreferences pre = await SharedPreferences.getInstance();
             pre.setInt("themeColor", 0);
             Provider.of<ThemeProvider>(context).setTheme(0);
           }),
-          createMiddleItem("assets/images/launch_icon.png", "Light",Provider.of<ThemeProvider>(context).themeIndex==0?1:0,()async {
+          createMiddleItem(OwonPic.appearW, "Light",Provider.of<ThemeProvider>(context).themeIndex==0?1:0,()async {
             SharedPreferences pre = await SharedPreferences.getInstance();
             pre.setInt("themeColor", 1);
             Provider.of<ThemeProvider>(context).setTheme(1);
@@ -102,7 +102,8 @@ class _AppearancePageState extends State<AppearancePage> {
           children: <Widget>[
             Image.asset(
               imageUrl,
-              height: 150,
+              width: 150,
+              fit: BoxFit.cover,
             ),
             SizedBox(
               height: 15,
