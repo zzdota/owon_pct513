@@ -23,7 +23,7 @@ class OwonToast {
     int timeInSecForIos = 1,
     double fontSize = 16.0,
     ToastGravity gravity = ToastGravity.CENTER,
-    Color backgroundColor,
+    Color backgroundColor = Colors.grey,
     Color textColor,
     // Function(bool) didTap,
   }) async {
