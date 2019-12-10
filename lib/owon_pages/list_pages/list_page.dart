@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
 import '../../owon_utils/owon_log.dart';
 import '../../res/owon_themeColor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -67,44 +68,49 @@ class _ListPageState extends State<ListPage> {
                   child: Container(
                     height: 110,
                     padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: OwonColor()
-                                  .getCurrent(context, "borderNormal"),
-                              width: 1.0,
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16.0))),
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Image.asset(
-                                    "assets/images/launch_icon.png",
-                                    fit: BoxFit.contain,
-                                    height: 40,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "PCT513",
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: OwonColor()
-                                            .getCurrent(context, "textColor")),
-                                  ),
-                                ],
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagementPage()));
+                      },
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: OwonColor()
+                                    .getCurrent(context, "borderNormal"),
+                                width: 1.0,
                               ),
-                              getRightWidget(true)
-                            ],
-                          ),
-                        )),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0))),
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Image.asset(
+                                      "assets/images/launch_icon.png",
+                                      fit: BoxFit.contain,
+                                      height: 40,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "PCT513",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: OwonColor()
+                                              .getCurrent(context, "textColor")),
+                                    ),
+                                  ],
+                                ),
+                                getRightWidget(true)
+                              ],
+                            ),
+                          )),
+                    ),
                   ),
                   secondaryActions: <Widget>[
                     Container(

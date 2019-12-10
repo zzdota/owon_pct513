@@ -62,7 +62,7 @@ class HomePageState extends State<HomePage> {
                 "Setting",
                 style: getStyleWithIndex(1),
               ),
-              icon: Icon(Icons.score,
+              icon: Icon(Icons.settings,
                   size: _currentIndex == 1 ? 35.0 : 30.0,
                   color: _currentIndex == 1
                       ? OwonColor().getCurrent(context, "textColor")

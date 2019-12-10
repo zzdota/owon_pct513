@@ -63,7 +63,7 @@ flutter:
   assets:
     - assets/images/launch_bg.png
     - assets/images/launch_icon.png
-
+    - assets/images/modifyPsw.svg
     #login
     - assets/images/login/confirm_psw_icon.svg
     - assets/images/login/login_bg_center_left_bottom.png

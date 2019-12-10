@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import '../../owon_providers/theme_provider.dart';
 import '../../res/owon_themeColor.dart';
@@ -103,10 +104,7 @@ class _SettingPageState extends State<SettingPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Image.asset(
-                      imageUrl,
-                      width: 30,
-                    ),
+                    SvgPicture.asset(imageUrl,width: 15,),
                     SizedBox(
                       width: 20,
                     ),
