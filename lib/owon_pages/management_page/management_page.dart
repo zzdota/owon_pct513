@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_utils/owon_bottomsheet.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import '../../res/owon_themeColor.dart';
@@ -45,23 +46,32 @@ Widget getWidget(context) {
             children: <Widget>[
 //              Padding(
 //                padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
-//                child: OwonAdjustTemp(),
+//                child: OwonAdjustTemp(
+//                  title: "Heat To",
+//                  tempTitle: "30.0",
+//                  upBtnPressed: () {
+//                    OwonLog.e("up");
+//                  },
+//                  downBtnPressed: () {
+//                    OwonLog.e("down");
+//                  },
+//                ),
 //              ),
               Expanded(child: OwonTempHumi()),
 
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
-                child: OwonAdjustTemp(
-                  title: "Heat To",
-                  tempTitle: "30.0",
-                  upBtnPressed: () {
-                    OwonLog.e("up");
-                  },
-                  downBtnPressed: () {
-                    OwonLog.e("down");
-                  },
-                ),
-              ),
+//              Padding(
+//                padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+//                child: OwonAdjustTemp(
+//                  title: "Heat To",
+//                  tempTitle: "30.0",
+//                  upBtnPressed: () {
+//                    OwonLog.e("up");
+//                  },
+//                  downBtnPressed: () {
+//                    OwonLog.e("down");
+//                  },
+//                ),
+//              ),
             ],
           ),
         ),
@@ -73,7 +83,7 @@ Widget getWidget(context) {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               OwonMode(
-                leftTitle: "模式",
+                leftTitle: "系统模式",
                 rightTitle: "Cool",
               ),
               OwonMode(
@@ -85,85 +95,14 @@ Widget getWidget(context) {
                 rightTitle: "Emergency Heat",
                 onPressed: () {
                   OwonLog.e("----");
+                  OwonBottomSheet.show(context, dataList,maxCount: 9,itemHeight: 50.0).then((val){
+                                        print("--消失后的回调-->$val");
 
-                  showModalBottomSheet(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          width: 1.0,
-                          color: OwonColor().getCurrent(context, "itemColor")),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(OwonConstant.cRadius),
-                          topRight: Radius.circular(OwonConstant.cRadius)),
-                    ),
-                    context: context,
-                    builder: (BuildContext context) {
-                      return new Container(
-                          height: 350.0,
-                          decoration: BoxDecoration(
-                              color:
-                                  OwonColor().getCurrent(context, "itemColor"),
-                              borderRadius: BorderRadius.only(
-                                  topLeft:
-                                      Radius.circular(OwonConstant.cRadius),
-                                  topRight:
-                                      Radius.circular(OwonConstant.cRadius)),
-                              border: Border.all(
-                                  color: OwonColor()
-                                      .getCurrent(context, "textColor"))),
-                          child: ListView.builder(
-                              itemCount: dataList.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context, index);
-                                  },
-                                  child: Container(
-                                    height: 70,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 120),
-                                                child: Icon(Icons.add,
-                                                    color: OwonColor()
-                                                        .getCurrent(context,
-                                                            "textColor")),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                dataList[index]["name"],
-                                                style: TextStyle(
-                                                    color: OwonColor()
-                                                        .getCurrent(context,
-                                                            "textColor")),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Divider(
-                                            height: 1,
-                                          ),
-                                          color: OwonColor().getCurrent(
-                                              context, "borderNormal"),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }));
-                    },
-                  ).then((val) {
-                    print("--消失后的回调-->$val");
                   });
+
+//                  .then((val) {
+//                    print("--消失后的回调-->$val");
+//                  });
                 },
               ),
               Padding(
