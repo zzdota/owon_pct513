@@ -12,6 +12,8 @@ class OwonConstant {
   static const String foreignServerHttp = "$foreignServerBase" + "accsystem/api/json/";
   static const String domesticServerHttp = "$domesticServerBase" + "accsystem/api/json/";
 
+  static const String mQTTUrl = "mqttUrl";
+
   static const double cHeight = 90.0; //最常用高度，登录输入框，card控件的高度
   static const double listHeight = 110.0; //设备列表中的list高度
   static const double cRadius = 16.0; //圆角弧度
