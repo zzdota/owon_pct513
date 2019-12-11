@@ -6,6 +6,9 @@
 
   "global_cancel": "取消",
   "global_ok": "确认",
+  "global_thermostat": "温控器",
+  "global_delete": "删除",
+
 
   "global_hint_user": "电子邮件/手机号码",
   "global_hint_password": "密码",
@@ -29,4 +32,17 @@
   "reset_psw_password": "密码",
   "reset_psw_confirm": "确认修改",
 
+  "tab_list": "温控器列表",
+  "tab_set": "设置",
+  "list_disconnect": "连接断开",
+  "set_exit": "退出登录",
+  "set_resetPsw": "重置密码",
+  "set_appearance": "主题",
+  "set_dig": "电子围栏",
+  "set_help": "帮助",
+  "set_about": "关于",
+
+  "appearance_dark": "深色",
+  "appearance_light": "浅色",
+  "about_version": "版本号"
 }

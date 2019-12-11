@@ -21,11 +21,15 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get about_version => "Version";
   String get app_listView => "ListView";
   String get app_name => "OWON";
   String get app_test => "test";
   String get app_title => "app title";
+  String get appearance_dark => "Dark";
+  String get appearance_light => "Light";
   String get global_cancel => "Cancel";
+  String get global_delete => "Remove";
   String get global_get_verify_code => "Get Code";
   String get global_hint_confirm_password => "Confirm Password";
   String get global_hint_new_password => "New Password";
@@ -34,8 +38,10 @@ class S implements WidgetsLocalizations {
   String get global_hint_verify_code => "Verification Code";
   String get global_ok => "OK";
   String get global_register => "Register";
+  String get global_thermostat => "Thermostat";
   String get global_verify_code_remaining1 => "";
   String get global_verify_code_remaining2 => " seconds left";
+  String get list_disconnect => "Disconnected";
   String get login_button => "Login";
   String get login_forgot => "Forgot";
   String get login_hi => "Hi,";
@@ -46,6 +52,14 @@ class S implements WidgetsLocalizations {
   String get reset_psw_password => "Password";
   String get reset_psw_reset => "Reset";
   String get reset_psw_title => "Reset Password";
+  String get set_about => "About";
+  String get set_appearance => "Appearance";
+  String get set_dig => "Electric Fence";
+  String get set_exit => "Log out";
+  String get set_help => "Help";
+  String get set_resetPsw => "Reset Password";
+  String get tab_list => "Thermostat List";
+  String get tab_set => "Setting";
 }
 
 class $en extends S {
@@ -61,6 +75,10 @@ class $zh extends S {
   @override
   String get login_privacy1 => "登录或注册即代表阅读并同意";
   @override
+  String get list_disconnect => "连接断开";
+  @override
+  String get set_exit => "退出登录";
+  @override
   String get login_button => "登录";
   @override
   String get login_hi => "Hi,";
@@ -73,17 +91,33 @@ class $zh extends S {
   @override
   String get reset_psw_reset => "重置";
   @override
+  String get about_version => "版本号";
+  @override
   String get reset_psw_confirm => "确认修改";
   @override
+  String get set_resetPsw => "重置密码";
+  @override
   String get global_cancel => "取消";
+  @override
+  String get tab_set => "设置";
+  @override
+  String get global_thermostat => "温控器";
   @override
   String get global_get_verify_code => "校验码";
   @override
   String get app_listView => "ListView";
   @override
+  String get appearance_dark => "深色";
+  @override
+  String get set_help => "帮助";
+  @override
+  String get tab_list => "温控器列表";
+  @override
   String get app_title => "app title";
   @override
   String get global_ok => "确认";
+  @override
+  String get set_appearance => "主题";
   @override
   String get reset_psw_title => "重置密码";
   @override
@@ -97,11 +131,19 @@ class $zh extends S {
   @override
   String get reset_psw_password => "密码";
   @override
+  String get set_dig => "电子围栏";
+  @override
   String get app_name => "OWON";
   @override
   String get global_register => "注册账号";
   @override
+  String get appearance_light => "浅色";
+  @override
   String get login_forgot => "忘记密码";
+  @override
+  String get global_delete => "删除";
+  @override
+  String get set_about => "关于";
   @override
   String get global_hint_new_password => "输入新密码";
   @override

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:provider/provider.dart';
 import '../../owon_providers/theme_provider.dart';
 import '../../res/owon_themeColor.dart';
 import '../../res/owon_settingData.dart';
 import 'appearance_page.dart';
+import '../../generated/i18n.dart';
 class SettingPage extends StatefulWidget {
   @override
   _SettingPageState createState() => _SettingPageState();
 }
 
 class _SettingPageState extends State<SettingPage> {
-  List dataList = loadSettingData;
+  List dataList;
   @override
   void initState() {
     super.initState();
@@ -20,11 +20,12 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    dataList = loadSettingData(context);
 
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
-          title: Text("Setting"),
+          title: Text(S.of(context).tab_set),
           centerTitle: true,
         ),
         body: ListView.builder(

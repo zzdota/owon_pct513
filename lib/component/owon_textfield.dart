@@ -9,32 +9,29 @@ class OwonTextField {
     return Container(
       width: width,
       child: TextField(
-          controller: textEditingController, //绑定controller
-          maxLines: 1, //最多一行
-          autofocus: false, //自动获取焦点
-          textAlign: TextAlign.left, //从左到右对齐
+          controller: textEditingController,
+          maxLines: 1,
+          autofocus: false,
+          textAlign: TextAlign.left,
           style: TextStyle(
               color: OwonColor().getCurrent(context, "textColor"),
-              fontSize: 20.0), //输入内容颜色和字体大小
+              fontSize: 20.0),
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
-            //添加装饰效果
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-            filled: false, //背景是否填充
-            fillColor: OwonColor().getCurrent(
-                context, "itemColor"), //添加黄色填充色（filled: true必须设置，否则单独设置填充色不会生效）
+            filled: false,
+            fillColor: OwonColor().getCurrent(context, "itemColor"),
             prefixIcon: Padding(
-              padding:
-                  const EdgeInsets.only(top: 15, bottom: 15),
+              padding: const EdgeInsets.only(top: 15, bottom: 15),
               child: Container(
                   child: SvgPicture.asset(
-                    imageUrl,
-                    color: OwonColor().getCurrent(context, "orange"),
-                    width: 5,
-                  )),
+                imageUrl,
+                color: OwonColor().getCurrent(context, "orange"),
+                width: 5,
+              )),
             ),
-            hintText: hint, //hint提示文案
+            hintText: hint,
             hintStyle: TextStyle(
                 fontSize: 14,
                 color: OwonColor().getCurrent(context, "textColor")),

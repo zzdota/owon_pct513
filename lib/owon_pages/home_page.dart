@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../res/owon_themeColor.dart';
 import 'list_pages/list_page.dart';
 import 'setting_pages/setting_page.dart';
+import '../generated/i18n.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
               title: Text(
-                "List",
+                S.of(context).tab_list,
                 style: getStyleWithIndex(0),
               ),
               icon:Image.asset(myIndex==0?(_currentIndex==0?OwonPic.theSelBlack:OwonPic.theUnSelBlack):(_currentIndex==0?OwonPic.theSelWhite:OwonPic.theUnSelWhite),
@@ -59,7 +60,7 @@ class HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
               title: Text(
-                "Setting",
+                S.of(context).tab_set,
                 style: getStyleWithIndex(1),
               ),
             icon:Image.asset(myIndex==0?(_currentIndex==1?OwonPic.settingSelBlack:OwonPic.settingUnSelBlack):(_currentIndex==1?OwonPic.settingSelWhite:OwonPic.settingUnSelWhite),

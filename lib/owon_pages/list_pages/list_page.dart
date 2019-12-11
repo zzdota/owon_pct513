@@ -6,6 +6,7 @@ import '../../owon_utils/owon_log.dart';
 import '../../res/owon_themeColor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import '../../generated/i18n.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -15,16 +16,23 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
+//    OwonHttp().post(url, params, successCallBack, errorCallBack)
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
-          title: Text("List"),
+          title: Text(S.of(context).global_thermostat),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
+              onPressed: (){},
                 icon: Icon(
               Icons.add,
               color: OwonColor().getCurrent(context, "textColor"),
@@ -117,7 +125,7 @@ class _ListPageState extends State<ListPage> {
                     Container(
                       padding: EdgeInsets.all(5),
                       child: IconSlideAction(
-                          caption: 'Delete',
+                          caption: S.of(context).global_delete,
                           color: Colors.red,
                           icon: Icons.delete,
                           closeOnTap: true,
@@ -149,7 +157,7 @@ class _ListPageState extends State<ListPage> {
             width: 10,
           ),
           Text(
-            "连接断开",
+            S.of(context).list_disconnect,
             style: TextStyle(
                 color: OwonColor().getCurrent(context, "borderDisconnect")),
           )

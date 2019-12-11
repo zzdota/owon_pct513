@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../owon_providers/theme_provider.dart';
 import '../../component/owon_header.dart';
 import '../../res/owon_picture.dart';
+import '../../generated/i18n.dart';
+
 class AppearancePage extends StatefulWidget {
   @override
   _AppearancePageState createState() => _AppearancePageState();
@@ -18,14 +20,14 @@ class _AppearancePageState extends State<AppearancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Appearance"),
+        title: Text(S.of(context).set_appearance),
         centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
           SizedBox(height: 40,),
 
-          OwonHeader.header(context,OwonPic.appearI,"Appearance",alignment: MainAxisAlignment.center,width: 120),
+          OwonHeader.header(context,OwonPic.appearI,S.of(context).set_appearance,alignment: MainAxisAlignment.center,width: 120),
           SizedBox(
             height: 30,
           ),
@@ -63,7 +65,7 @@ class _AppearancePageState extends State<AppearancePage> {
             width: 10,
           ),
           Text(
-            "Appearance",
+            S.of(context).set_appearance,
             style: TextStyle(
                 color: OwonColor().getCurrent(context, "textColor"),
                 fontSize: 45),
@@ -78,12 +80,12 @@ class _AppearancePageState extends State<AppearancePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          createMiddleItem(OwonPic.appearB, "Dark",Provider.of<ThemeProvider>(context).themeIndex,()async {
+          createMiddleItem(OwonPic.appearB, S.of(context).appearance_dark,Provider.of<ThemeProvider>(context).themeIndex,()async {
             SharedPreferences pre = await SharedPreferences.getInstance();
             pre.setInt("themeColor", 0);
             Provider.of<ThemeProvider>(context).setTheme(0);
           }),
-          createMiddleItem(OwonPic.appearW, "Light",Provider.of<ThemeProvider>(context).themeIndex==0?1:0,()async {
+          createMiddleItem(OwonPic.appearW, S.of(context).appearance_light,Provider.of<ThemeProvider>(context).themeIndex==0?1:0,()async {
             SharedPreferences pre = await SharedPreferences.getInstance();
             pre.setInt("themeColor", 1);
             Provider.of<ThemeProvider>(context).setTheme(1);

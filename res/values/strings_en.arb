@@ -6,6 +6,9 @@
 
   "global_cancel": "Cancel",
   "global_ok": "OK",
+  "global_thermostat": "Thermostat",
+  "global_delete": "Remove",
+
 
   "global_hint_user": "E-Mail / Phone",
   "global_hint_password": "Password",
@@ -27,7 +30,22 @@
   "reset_psw_title": "Reset Password",
   "reset_psw_reset": "Reset",
   "reset_psw_password": "Password",
-  "reset_psw_confirm": "Confirm"
+  "reset_psw_confirm": "Confirm",
+
+
+  "tab_list": "Thermostat List",
+  "tab_set": "Setting",
+  "list_disconnect": "Disconnected",
+  "set_exit": "Log out",
+  "set_resetPsw": "Reset Password",
+  "set_appearance": "Appearance",
+  "set_dig": "Electric Fence",
+  "set_help": "Help",
+  "set_about": "About",
+
+  "appearance_dark": "Dark",
+  "appearance_light": "Light",
+  "about_version": "Version"
 
 
 }

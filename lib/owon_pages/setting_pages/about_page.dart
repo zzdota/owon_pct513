@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 import 'package:package_info/package_info.dart';
-
+import '../../generated/i18n.dart';
 
 class AboutPage extends StatefulWidget {
   @override
@@ -32,7 +32,7 @@ class _AboutPageState extends State<AboutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("About"),
+        title: Text(S.of(context).set_about),
         centerTitle: true,
       ),
       body: Container(
