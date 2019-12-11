@@ -54,6 +54,12 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences pre = await SharedPreferences.getInstance();
     _userName = pre.get(OwonConstant.userName);
     _password = pre.get(OwonConstant.password);
+    if(!TextUtil.isEmpty(_userName) && !RegexUtil.isEmail(_userName)){
+      int index = _userName.indexOf("-");
+      if(index > 0){
+        _userName = _userName.substring(index+1,_userName.length);
+      }
+    }
     _useController.text = _userName;
     _pwdController.text = _password;
   }
@@ -261,6 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                                           .getCurrent(context, "textColor"),
                                       fontSize: 20.0), //输入内容颜色和字体大小
                                   keyboardType: TextInputType.visiblePassword,
+                                  obscureText: true,
                                   decoration: InputDecoration(
                                     //添加装饰效果
                                     contentPadding: const EdgeInsets.symmetric(
@@ -273,6 +280,7 @@ class _LoginPageState extends State<LoginPage> {
                                       color: OwonColor()
                                           .getCurrent(context, "orange"),
                                     ), //左侧图标
+                                    suffixIcon: Icon(Icons.remove_red_eye),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: OwonColor().getCurrent(
