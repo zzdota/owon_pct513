@@ -82,9 +82,11 @@ class _LoginPageState extends State<LoginPage> {
           LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
           switch(int.parse(loginModelEntity.code)){
             case 100:
-              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
+//              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
               SharedPreferences pre = await SharedPreferences.getInstance();
-              pre.setString(OwonConstant.mQTTUrl, url);
+              pre.setString(OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
+              pre.setInt(OwonConstant.mQTTPort, loginModelEntity.response.mqttport);
+              pre.setInt(OwonConstant.mQTTPortS, loginModelEntity.response.mqttsslport);
               pre.setString(OwonConstant.userName, _userName);
               pre.setString(OwonConstant.password, _password);
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {

@@ -13,6 +13,8 @@ class OwonConstant {
   static const String domesticServerHttp = "$domesticServerBase" + "accsystem/api/json/";
 
   static const String mQTTUrl = "mqttUrl";
+  static const String mQTTPort = "mqttPort";
+  static const String mQTTPortS = "mqttPorts";
   static const String userName = "userName";
   static const String password = "password";
 
