@@ -31,7 +31,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _useController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
-  String _countryCode = "+86";
+  String _countryCode = "+86", _userNameCountryCode = "86-";
   String _userName = "", _password = "";
 
   @override
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 
-  getExistUserInfo() async{
+  getExistUserInfo() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     _userName = pre.get(OwonConstant.userName);
     _password = pre.get(OwonConstant.password);
@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
         .then((val) {
       setState(() {
         _countryCode = "+" + countryCode[val]["code"].toString();
+        _userNameCountryCode = countryCode[val]["code"].toString() + "-";
       });
     });
   }
@@ -73,31 +74,36 @@ class _LoginPageState extends State<LoginPage> {
       OwonToast.show(S.of(context).login_username_null);
       return;
     }
-    if (TextUtil.isEmpty(_password) || _password.length < OwonConstant.passwordLessLength) {
+    if (TextUtil.isEmpty(_password) ||
+        _password.length < OwonConstant.passwordLessLength) {
       OwonToast.show(S.of(context).login_password_less_six_digits);
       return;
     }
+    if (!RegexUtil.isEmail(_userName)) {
+      _userName = _userNameCountryCode + _userName;
+    }
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().login(_userName, _password), (value) async {
-          LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
-          switch(int.parse(loginModelEntity.code)){
-            case 100:
+      LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
+      switch (int.parse(loginModelEntity.code)) {
+        case 100:
 //              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
-              SharedPreferences pre = await SharedPreferences.getInstance();
-              pre.setString(OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
-              pre.setInt(OwonConstant.mQTTPort, loginModelEntity.response.mqttport);
-              pre.setInt(OwonConstant.mQTTPortS, loginModelEntity.response.mqttsslport);
-              pre.setString(OwonConstant.userName, _userName);
-              pre.setString(OwonConstant.password, _password);
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return HomePage();
-              }));
-              break;
-            case 110:
-              break;
-
-          }
-
+          SharedPreferences pre = await SharedPreferences.getInstance();
+          pre.setString(
+              OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
+          pre.setInt(OwonConstant.mQTTPort, loginModelEntity.response.mqttport);
+          pre.setInt(
+              OwonConstant.mQTTPortS, loginModelEntity.response.mqttsslport);
+          pre.setString(OwonConstant.userName, _userName);
+          pre.setString(OwonConstant.password, _password);
+          pre.setString(OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return HomePage();
+          }));
+          break;
+        case 110:
+          break;
+      }
     }, (value) {
       OwonLog.e("error-------$value");
     });

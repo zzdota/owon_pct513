@@ -17,6 +17,7 @@ class OwonConstant {
   static const String mQTTPortS = "mqttPorts";
   static const String userName = "userName";
   static const String password = "password";
+  static const String md5Password = "passwordmd5";
 
   static const double cHeight = 90.0; //最常用高度，登录输入框，card控件的高度
   static const double listHeight = 110.0; //设备列表中的list高度
