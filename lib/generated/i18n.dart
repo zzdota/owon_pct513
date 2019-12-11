@@ -45,8 +45,8 @@ class S implements WidgetsLocalizations {
   String get login_button => "Login";
   String get login_forgot => "Forgot";
   String get login_hi => "Hi,";
-  String get login_privacy1 => "登录或注册即代表阅读并同意";
-  String get login_privacy2 => "隐私条例";
+  String get login_privacy1 => "By signing in or registering, you are agreeing to the ";
+  String get login_privacy2 => "Privacy Policy";
   String get login_welcome => "Welcome";
   String get reset_psw_confirm => "Confirm";
   String get reset_psw_password => "Password";

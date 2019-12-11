@@ -24,8 +24,8 @@
   "login_welcome": "Welcome",
   "login_forgot": "Forgot",
   "login_button": "Login",
-  "login_privacy1": "登录或注册即代表阅读并同意",
-  "login_privacy2": "隐私条例",
+  "login_privacy1": "By signing in or registering, you are agreeing to the ",
+  "login_privacy2": "Privacy Policy",
 
   "reset_psw_title": "Reset Password",
   "reset_psw_reset": "Reset",

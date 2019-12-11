@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:owon_pct513/owon_api/model/owon_login_model_entity.dart';
+import '../../owon_api/owon_api_http.dart';
+import '../../owon_utils/owon_http.dart';
+import '../../owon_utils/owon_log.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../owon_utils/owon_bottomsheet.dart';
 import '../../res/owon_country_code.dart';
-import '../../owon_utils/owon_toast.dart';
 import '../../component/owon_header.dart';
 import '../../component/owon_verification.dart';
 import '../../owon_pages/login_pages/register_page.dart';
@@ -54,10 +58,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _login() {
-    OwonToast.show("username:$_userName------psw:$_password");
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return HomePage();
-    }));
+    OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
+        OwonApiHttp().login(_userName, _password), (value) async {
+          LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
+          switch(int.parse(loginModelEntity.code)){
+            case 100:
+              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
+              OwonLog.e("url---------------------$url");
+              SharedPreferences pre = await SharedPreferences.getInstance();
+              pre.setString(OwonConstant.mQTTUrl, url);
+              pre.setString(OwonConstant.userName, _userName);
+              pre.setString(OwonConstant.password, _password);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return HomePage();
+              }));
+              break;
+            case 110:
+              break;
+
+          }
+
+    }, (value) {
+      OwonLog.e("error-------$value");
+    });
+//  OwonHttp.getInstance().get("http://www.baidu.com", (v){}, (v){});
   }
 
   _privacy() {}
@@ -314,7 +338,8 @@ class _LoginPageState extends State<LoginPage> {
                                       TextIconAlignment.iconRightTextLeft),
                             ),
                             Container(
-                              margin: EdgeInsets.only(top: 20.0),
+                              margin: EdgeInsets.only(
+                                  top: 20.0, left: 20.0, right: 20.0),
                               child: Text.rich(TextSpan(children: [
                                 TextSpan(
                                     text: S.of(context).login_privacy1,

@@ -4,6 +4,7 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:owon_pct513/owon_utils/owon_http.dart';
+import 'package:owon_pct513/owon_utils/owon_log.dart';
 import '../../component/owon_textfield.dart';
 import '../../component/owon_verification.dart';
 import '../../owon_utils/owon_bottomsheet.dart';
@@ -36,8 +37,24 @@ class _RegisterPageState extends State<RegisterPage> {
   int _countdownTime;
 
   _getVerifyCode() {
-    if(_countdownTime == 0 && validateMobileOrEmail()){
-//      OwonHttp.getInstance().post(url, params, successCallBack, errorCallBack)
+    if(_countdownTime == 0 && _validateMobileOrEmail()){
+      Map<String,dynamic> arg = <String,dynamic>{
+        "account":"1152740490@qq.com",
+        "atype":1,
+        "ctype":1,
+        "agentid":"lsdjflasjflkasdf"
+      };
+      Map<String, dynamic> params = <String, dynamic>{
+        'type': "/sendvcode",
+        'ts': "586851710",
+        'token': "",
+        'param': arg,
+      };
+      OwonHttp.getInstance().post(OwonConstant.domesticServerHttp, params, (value){
+        OwonLog.e("success-------$value");
+      }, (value){
+        OwonLog.e("error-------$value");
+      });
       startCountdownTimer();
     }
   }
@@ -210,7 +227,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-  bool validateMobileOrEmail(){
+  bool _validateMobileOrEmail(){
     if(RegexUtil.isMobileExact(_userName) || RegexUtil.isEmail(_userName)){
       return true;
     }
