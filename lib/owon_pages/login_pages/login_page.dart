@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../owon_utils/owon_bottomsheet.dart';
+import '../../res/owon_country_code.dart';
 import '../../owon_utils/owon_toast.dart';
 import '../../component/owon_header.dart';
 import '../../component/owon_verification.dart';
@@ -42,8 +44,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _setPhoneCountryCode() {
-    setState(() {
-      _countryCode = "123";
+    OwonBottomSheet.show(context, countryCode,
+            maxCount: 10, itemHeight: 50.0, key1: "zh")
+        .then((val) {
+      setState(() {
+        _countryCode = "+" + countryCode[val]["code"].toString();
+      });
     });
   }
 
@@ -85,8 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 80,
                       child: OwonHeader.header(
                           context, OwonPic.loginBgSmile, S.of(context).login_hi,
-                          width: 140,
-                          subTitle: S.of(context).login_welcome),
+                          width: 140, subTitle: S.of(context).login_welcome),
                     ),
                   ),
                   Expanded(

@@ -7,7 +7,7 @@ class OwonVerify {
       double fontSize = 14.0,
       Color color,
       double height = 60.0,
-      double width = 130.0}) {
+      double width = 150.0}) {
     return Container(
       height: height,
       width: width,

@@ -7,7 +7,8 @@ class OwonBottomSheet {
   static Future show(context, List dataList,
       {int maxCount = 5,
       double itemHeight = OwonConstant.systemHeight,
-      String key = "name"}) {
+      String key = "code",
+      String key1 = "name"}) {
     return showModalBottomSheet(
       shape: RoundedRectangleBorder(
         side: BorderSide(
@@ -61,11 +62,24 @@ class OwonBottomSheet {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Text(
-                                  dataList[index][key],
-                                  style: TextStyle(
-                                      color: OwonColor()
-                                          .getCurrent(context, "textColor")),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      "+" + dataList[index][key].toString(),
+                                      style: TextStyle(
+                                          color: OwonColor().getCurrent(
+                                              context, "textColor")),
+                                    ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Text(
+                                      dataList[index][key1],
+                                      style: TextStyle(
+                                          color: OwonColor().getCurrent(
+                                              context, "textColor")),
+                                    ),
+                                  ],
                                 )
                               ],
                             ),

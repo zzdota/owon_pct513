@@ -34,6 +34,8 @@ class S implements WidgetsLocalizations {
   String get global_hint_verify_code => "Verification Code";
   String get global_ok => "OK";
   String get global_register => "Register";
+  String get global_verify_code_remaining1 => "";
+  String get global_verify_code_remaining2 => " seconds left";
   String get login_button => "Login";
   String get login_forgot => "Forgot";
   String get login_hi => "Hi,";
@@ -61,17 +63,31 @@ class $zh extends S {
   @override
   String get login_button => "登录";
   @override
+  String get login_hi => "Hi,";
+  @override
+  String get global_verify_code_remaining1 => "剩余";
+  @override
+  String get global_hint_password => "密码";
+  @override
+  String get global_verify_code_remaining2 => " 秒";
+  @override
+  String get reset_psw_reset => "重置";
+  @override
+  String get reset_psw_confirm => "确认修改";
+  @override
+  String get global_cancel => "取消";
+  @override
+  String get global_get_verify_code => "校验码";
+  @override
+  String get app_listView => "ListView";
+  @override
   String get app_title => "app title";
   @override
   String get global_ok => "确认";
   @override
-  String get login_hi => "Hi,";
-  @override
   String get reset_psw_title => "重置密码";
   @override
   String get app_test => "test";
-  @override
-  String get global_hint_password => "密码";
   @override
   String get global_hint_confirm_password => "再次确认密码";
   @override
@@ -79,25 +95,15 @@ class $zh extends S {
   @override
   String get global_hint_verify_code => "输入校验码";
   @override
-  String get reset_psw_reset => "重置";
-  @override
   String get reset_psw_password => "密码";
   @override
-  String get reset_psw_confirm => "确认修改";
-  @override
   String get app_name => "OWON";
-  @override
-  String get global_cancel => "取消";
   @override
   String get global_register => "注册账号";
   @override
   String get login_forgot => "忘记密码";
   @override
-  String get global_get_verify_code => "校验码";
-  @override
   String get global_hint_new_password => "输入新密码";
-  @override
-  String get app_listView => "ListView";
   @override
   String get global_hint_user => "电子邮件/手机号码";
   @override

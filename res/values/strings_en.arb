@@ -14,6 +14,8 @@
   "global_hint_confirm_password": "Confirm Password",
   "global_get_verify_code": "Get Code",
   "global_register": "Register",
+  "global_verify_code_remaining1": "",
+  "global_verify_code_remaining2": " seconds left",
 
   "login_hi": "Hi,",
   "login_welcome": "Welcome",
