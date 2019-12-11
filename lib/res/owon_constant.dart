@@ -21,4 +21,6 @@ class OwonConstant {
   static const double cRadius = 16.0; //圆角弧度
   static const double systemHeight = 70.0; //控件界面模式的高度
   static const Color toastBg = Color(0xFF616161);
+
+  static const int passwordLessLength = 6;
 }

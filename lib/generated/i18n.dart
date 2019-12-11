@@ -45,8 +45,10 @@ class S implements WidgetsLocalizations {
   String get login_button => "Login";
   String get login_forgot => "Forgot";
   String get login_hi => "Hi,";
+  String get login_password_less_six_digits => "Password must be no less than 6 digits";
   String get login_privacy1 => "By signing in or registering, you are agreeing to the ";
   String get login_privacy2 => "Privacy Policy";
+  String get login_username_null => "Please enter username";
   String get login_welcome => "Welcome";
   String get reset_psw_confirm => "Confirm";
   String get reset_psw_password => "Password";
@@ -86,6 +88,8 @@ class $zh extends S {
   String get global_verify_code_remaining1 => "剩余";
   @override
   String get global_hint_password => "密码";
+  @override
+  String get login_password_less_six_digits => "密码不得小于6位";
   @override
   String get global_verify_code_remaining2 => " 秒";
   @override
@@ -136,6 +140,8 @@ class $zh extends S {
   String get app_name => "OWON";
   @override
   String get global_register => "注册账号";
+  @override
+  String get login_username_null => "请输入用户名";
   @override
   String get appearance_light => "浅色";
   @override

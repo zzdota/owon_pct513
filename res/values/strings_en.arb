@@ -26,6 +26,8 @@
   "login_button": "Login",
   "login_privacy1": "By signing in or registering, you are agreeing to the ",
   "login_privacy2": "Privacy Policy",
+  "login_username_null": "Please enter username",
+  "login_password_less_six_digits": "Password must be no less than 6 digits",
 
   "reset_psw_title": "Reset Password",
   "reset_psw_reset": "Reset",

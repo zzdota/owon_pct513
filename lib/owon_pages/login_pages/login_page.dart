@@ -1,8 +1,10 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:owon_pct513/owon_api/model/owon_login_model_entity.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import '../../owon_api/owon_api_http.dart';
 import '../../owon_utils/owon_http.dart';
 import '../../owon_utils/owon_log.dart';
@@ -36,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   initState() {
     super.initState();
     getPhoneCountryCode();
+    getExistUserInfo();
   }
 
   @override
@@ -45,6 +48,14 @@ class _LoginPageState extends State<LoginPage> {
 
   getPhoneCountryCode() {
     setState(() {});
+  }
+
+  getExistUserInfo() async{
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    _userName = pre.get(OwonConstant.userName);
+    _password = pre.get(OwonConstant.password);
+    _useController.text = _userName;
+    _pwdController.text = _password;
   }
 
   _setPhoneCountryCode() {
@@ -58,13 +69,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _login() {
+    if (TextUtil.isEmpty(_userName)) {
+      OwonToast.show(S.of(context).login_username_null);
+      return;
+    }
+    if (TextUtil.isEmpty(_password) || _password.length < OwonConstant.passwordLessLength) {
+      OwonToast.show(S.of(context).login_password_less_six_digits);
+      return;
+    }
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().login(_userName, _password), (value) async {
           LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
           switch(int.parse(loginModelEntity.code)){
             case 100:
               String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
-              OwonLog.e("url---------------------$url");
               SharedPreferences pre = await SharedPreferences.getInstance();
               pre.setString(OwonConstant.mQTTUrl, url);
               pre.setString(OwonConstant.userName, _userName);
