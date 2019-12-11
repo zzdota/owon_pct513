@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/appearance_page.dart';
+import 'package:owon_pct513/owon_utils/owon_clientid.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:provider/provider.dart';
 import 'generated/i18n.dart';

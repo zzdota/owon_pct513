@@ -2,19 +2,25 @@ import 'dart:async';
 
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:typed_data/typed_buffers.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../owon_utils/owon_clientid.dart';
 typedef ConnectedCallback = void Function();
 typedef AConnectedCallback = void Function(List<MqttReceivedMessage<MqttMessage>> data);
 
 class OwonMqtt {
-  String server = "110.80.23.122";
-  int port = 1883;
-  String clientIdentifier = "798diokkjhxckljlzgjkhadkjdsaljdlajd";
+
   MqttQos qos = MqttQos.atLeastOnce;
   MqttClient mqttClient;
   static OwonMqtt _instance;
-  OwonMqtt._() {
 
+
+  static OwonMqtt getInstance() {
+    if (_instance == null) {
+      _instance = OwonMqtt();
+    }
+    return _instance;
+  }
+  Future<MqttClientConnectionStatus> connect(String server,int port,String clientIdentifier,String username, String password) {
     mqttClient = MqttClient.withPort(server, clientIdentifier, port);
 
     mqttClient.onDisconnected = _onDisconnected;
@@ -27,16 +33,6 @@ class OwonMqtt {
 
     mqttClient.setProtocolV311();
     mqttClient.logging(on: false);
-
-  }
-
-  static OwonMqtt getInstance() {
-    if (_instance == null) {
-      _instance = OwonMqtt._();
-    }
-    return _instance;
-  }
-  Future<MqttClientConnectionStatus> connect([String username, String password]) {
     _log("_正在连接中...");
     return mqttClient.connect(username,password);
   }

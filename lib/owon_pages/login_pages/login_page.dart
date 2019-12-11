@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:owon_pct513/owon_api/model/owon_login_model_entity.dart';
+import 'package:owon_pct513/owon_utils/owon_clientid.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import '../../owon_api/owon_api_http.dart';
 import '../../owon_utils/owon_http.dart';
@@ -20,7 +22,7 @@ import '../../owon_utils/owon_text_icon_button.dart';
 import '../../res/owon_constant.dart';
 import '../../generated/i18n.dart';
 import '../../res/owon_themeColor.dart';
-
+import 'package:mqtt_client/mqtt_client.dart';
 import 'forgot_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -93,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
       LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
       switch (int.parse(loginModelEntity.code)) {
         case 100:
+          initMqtt();
 //              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
           SharedPreferences pre = await SharedPreferences.getInstance();
           pre.setString(
@@ -114,6 +117,25 @@ class _LoginPageState extends State<LoginPage> {
       OwonLog.e("error-------$value");
     });
 //  OwonHttp.getInstance().get("http://www.baidu.com", (v){}, (v){});
+  }
+
+  initMqtt() async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var userName = pre.get(OwonConstant.userName);
+    var password = pre.get(OwonConstant.md5Password);
+    var server = pre.get(OwonConstant.mQTTUrl);
+    var port = pre.getInt(OwonConstant.mQTTPortS);
+    var clientId =OwonClientId.createClientID(userName);
+
+    OwonLog.e("---port=$port  username=$userName pass=$password server=$server client=$clientId");
+
+   OwonMqtt.getInstance().connect(server, port, clientId, userName, password).then((v){
+     OwonLog.e("res=$v");
+     if(v.returnCode == MqttConnectReturnCode.connectionAccepted){
+       OwonLog.e("恭喜你~ ====mqtt连接成功");
+     }
+
+   });
   }
 
   _privacy() {}
