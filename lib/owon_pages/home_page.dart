@@ -55,7 +55,7 @@ class HomePageState extends State<HomePage> {
                 style: getStyleWithIndex(0),
               ),
               icon:Image.asset(myIndex==0?(_currentIndex==0?OwonPic.theSelBlack:OwonPic.theUnSelBlack):(_currentIndex==0?OwonPic.theSelWhite:OwonPic.theUnSelWhite),
-                  width:_currentIndex == 0 ? 35.0 : 30.0),
+                  width:_currentIndex == 0 ? 30.0 : 25.0),
           ),
           BottomNavigationBarItem(
               title: Text(
@@ -63,7 +63,7 @@ class HomePageState extends State<HomePage> {
                 style: getStyleWithIndex(1),
               ),
             icon:Image.asset(myIndex==0?(_currentIndex==1?OwonPic.settingSelBlack:OwonPic.settingUnSelBlack):(_currentIndex==1?OwonPic.settingSelWhite:OwonPic.settingUnSelWhite),
-                width:_currentIndex == 1 ? 35.0 : 30.0),
+                width:_currentIndex == 1 ? 30.0 : 25.0),
           ),
         ],
         currentIndex: _currentIndex,

@@ -36,9 +36,10 @@ class _OwonAdjustTempState extends State<OwonAdjustTemp> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          InkWell(
-            onTap: widget.upBtnPressed,
-              child: Icon(Icons.keyboard_arrow_up,color: OwonColor().getCurrent(context, "textColor"),size: 35,)),
+          IconButton(icon: Icon(Icons.keyboard_arrow_up,color: OwonColor().getCurrent(context, "textColor"),size: 35,), onPressed: widget.upBtnPressed),
+//          InkWell(
+//            onTap: widget.upBtnPressed,
+//              child: Icon(Icons.keyboard_arrow_up,color: OwonColor().getCurrent(context, "textColor"),size: 35,)),
           Column(
             children: <Widget>[
               Text(widget.title,style: TextStyle(
@@ -49,9 +50,11 @@ class _OwonAdjustTempState extends State<OwonAdjustTemp> {
               ),),
             ],
           ),
-          InkWell(
-            onTap: widget.downBtnPressed,
-              child: Icon(Icons.keyboard_arrow_down,color: OwonColor().getCurrent(context, "textColor"),size: 35,)),
+          IconButton(icon: Icon(Icons.keyboard_arrow_down,color: OwonColor().getCurrent(context, "textColor"),size: 35,), onPressed: widget.upBtnPressed),
+
+//          InkWell(
+//            onTap: widget.downBtnPressed,
+//              child: Icon(Icons.keyboard_arrow_down,color: OwonColor().getCurrent(context, "textColor"),size: 35,)),
 
         ],
       ),

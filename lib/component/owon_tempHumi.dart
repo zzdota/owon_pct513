@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/res/owon_picture.dart';
 import '../res/owon_themeColor.dart';
 
 class OwonTempHumi extends StatefulWidget {
@@ -28,7 +30,8 @@ class _OwonTempHumiState extends State<OwonTempHumi> {
                 ),
               ),
               SizedBox(width: 8,),
-              Icon(Icons.watch,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
+              SvgPicture.asset(OwonPic.mHumidityWater,color:  OwonColor().getCurrent(context, "textColor",),width: 11,),
+//              Icon(Icons.watch,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
 
               Text("29%",style: TextStyle(
                   color:  OwonColor().getCurrent(context, "textColor",),fontSize: 14.0

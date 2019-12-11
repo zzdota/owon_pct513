@@ -46,6 +46,24 @@ class OwonPic {
   static String setAppearW = "assets/images/list_set/set_appear_w.png";
   static String setExit = "assets/images/list_set/set_exit.png";
 
+  static String mHumidityWater = "assets/images/management/m_humi_water.svg";
+  static String mComfortAway = "assets/images/management/m_confort_away.svg";
+  static String mComfortHome = "assets/images/management/m_confort_home.svg";
+
+  static String mFanAuto = "assets/images/management/m_fan_auto.svg";
+  static String mFanCircle = "assets/images/management/m_fan_circle.svg";
+  static String mFanShow = "assets/images/management/m_fan_show.svg";
+
+  static String mHoldPermHold = "assets/images/management/m_hold_permHold.svg";
+  static String mHoldSchedule = "assets/images/management/m_hold_schedule.svg";
+  static String mHoldTempHold = "assets/images/management/m_hold_tempHold.svg";
+
+  static String mSysAuto = "assets/images/management/m_sys_auto.svg";
+  static String mSysCool = "assets/images/management/m_sys_cool.svg";
+  static String mSysEHeat = "assets/images/management/m_sys_eHeat.svg";
+  static String mSysHeat = "assets/images/management/m_sys_heat.svg";
+  static String mSysOff = "assets/images/management/m_sys_off.svg";
+
 
 
 

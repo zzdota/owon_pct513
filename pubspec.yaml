@@ -109,6 +109,28 @@ flutter:
     - assets/images/list_set/set_map_w.png
     - assets/images/list_set/set_exit.png
 
+    - assets/images/management/m_humi_water.svg
+    - assets/images/management/m_confort_away.svg
+    - assets/images/management/m_confort_home.svg
+
+    - assets/images/management/m_fan_auto.svg
+    - assets/images/management/m_fan_circle.svg
+    - assets/images/management/m_fan_show.svg
+
+    - assets/images/management/m_hold_permHold.svg
+    - assets/images/management/m_hold_schedule.svg
+    - assets/images/management/m_hold_tempHold.svg
+
+    - assets/images/management/m_sys_auto.svg
+    - assets/images/management/m_sys_cool.svg
+    - assets/images/management/m_sys_eHeat.svg
+    - assets/images/management/m_sys_heat.svg
+    - assets/images/management/m_sys_off.svg
+
+
+
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
