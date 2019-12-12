@@ -95,7 +95,6 @@ class _LoginPageState extends State<LoginPage> {
       LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
       switch (int.parse(loginModelEntity.code)) {
         case 100:
-          initMqtt();
 //              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
           SharedPreferences pre = await SharedPreferences.getInstance();
           pre.setString(
@@ -106,6 +105,10 @@ class _LoginPageState extends State<LoginPage> {
           pre.setString(OwonConstant.userName, _userName);
           pre.setString(OwonConstant.password, _password);
           pre.setString(OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
+
+
+          initMqtt();
+
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return HomePage();
           }));
