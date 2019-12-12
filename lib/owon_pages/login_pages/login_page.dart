@@ -129,19 +129,17 @@ class _LoginPageState extends State<LoginPage> {
     var password = pre.get(OwonConstant.md5Password);
     var server = pre.get(OwonConstant.mQTTUrl);
     var port = pre.getInt(OwonConstant.mQTTPortS);
-    var clientId = OwonClientId.createClientID(userName);
+    var clientId =OwonClientId.createClientID(userName);
 
-    OwonLog.e(
-        "---port=$port  username=$userName pass=$password server=$server client=$clientId");
+    OwonLog.e("---port=$port  username=$userName pass=$password server=$server client=$clientId");
 
-    OwonMqtt.getInstance()
-        .connect(server, port, clientId, userName, password)
-        .then((v) {
-      OwonLog.e("res=$v");
-      if (v.returnCode == MqttConnectReturnCode.connectionAccepted) {
-        OwonLog.e("恭喜你~ ====mqtt连接成功");
-      }
-    });
+   OwonMqtt.getInstance().connect(server, port, clientId, userName, password).then((v){
+     OwonLog.e("res=$v");
+     if(v.returnCode == MqttConnectReturnCode.connectionAccepted){
+       OwonLog.e("恭喜你~ ====mqtt连接成功");
+     }
+
+   });
   }
 
   _privacy() {}
