@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import '../../owon_utils/owon_log.dart';
 import '../../res/owon_themeColor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../../generated/i18n.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
@@ -16,12 +20,31 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
-@override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  StreamSubscription<Map<dynamic,dynamic>> _listEvenBusSubscription;
 
-//    OwonHttp().post(url, params, successCallBack, errorCallBack)
+  @override
+  void initState() {
+    _listEvenBusSubscription = ListEventBus.getDefault().register<Map<dynamic,dynamic>>((msg){
+      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
+      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
+      Map<String, dynamic> payload = msg["payload"];
+      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
+      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
+    });
+    super.initState();
+    Future.delayed(Duration(seconds: 2),(){
+        toGetList();
+    });
+  }
+
+  toGetList()async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "addr.dev.list";
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
   }
   @override
   Widget build(BuildContext context) {
@@ -50,6 +73,7 @@ class _ListPageState extends State<ListPage> {
               enableInfiniteLoad: false
               ),
           onRefresh: () async {
+            toGetList();
             OwonLog.e("refresh");
           },
           onLoad: () async {

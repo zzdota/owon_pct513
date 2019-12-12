@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../owon_api/model/owon_login_model_entity.dart';
+import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 import '../../owon_utils/owon_clientid.dart';
 import '../../owon_utils/owon_mqtt.dart';
 import '../../owon_utils/owon_toast.dart';
@@ -98,8 +101,7 @@ class _LoginPageState extends State<LoginPage> {
       LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
       switch (int.parse(loginModelEntity.code)) {
         case 100:
-          initMqtt();
-
+//              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
           SharedPreferences pre = await SharedPreferences.getInstance();
           pre.setString(
               OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
@@ -110,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
           pre.setString(OwonConstant.password, _password);
           pre.setString(
               OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
+          initMqtt();
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return HomePage();
           }));
@@ -129,10 +132,9 @@ class _LoginPageState extends State<LoginPage> {
     var password = pre.get(OwonConstant.md5Password);
     var server = pre.get(OwonConstant.mQTTUrl);
     var port = pre.getInt(OwonConstant.mQTTPortS);
-    var clientId = OwonClientId.createClientID(userName);
+    var clientId =OwonClientId.createClientID(userName);
 
-    OwonLog.e(
-        "---port=$port  username=$userName pass=$password server=$server client=$clientId");
+    OwonLog.e("---port=$port  username=$userName pass=$password server=$server client=$clientId");
 
     OwonMqtt.getInstance()
         .connect(server, port, clientId, userName, password)
@@ -140,8 +142,38 @@ class _LoginPageState extends State<LoginPage> {
       OwonLog.e("res=$v");
       if (v.returnCode == MqttConnectReturnCode.connectionAccepted) {
         OwonLog.e("恭喜你~ ====mqtt连接成功");
+        pre.setString(OwonConstant.clientID, clientId);
+        startListen();
+        toSubscribe(clientId);
+      } else {
+        OwonLog.e("有事做了~ ====mqtt连接失败!!!");
       }
     });
+  }
+
+  toSubscribe(String clientID){
+    String topic = "reply/cloud/$clientID";
+    OwonMqtt.getInstance().subscribeMessage(topic);
+  }
+
+  startListen(){
+    OwonMqtt.getInstance().updates().listen(_onData);
+  }
+
+  ///消息监听
+  _onData(List<MqttReceivedMessage<MqttMessage>> data) {
+    final MqttPublishMessage recMess = data[0].payload;
+    final String topic = data[0].topic;
+    final String pt =
+    MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+//    String desString = "topic is <$topic>, payload is <-- $pt -->";
+    Map p = Map();
+    p["topic"] = topic;
+    p["payload"] = jsonDecode(pt);
+
+    ListEventBus.getDefault().post(p);
+
+
   }
 
   _privacy() {}

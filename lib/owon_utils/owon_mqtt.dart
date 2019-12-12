@@ -51,6 +51,7 @@ class OwonMqtt {
   }
 
   int publishMessage(String pTopic, String msg) {
+    _log("_发送数据-topic:$pTopic,playLoad:$msg");
     Uint8Buffer uint8buffer = Uint8Buffer();
     var codeUnits = msg.codeUnits;
     uint8buffer.addAll(codeUnits);
