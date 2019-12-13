@@ -28,6 +28,7 @@
   "login_privacy2": "隐私条例",
   "login_username_null": "请输入用户名",
   "login_password_less_six_digits": "密码不得小于6位",
+  "login_no_network": "当前没有网络",
 
   "reset_psw_title": "重置密码",
   "reset_psw_reset": "重置",

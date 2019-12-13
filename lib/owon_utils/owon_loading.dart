@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:owon_pct513/res/owon_themeColor.dart';
 
 enum OwonLoadingType { Normal, Download }
 
@@ -13,7 +13,7 @@ OwonLoadingType _OwonLoadingType;
 bool _barrierDismissible = true, _showLogs = true;
 
 TextStyle _progressTextStyle = TextStyle(
-    color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
     _messageStyle = TextStyle(
         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.w400);
 
@@ -21,9 +21,14 @@ double _dialogElevation = 8.0, _borderRadius = 8.0;
 Color _backgroundColor = Color.fromRGBO(220, 220, 220, 1.0);
 Curve _insetAnimCurve = Curves.easeInOut;
 
-Widget _progressWidget = Image.asset(
-  'assets/up_blue.gif'
+Widget _progressWidget = CircularProgressIndicator(
+  strokeWidth: 4.0,
+    valueColor:  AlwaysStoppedAnimation<Color>(OwonColor().getCurrent(_context, "blue"))
+//  backgroundColor: ,
 );
+//Image.asset(
+//  'assets/up_blue.gif'
+//);
 //SpinKitFadingCircle(
 //  color: Colors.blue,
 //);
@@ -41,15 +46,15 @@ class OwonLoading {
 
   void style(
       {double progress,
-        double maxProgress,
-        String message,
-        Widget progressWidget,
-        Color backgroundColor,
-        TextStyle progressTextStyle,
-        TextStyle messageTextStyle,
-        double elevation,
-        double borderRadius,
-        Curve insetAnimCurve}) {
+      double maxProgress,
+      String message,
+      Widget progressWidget,
+      Color backgroundColor,
+      TextStyle progressTextStyle,
+      TextStyle messageTextStyle,
+      double elevation,
+      double borderRadius,
+      Curve insetAnimCurve}) {
     if (_isShowing) return;
     if (_OwonLoadingType == OwonLoadingType.Download) {
       _progress = progress ?? _progress;
@@ -68,11 +73,11 @@ class OwonLoading {
 
   void update(
       {double progress,
-        double maxProgress,
-        String message,
-        Widget progressWidget,
-        TextStyle progressTextStyle,
-        TextStyle messageTextStyle}) {
+      double maxProgress,
+      String message,
+      Widget progressWidget,
+      TextStyle progressTextStyle,
+      TextStyle messageTextStyle}) {
     if (_OwonLoadingType == OwonLoadingType.Download) {
       _progress = progress ?? _progress;
     }
@@ -145,7 +150,7 @@ class OwonLoading {
                 elevation: _dialogElevation,
                 shape: RoundedRectangleBorder(
                     borderRadius:
-                    BorderRadius.all(Radius.circular(_borderRadius))),
+                        BorderRadius.all(Radius.circular(_borderRadius))),
                 child: _dialog),
           );
         },
@@ -198,21 +203,21 @@ class _BodyState extends State<_Body> {
         Expanded(
           child: _OwonLoadingType == OwonLoadingType.Normal
               ? Text(_dialogMessage,
-              textAlign: TextAlign.justify, style: _messageStyle)
+                  textAlign: TextAlign.justify, style: _messageStyle)
               : Stack(
-            children: <Widget>[
-              Positioned(
-                child: Text(_dialogMessage, style: _messageStyle),
-                top: 30.0,
-              ),
-              Positioned(
-                child: Text("$_progress/$_maxProgress",
-                    style: _progressTextStyle),
-                bottom: 10.0,
-                right: 10.0,
-              ),
-            ],
-          ),
+                  children: <Widget>[
+                    Positioned(
+                      child: Text(_dialogMessage, style: _messageStyle),
+                      top: 30.0,
+                    ),
+                    Positioned(
+                      child: Text("$_progress/$_maxProgress",
+                          style: _progressTextStyle),
+                      bottom: 10.0,
+                      right: 10.0,
+                    ),
+                  ],
+                ),
         ),
         const SizedBox(width: 10.0)
       ]),

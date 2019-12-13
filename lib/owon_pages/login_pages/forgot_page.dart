@@ -97,34 +97,31 @@ class _ForgotPageState extends State<ForgotPage> {
                 OwonHeader.header(context, OwonPic.loginResetPswHeader,
                     S.of(context).reset_psw_reset,
                     width: 250,
-//                height: 50,
                     subTitle: S.of(context).reset_psw_password),
-                SizedBox(
-                  height: 20.0,
-                ),
                 Container(
                   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
-                  child: Stack(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       OwonTextField.textField(
                           context,
                           _useController,
                           S.of(context).global_hint_user,
-                          OwonPic.loginUsernameIcon),
-                      _isShowCodeBtn == true
-                          ? Positioned(
-                              right: 0,
-                              child: OwonVerify.button(context, _countryCode,
-                                  onPressed: _setPhoneCountryCode,
-                                  width: 80.0,
-                                  height: 45.0),
-                            )
+                          OwonPic.loginUsernameIcon,
+                          width: _isShowCodeBtn
+                              ? ScreenUtil().setWidth(800)
+                              : double.infinity),
+                      _isShowCodeBtn
+                          ? OwonVerify.button(context, _countryCode,
+                              onPressed: _setPhoneCountryCode,
+                              width: ScreenUtil().setWidth(260),
+                              height: ScreenUtil().setHeight(200))
                           : Container(height: 0.0, width: 0.0),
                     ],
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 20, right: 20, top: 30),
+                  margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -133,7 +130,7 @@ class _ForgotPageState extends State<ForgotPage> {
                           _verifyController,
                           S.of(context).global_hint_verify_code,
                           OwonPic.loginVerifyCodeIcon,
-                          width: 220),
+                          width: ScreenUtil().setWidth(750)),
                       OwonVerify.button(
                           context,
                           _countdownTime > 0
@@ -141,12 +138,14 @@ class _ForgotPageState extends State<ForgotPage> {
                                   '$_countdownTime' +
                                   S.of(context).global_verify_code_remaining2
                               : S.of(context).global_get_verify_code,
-                          onPressed: _getVerifyCode,),
+                          onPressed: _getVerifyCode,
+                          width: ScreenUtil().setWidth(350),
+                          height: ScreenUtil().setHeight(200)),
                     ],
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 30),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
                   child: OwonTextField.textField(
                       context,
                       _newPwdController,
@@ -154,7 +153,7 @@ class _ForgotPageState extends State<ForgotPage> {
                       OwonPic.loginNewPswIcon),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 30),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
                   child: OwonTextField.textField(
                       context,
                       _confirmPwdController,
@@ -162,9 +161,9 @@ class _ForgotPageState extends State<ForgotPage> {
                       OwonPic.loginConfirmPswIcon),
                 ),
                 Container(
-                  width:ScreenUtil.getInstance().setWidth(1242/2),
+                  width: double.infinity,
                   height: 60.0,
-                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
                   child: OwonTextIconButton.icon(
                       onPressed: _confirm,
                       shape: RoundedRectangleBorder(

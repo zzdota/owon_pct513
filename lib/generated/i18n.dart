@@ -48,6 +48,7 @@ class S implements WidgetsLocalizations {
   String get login_hi => "Hi,";
   String get login_lock_account => "The account has been locked\n Please wait for the account to unlock and try again";
   String get login_no_account => "Account does not exist";
+  String get login_no_network => "当前没有网络";
   String get login_password_less_six_digits => "Password must be no less than 6 digits";
   String get login_privacy1 => "By signing in or registering, you are agreeing to the ";
   String get login_privacy2 => "Privacy Policy";
@@ -87,6 +88,8 @@ class $zh extends S {
   String get list_disconnect => "连接断开";
   @override
   String get set_exit => "退出登录";
+  @override
+  String get login_no_network => "当前没有网络";
   @override
   String get login_button => "登录";
   @override
