@@ -12,6 +12,9 @@ class OwonConstant {
   static const String foreignServerHttp = "$foreignServerBase" + "accsystem/api/json/";
   static const String domesticServerHttp = "$domesticServerBase" + "accsystem/api/json/";
 
+  static const double designWidth = 1242;
+  static const double designHeight = 2688;
+
   static const String mQTTUrl = "mqttUrl";
   static const String mQTTPort = "mqttPort";
   static const String mQTTPortS = "mqttPorts";

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/component/owon_textfield.dart';
@@ -140,7 +141,7 @@ class _ForgotPageState extends State<ForgotPage> {
                                   '$_countdownTime' +
                                   S.of(context).global_verify_code_remaining2
                               : S.of(context).global_get_verify_code,
-                          onPressed: _getVerifyCode),
+                          onPressed: _getVerifyCode,),
                     ],
                   ),
                 ),
@@ -161,7 +162,7 @@ class _ForgotPageState extends State<ForgotPage> {
                       OwonPic.loginConfirmPswIcon),
                 ),
                 Container(
-                  width: double.infinity,
+                  width:ScreenUtil.getInstance().setWidth(1242/2),
                   height: 60.0,
                   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
                   child: OwonTextIconButton.icon(

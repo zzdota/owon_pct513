@@ -127,13 +127,13 @@ List loadSystemData = [
     "name": "Cool",
     "description":
     "西部森林中隐藏了无数的秘密。其中之一就是受到风神眷顾的森林弓箭大师莱瑞蕾。风行者莱瑞蕾的家人在她出生那夜的暴风雨中全部去世了，狂风摧毁了他们的房屋，一切都化为乌有。",
-    "imageUrl": "assets/images/login/password_icon.svg",
+    "imageUrl": "",
   }
   ,
   {
     "name": "退出登录",
     "description":
     "西部森林中隐藏了无数的秘密。其中之一就是受到风神眷顾的森林弓箭大师莱瑞蕾。风行者莱瑞蕾的家人在她出生那夜的暴风雨中全部去世了，狂风摧毁了他们的房屋，一切都化为乌有。",
-    "imageUrl": "assets/images/login/login_register_icon.svg",
+    "imageUrl": "",
   }
 ];

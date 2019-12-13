@@ -53,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     setSuffixIconStatus();
 //    applyPermission();
 //    getPhoneCountryCode();
+
     super.initState();
   }
 
@@ -74,7 +75,8 @@ class _LoginPageState extends State<LoginPage> {
         await PermissionHandler().openAppSettings();
       } else {
         final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
-        await PermissionHandler().requestPermissions([PermissionGroup.location]);
+            await PermissionHandler()
+                .requestPermissions([PermissionGroup.location]);
         //此时要在检测一遍，如果允许了就下载。
 //      没允许就就提示。
         PermissionStatus pp = await PermissionHandler()
@@ -104,13 +106,13 @@ class _LoginPageState extends State<LoginPage> {
   String getPhoneCountryCode() {
     String code = ui.window.locale.countryCode.toString();
     setState(() {
-      for(int i = 0; i< countryCode.length;i++){
-        if(code == countryCode[i]["locale"]){
+      for (int i = 0; i < countryCode.length; i++) {
+        if (code == countryCode[i]["locale"]) {
           _countryCode = "+${countryCode[i]["code"]}";
           break;
         }
       }
-      if(_countryCode == null || _countryCode.isEmpty){
+      if (_countryCode == null || _countryCode.isEmpty) {
         _countryCode = "+86";
       }
     });
@@ -194,8 +196,8 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     if (!RegexUtil.isEmail(_userName)) {
-      if(_userNameCountryCode == null || _userNameCountryCode.isEmpty){
-        String code = _countryCode.substring(1,_countryCode.length);
+      if (_userNameCountryCode == null || _userNameCountryCode.isEmpty) {
+        String code = _countryCode.substring(1, _countryCode.length);
         _userNameCountryCode = "$code-";
       }
       _userName = _userNameCountryCode + _userName;
@@ -298,10 +300,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    applyPermission();
+//    applyPermission();
 //    getPhoneCountryCode();
-    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
-
+    ScreenUtil.instance = ScreenUtil(
+        width: OwonConstant.designWidth, height: OwonConstant.designHeight)
+      ..init(context);
     _useController.addListener(() {
       _userName = _useController.text;
       setState(() {
@@ -309,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
           try {
             if (int.parse(_userName) is num && _userName.length < 12) {
               _countryCodeIsVisibity = true;
-              if(_userName.length == 1){
+              if (_userName.length == 1) {
                 getPhoneCountryCode();
               }
             } else {
@@ -526,8 +529,8 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(
-                                  left: 20, top: 10, right: 20),
+                              padding:
+                                  EdgeInsets.only(left: 20, top: 10, right: 20),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -573,7 +576,7 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               height: 50.0,
                               margin: EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 10 ),
+                                  left: 20.0, right: 20.0, top: 10),
                               child: OwonTextIconButton.icon(
                                   onPressed: _login,
                                   shape: RoundedRectangleBorder(
