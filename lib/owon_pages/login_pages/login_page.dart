@@ -1,14 +1,12 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:common_utils/common_utils.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:owon_pct513/owon_utils/owon_dialog.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../owon_api/model/owon_login_model_entity.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
@@ -64,9 +62,11 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  //动态申请权限
   Future applyPermission() async {
     bool isSHow = await PermissionHandler()
         .shouldShowRequestPermissionRationale(PermissionGroup.location);
+    // 申请结果  权限检测
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.location);
 
@@ -77,12 +77,14 @@ class _LoginPageState extends State<LoginPage> {
         final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
             await PermissionHandler()
                 .requestPermissions([PermissionGroup.location]);
-
+        //此时要在检测一遍，如果允许了就下载。
+//      没允许就就提示。
         PermissionStatus pp = await PermissionHandler()
             .checkPermissionStatus(PermissionGroup.location);
         if (pp == PermissionStatus.granted) {
           OwonToast.show("权限申请通过");
         } else {
+          // 参数1：提示消息// 参数2：提示消息多久后自动隐藏// 参数3：位置
           OwonToast.show("请允许camera权限，并重试！");
         }
       }
@@ -126,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
       int index = _userName.indexOf("-");
       if (index > 0) {
         _countryCode = "+${_userName.substring(0, index)}";
-        _userNameCountryCode = "${_userName.substring(0,index)}-";
+//        _userNameCountryCode = "${_userName.substring(0,index)}-";
         _userName = _userName.substring(index + 1, _userName.length);
       }
     }
@@ -182,8 +184,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  _login() async{
-    OwonLoading(context).show();
+  _login() {
     _userName = _useController.text;
     if (TextUtil.isEmpty(_userName)) {
       OwonToast.show(S.of(context).login_username_null);
@@ -194,12 +195,6 @@ class _LoginPageState extends State<LoginPage> {
       OwonToast.show(S.of(context).login_password_less_six_digits);
       return;
     }
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
-      OwonToast.show(S.of(context).login_no_network);
-      return;
-    }
     if (!RegexUtil.isEmail(_userName)) {
       if (_userNameCountryCode == null || _userNameCountryCode.isEmpty) {
         String code = _countryCode.substring(1, _countryCode.length);
@@ -207,12 +202,13 @@ class _LoginPageState extends State<LoginPage> {
       }
       _userName = _userNameCountryCode + _userName;
     }
-
+    OwonLog.e(_userName);
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().login(_userName, _password), (value) async {
       LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
       switch (int.parse(loginModelEntity.code)) {
         case 100:
+//              String url = "https://${loginModelEntity.response.mqttserver}:${loginModelEntity.response.mqttsslport}/";
           SharedPreferences pre = await SharedPreferences.getInstance();
           pre.setString(
               OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
@@ -223,8 +219,10 @@ class _LoginPageState extends State<LoginPage> {
           pre.setString(OwonConstant.password, _password);
           pre.setString(
               OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
-          initMqtt(pre);
-
+          initMqtt();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return HomePage();
+          }));
           break;
         case 110:
           OwonToast.show(S.of(context).login_fail);
@@ -249,7 +247,8 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  initMqtt(SharedPreferences pre) async {
+  initMqtt() async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
     var userName = pre.get(OwonConstant.userName);
     var password = pre.get(OwonConstant.md5Password);
     var server = pre.get(OwonConstant.mQTTUrl);
@@ -265,17 +264,11 @@ class _LoginPageState extends State<LoginPage> {
       OwonLog.e("res=$v");
       if (v.returnCode == MqttConnectReturnCode.connectionAccepted) {
         OwonLog.e("恭喜你~ ====mqtt连接成功");
-        OwonLoading(context).dismiss();
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return HomePage();
-        }));
         pre.setString(OwonConstant.clientID, clientId);
         startListen();
         toSubscribe(clientId);
       } else {
         OwonLog.e("有事做了~ ====mqtt连接失败!!!");
-        OwonLoading(context).dismiss();
-        OwonToast.show(S.of(context).login_fail);
       }
     });
   }
@@ -289,6 +282,7 @@ class _LoginPageState extends State<LoginPage> {
     OwonMqtt.getInstance().updates().listen(_onData);
   }
 
+  ///消息监听
   _onData(List<MqttReceivedMessage<MqttMessage>> data) {
     final MqttPublishMessage recMess = data[0].payload;
     final String topic = data[0].topic;

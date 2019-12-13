@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_utils/owon_bottomsheet.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
@@ -39,11 +41,26 @@ Widget getWidget(context) {
 
   return Column(
     children: <Widget>[
+      Container(
+        padding: EdgeInsets.all(10),
+        color: Colors.grey,
+        child: TextField(
+style: TextStyle(
+//  backgroundColor: Colors.blue,
+  color: Colors.orange
+),
+          decoration: InputDecoration(
+            fillColor: Colors.purple,
+//            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)),borderSide: BorderSide(color: Colors.red)),
+          ),
+        ),
+      ),
       Expanded(
         child: Container(
-          color: Colors.red,
+//          color: Colors.red,
           child: Row(
             children: <Widget>[
+
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
                 child: OwonAdjustTemp(
