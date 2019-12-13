@@ -62,11 +62,9 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  //动态申请权限
   Future applyPermission() async {
     bool isSHow = await PermissionHandler()
         .shouldShowRequestPermissionRationale(PermissionGroup.location);
-    // 申请结果  权限检测
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.location);
 
@@ -77,14 +75,12 @@ class _LoginPageState extends State<LoginPage> {
         final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
             await PermissionHandler()
                 .requestPermissions([PermissionGroup.location]);
-        //此时要在检测一遍，如果允许了就下载。
-//      没允许就就提示。
+
         PermissionStatus pp = await PermissionHandler()
             .checkPermissionStatus(PermissionGroup.location);
         if (pp == PermissionStatus.granted) {
           OwonToast.show("权限申请通过");
         } else {
-          // 参数1：提示消息// 参数2：提示消息多久后自动隐藏// 参数3：位置
           OwonToast.show("请允许camera权限，并重试！");
         }
       }
@@ -219,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
           pre.setString(OwonConstant.password, _password);
           pre.setString(
               OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
-          initMqtt();
+          initMqtt(pre);
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return HomePage();
           }));
@@ -247,8 +243,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  initMqtt() async {
-    SharedPreferences pre = await SharedPreferences.getInstance();
+  initMqtt(SharedPreferences pre) async {
     var userName = pre.get(OwonConstant.userName);
     var password = pre.get(OwonConstant.md5Password);
     var server = pre.get(OwonConstant.mQTTUrl);
@@ -282,7 +277,6 @@ class _LoginPageState extends State<LoginPage> {
     OwonMqtt.getInstance().updates().listen(_onData);
   }
 
-  ///消息监听
   _onData(List<MqttReceivedMessage<MqttMessage>> data) {
     final MqttPublishMessage recMess = data[0].payload;
     final String topic = data[0].topic;

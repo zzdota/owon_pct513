@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
-import 'package:owon_pct513/res/owon_picture.dart';
+import '../../owon_utils/owon_mqtt.dart';
+import '../../res/owon_constant.dart';
+import '../../res/owon_picture.dart';
 import '../../owon_utils/owon_log.dart';
 import '../../res/owon_themeColor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../../generated/i18n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../owon_api/model/address_model_entity.dart';
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
@@ -20,24 +21,32 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
-  StreamSubscription<Map<dynamic,dynamic>> _listEvenBusSubscription;
+  StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
+  @override
+  void dispose() {
+    _listEvenBusSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
-    _listEvenBusSubscription = ListEventBus.getDefault().register<Map<dynamic,dynamic>>((msg){
-      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
+    _listEvenBusSubscription =
+        ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
+//      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
       OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
       Map<String, dynamic> payload = msg["payload"];
-      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
-      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
+//      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
+//      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
+      String cmd = AddressModelEntity.fromJson(payload).addrs[0].addrname;
+      OwonLog.e("canvas =>>>>cmd=$cmd");
     });
     super.initState();
-    Future.delayed(Duration(seconds: 2),(){
-        toGetList();
+    Future.delayed(Duration(seconds: 2), () {
+      toGetList();
     });
   }
 
-  toGetList()async {
+  toGetList() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic = "api/cloud/$clientID";
@@ -46,21 +55,51 @@ class _ListPageState extends State<ListPage> {
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
-          title: Text(S.of(context).global_thermostat),
+          title: GestureDetector(child: Text(S.of(context).global_thermostat),onTap: (){
+            print("----");
+           return showMenu(
+             context: context,
+             items: <PopupMenuEntry>[
+               //items 子项
+               PopupMenuItem(
+                 value: 0,
+                 child: Text('Item 1'),
+               ),
+               PopupMenuDivider(),
+               PopupMenuItem(
+                 value: 1,
+                 child: Text('Item 2'),
+               ),
+               // 分割线
+               PopupMenuDivider(),
+               // 带有复选标记的子项
+               PopupMenuItem(
+                 value: 2,
+                 child: Text('Item 3'),
+               ),
+             ],
+             position: RelativeRect.fromLTRB(100, 88, 100, 200),
+           ).then((e){
+             if(e == 2) {
+               OwonLog.e("index=$e");
+             }
+           });
+          },),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-              onPressed: (){},
+                onPressed: () {},
                 icon: Icon(
-              Icons.add,
-              color: OwonColor().getCurrent(context, "textColor"),
-              size: 30,
-            ))
+                  Icons.add,
+                  color: OwonColor().getCurrent(context, "textColor"),
+                  size: 30,
+                ))
           ],
         ),
         body: EasyRefresh(
@@ -70,8 +109,7 @@ class _ListPageState extends State<ListPage> {
           ),
           footer: ClassicalFooter(
               textColor: OwonColor().getCurrent(context, "textColor"),
-              enableInfiniteLoad: false
-              ),
+              enableInfiniteLoad: false),
           onRefresh: () async {
             toGetList();
             OwonLog.e("refresh");
@@ -102,8 +140,9 @@ class _ListPageState extends State<ListPage> {
                     height: 110,
                     padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                     child: InkWell(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagementPage()));
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ManagementPage()));
                       },
                       child: Card(
                           shape: RoundedRectangleBorder(
@@ -134,8 +173,8 @@ class _ListPageState extends State<ListPage> {
                                       "PCT513",
                                       style: TextStyle(
                                           fontSize: 13,
-                                          color: OwonColor()
-                                              .getCurrent(context, "textColor")),
+                                          color: OwonColor().getCurrent(
+                                              context, "textColor")),
                                     ),
                                   ],
                                 ),
