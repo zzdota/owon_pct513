@@ -43,9 +43,9 @@ dependencies:
   package_info: ^0.4.0+12
   flutter_slidable: ^0.5.4
   permission_handler: ^4.0.0
-  google_maps_flutter: ^0.5.21
-  firebase_core: 0.4.0
-  cloud_firestore: ^0.12.10
+#  google_maps_flutter: ^0.5.21
+#  firebase_core: 0.4.0
+#  cloud_firestore: ^0.12.10
 
 dev_dependencies:
   flutter_test:

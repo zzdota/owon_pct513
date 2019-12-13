@@ -126,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
       int index = _userName.indexOf("-");
       if (index > 0) {
         _countryCode = "+${_userName.substring(0, index)}";
+//        _userNameCountryCode = "${_userName.substring(0,index)}-";
         _userName = _userName.substring(index + 1, _userName.length);
       }
     }
@@ -193,6 +194,10 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     if (!RegexUtil.isEmail(_userName)) {
+      if(_userNameCountryCode == null || _userNameCountryCode.isEmpty){
+        String code = _countryCode.substring(1,_countryCode.length);
+        _userNameCountryCode = "$code-";
+      }
       _userName = _userNameCountryCode + _userName;
     }
     OwonLog.e(_userName);
