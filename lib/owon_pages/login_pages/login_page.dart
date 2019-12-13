@@ -1,10 +1,13 @@
 import 'dart:convert';
-
+import 'dart:ui' as ui;
 import 'package:common_utils/common_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:owon_pct513/owon_utils/owon_dialog.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../owon_api/model/owon_login_model_entity.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 import '../../owon_utils/owon_clientid.dart';
@@ -36,16 +39,21 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _useController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
-  String _countryCode = "+86", _userNameCountryCode = "86-";
+  FocusNode _useFocusNode = FocusNode();
+  FocusNode _pswFocusNode = FocusNode();
+
+  String _countryCode, _userNameCountryCode;
   String _userName = "", _password = "";
-  bool _userNameIsEmpty = false, _passwordIsEmpty = false;
-  bool _countryCodeIsVisibity = true;
+  bool _userNameIsEmpty = true, _passwordIsEmpty = true;
+  bool _countryCodeIsVisibity = false;
 
   @override
   initState() {
-    super.initState();
-    getPhoneCountryCode();
     getExistUserInfo();
+    setSuffixIconStatus();
+//    applyPermission();
+//    getPhoneCountryCode();
+    super.initState();
   }
 
   @override
@@ -53,8 +61,61 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  getPhoneCountryCode() {
-    setState(() {});
+  //动态申请权限
+  Future applyPermission() async {
+    bool isSHow = await PermissionHandler()
+        .shouldShowRequestPermissionRationale(PermissionGroup.location);
+    // 申请结果  权限检测
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.location);
+
+    if (permission != PermissionStatus.granted) {
+      if (!isSHow) {
+        await PermissionHandler().openAppSettings();
+      } else {
+        final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
+        await PermissionHandler().requestPermissions([PermissionGroup.location]);
+        //此时要在检测一遍，如果允许了就下载。
+//      没允许就就提示。
+        PermissionStatus pp = await PermissionHandler()
+            .checkPermissionStatus(PermissionGroup.location);
+        if (pp == PermissionStatus.granted) {
+          OwonToast.show("权限申请通过");
+        } else {
+          // 参数1：提示消息// 参数2：提示消息多久后自动隐藏// 参数3：位置
+          OwonToast.show("请允许camera权限，并重试！");
+        }
+      }
+    } else {
+//      getPhoneCountryCode();
+    }
+//    PermissionStatus permission = await PermissionHandler()
+//        .checkPermissionStatus(PermissionGroup.location);
+//    if (permission != PermissionStatus.granted) {
+//      OwonDialog(cancelPressed: () {
+//        print('cancel cancle');
+//        OwonToast.show('使肌肤卡拉斯京flasjdfoasjdfio大龄剩女发生内');
+//      }).showOK("没有定位权限");
+//    } else {
+//      getPhoneCountryCode();
+//    }
+  }
+
+  String getPhoneCountryCode() {
+    String code = ui.window.locale.countryCode.toString();
+    setState(() {
+      for(int i = 0; i< countryCode.length;i++){
+        if(code == countryCode[i]["locale"]){
+          _countryCode = "+${countryCode[i]["code"]}";
+          break;
+        }
+      }
+      if(_countryCode == null || _countryCode.isEmpty){
+        _countryCode = "+86";
+      }
+    });
+    OwonLog.e("==========------$code");
+    return code;
   }
 
   getExistUserInfo() async {
@@ -64,11 +125,49 @@ class _LoginPageState extends State<LoginPage> {
     if (!TextUtil.isEmpty(_userName) && !RegexUtil.isEmail(_userName)) {
       int index = _userName.indexOf("-");
       if (index > 0) {
+        _countryCode = "+${_userName.substring(0, index)}";
         _userName = _userName.substring(index + 1, _userName.length);
       }
     }
     _useController.text = _userName;
     _pwdController.text = _password;
+  }
+
+  setSuffixIconStatus() {
+    _useFocusNode.addListener(() {
+      setState(() {
+        if (TextUtil.isEmpty(_useController.text)) {
+          if (_useFocusNode.hasFocus) {
+            _userNameIsEmpty = true;
+          } else {
+            _userNameIsEmpty = true;
+          }
+        } else {
+          if (_useFocusNode.hasFocus) {
+            _userNameIsEmpty = false;
+          } else {
+            _userNameIsEmpty = true;
+          }
+        }
+      });
+    });
+    _pswFocusNode.addListener(() {
+      setState(() {
+        if (TextUtil.isEmpty(_pwdController.text)) {
+          if (_pswFocusNode.hasFocus) {
+            _passwordIsEmpty = true;
+          } else {
+            _passwordIsEmpty = true;
+          }
+        } else {
+          if (_pswFocusNode.hasFocus) {
+            _passwordIsEmpty = false;
+          } else {
+            _passwordIsEmpty = true;
+          }
+        }
+      });
+    });
   }
 
   _setPhoneCountryCode() {
@@ -96,6 +195,7 @@ class _LoginPageState extends State<LoginPage> {
     if (!RegexUtil.isEmail(_userName)) {
       _userName = _userNameCountryCode + _userName;
     }
+    OwonLog.e(_userName);
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().login(_userName, _password), (value) async {
       LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
@@ -118,12 +218,26 @@ class _LoginPageState extends State<LoginPage> {
           }));
           break;
         case 110:
+          OwonToast.show(S.of(context).login_fail);
+          break;
+        case 301:
+          OwonToast.show(S.of(context).login_no_account);
+          break;
+        case 302:
+          OwonToast.show(
+              "${S.of(context).login_retry_limit}${loginModelEntity.response.retryRemainTime} ${S.of(context).login_retry_time}");
+          break;
+        case 303:
+          OwonToast.show(
+              "${S.of(context).login_wrong_psw}, ${loginModelEntity.response.retryPswRemainCout} ${S.of(context).login_retry_time_alert}");
+          break;
+        case 304:
+          OwonToast.show(S.of(context).login_lock_account);
           break;
       }
     }, (value) {
       OwonLog.e("error-------$value");
     });
-//  OwonHttp.getInstance().get("http://www.baidu.com", (v){}, (v){});
   }
 
   initMqtt() async {
@@ -132,9 +246,10 @@ class _LoginPageState extends State<LoginPage> {
     var password = pre.get(OwonConstant.md5Password);
     var server = pre.get(OwonConstant.mQTTUrl);
     var port = pre.getInt(OwonConstant.mQTTPortS);
-    var clientId =OwonClientId.createClientID(userName);
+    var clientId = OwonClientId.createClientID(userName);
 
-    OwonLog.e("---port=$port  username=$userName pass=$password server=$server client=$clientId");
+    OwonLog.e(
+        "---port=$port  username=$userName pass=$password server=$server client=$clientId");
 
     OwonMqtt.getInstance()
         .connect(server, port, clientId, userName, password)
@@ -151,12 +266,12 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  toSubscribe(String clientID){
+  toSubscribe(String clientID) {
     String topic = "reply/cloud/$clientID";
     OwonMqtt.getInstance().subscribeMessage(topic);
   }
 
-  startListen(){
+  startListen() {
     OwonMqtt.getInstance().updates().listen(_onData);
   }
 
@@ -165,31 +280,33 @@ class _LoginPageState extends State<LoginPage> {
     final MqttPublishMessage recMess = data[0].payload;
     final String topic = data[0].topic;
     final String pt =
-    MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 //    String desString = "topic is <$topic>, payload is <-- $pt -->";
     Map p = Map();
     p["topic"] = topic;
     p["payload"] = jsonDecode(pt);
 
     ListEventBus.getDefault().post(p);
-
-
   }
 
   _privacy() {}
 
   @override
   Widget build(BuildContext context) {
+    applyPermission();
+//    getPhoneCountryCode();
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
 
     _useController.addListener(() {
       _userName = _useController.text;
       setState(() {
         if (!TextUtil.isEmpty(_useController.text)) {
-          _userNameIsEmpty = false;
           try {
             if (int.parse(_userName) is num && _userName.length < 12) {
               _countryCodeIsVisibity = true;
+              if(_userName.length == 1){
+                getPhoneCountryCode();
+              }
             } else {
               _countryCodeIsVisibity = false;
             }
@@ -197,7 +314,6 @@ class _LoginPageState extends State<LoginPage> {
             _countryCodeIsVisibity = false;
           }
         } else {
-          _userNameIsEmpty = true;
           _countryCodeIsVisibity = false;
         }
       });
@@ -205,13 +321,6 @@ class _LoginPageState extends State<LoginPage> {
 
     _pwdController.addListener(() {
       _password = _pwdController.text;
-      setState(() {
-        if (!TextUtil.isEmpty(_pwdController.text)) {
-          _passwordIsEmpty = false;
-        } else {
-          _passwordIsEmpty = true;
-        }
-      });
     });
 
     return Scaffold(
@@ -274,6 +383,7 @@ class _LoginPageState extends State<LoginPage> {
                                 children: <Widget>[
                                   TextField(
                                       controller: _useController,
+                                      focusNode: _useFocusNode,
                                       maxLines: 1,
                                       maxLength: 20,
                                       autofocus: false,
@@ -287,7 +397,7 @@ class _LoginPageState extends State<LoginPage> {
                                         counterText: "",
                                         contentPadding:
                                             const EdgeInsets.symmetric(
-                                                vertical: 25.0),
+                                                vertical: 20.0),
                                         filled: true,
                                         fillColor: OwonColor()
                                             .getCurrent(context, "itemColor"),
@@ -332,7 +442,7 @@ class _LoginPageState extends State<LoginPage> {
                                       )),
                                   Positioned(
                                     right: 40.0,
-                                    top: 15.0,
+                                    top: 10.0,
                                     child: _countryCodeIsVisibity
                                         ? OwonVerify.button(
                                             context, _countryCode,
@@ -352,6 +462,7 @@ class _LoginPageState extends State<LoginPage> {
                                   left: 20, top: 20, right: 20, bottom: 0),
                               child: TextField(
                                 controller: _pwdController,
+                                focusNode: _pswFocusNode,
                                 maxLines: 1,
                                 maxLength: 20,
                                 autofocus: false,
@@ -365,7 +476,7 @@ class _LoginPageState extends State<LoginPage> {
                                 decoration: InputDecoration(
                                   counterText: "",
                                   contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 25.0),
+                                      vertical: 20.0),
                                   filled: true,
                                   fillColor: OwonColor()
                                       .getCurrent(context, "itemColor"),
@@ -411,7 +522,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: 20, top: 20, right: 20, bottom: 0),
+                                  left: 20, top: 10, right: 20),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -455,9 +566,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Container(
                               width: double.infinity,
-                              height: 60.0,
+                              height: 50.0,
                               margin: EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 20.0),
+                                  left: 20.0, right: 20.0, top: 10 ),
                               child: OwonTextIconButton.icon(
                                   onPressed: _login,
                                   shape: RoundedRectangleBorder(

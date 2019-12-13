@@ -1,1 +1,60 @@
-{}
+{
+  "app_name": "OWON",
+  "app_title": "app title",
+  "app_test": "test",
+  "app_listView": "ListView",
+
+  "global_cancel": "Cancel",
+  "global_ok": "OK",
+  "global_thermostat": "Thermostat",
+  "global_delete": "Remove",
+
+
+  "global_hint_user": "E-Mail / Phone",
+  "global_hint_password": "Password",
+  "global_hint_verify_code": "Verification Code",
+  "global_hint_new_password": "New Password",
+  "global_hint_confirm_password": "Confirm Password",
+  "global_get_verify_code": "Get Code",
+  "global_register": "Register",
+  "global_verify_code_remaining1": "",
+  "global_verify_code_remaining2": " seconds left",
+
+  "login_hi": "Hi,",
+  "login_welcome": "Welcome",
+  "login_forgot": "Forgot",
+  "login_button": "Login",
+  "login_privacy1": "By signing in or registering, you are agreeing to the ",
+  "login_privacy2": "Privacy Policy",
+  "login_username_null": "Please enter username",
+  "login_password_less_six_digits": "Password must be no less than 6 digits",
+  "login_fail": "Login failed",
+  "login_no_account": "Account does not exist",
+  "login_retry_limit": "You have reached the maximum number of invalid login attempts ",
+  "login_retry_time": "minutes.",
+  "login_wrong_psw": "Wrong password",
+  "login_retry_time_alert": " Account will be locked after attempt",
+  "login_lock_account": "The account has been locked\n Please wait for the account to unlock and try again",
+
+  "reset_psw_title": "Reset Password",
+  "reset_psw_reset": "Reset",
+  "reset_psw_password": "Password",
+  "reset_psw_confirm": "Confirm",
+
+
+  "tab_list": "Thermostat List",
+  "tab_set": "Setting",
+  "list_disconnect": "Disconnected",
+  "set_exit": "Log out",
+  "set_resetPsw": "Reset Password",
+  "set_appearance": "Appearance",
+  "set_dig": "Electric Fence",
+  "set_help": "Help",
+  "set_about": "About",
+
+  "appearance_dark": "Dark",
+  "appearance_light": "Light",
+  "about_version": "Version"
+
+
+}

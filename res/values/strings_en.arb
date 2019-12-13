@@ -28,6 +28,13 @@
   "login_privacy2": "Privacy Policy",
   "login_username_null": "Please enter username",
   "login_password_less_six_digits": "Password must be no less than 6 digits",
+  "login_fail": "Login failed",
+  "login_no_account": "Account does not exist",
+  "login_retry_limit": "You have reached the maximum number of invalid login attempts ",
+  "login_retry_time": "minutes.",
+  "login_wrong_psw": "Wrong password",
+  "login_retry_time_alert": " Account will be locked after attempt",
+  "login_lock_account": "The account has been locked\n Please wait for the account to unlock and try again",
 
   "reset_psw_title": "Reset Password",
   "reset_psw_reset": "Reset",
