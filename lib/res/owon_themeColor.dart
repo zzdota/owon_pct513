@@ -16,6 +16,7 @@ class OwonColor {
       "tabBarSelected": Color(0xffffffff),//底部tabBar选中颜色
       "blue": Color(0xff009fe9), // 登录界面登录按钮色
       "orange": Color(0xfff7ad18), //用户名图标色
+      "textfieldColor": Color(0xff5a5a5a),
     },
     1: {
       //white
@@ -28,6 +29,7 @@ class OwonColor {
       "tabBarSelected": Color(0xff000000),
       "blue": Color(0xff009fe9),
       "orange": Color(0xfff7ad18),
+      "textfieldColor": Color(0xff5a5a5a),
     }
   };
 
