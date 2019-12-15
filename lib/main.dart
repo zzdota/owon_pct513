@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/vacation_setting_pages/vacation_list_page.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/vacation_setting_pages/vacation_set_page.dart';
 import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/appearance_page.dart';

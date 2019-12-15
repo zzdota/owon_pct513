@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/vacation_setting_pages/vacation_list_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:provider/provider.dart';
@@ -39,9 +40,9 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                       case 0:{}
                       break;
                       case 1:{
-//                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-//                          return AppearancePage();
-//                        }));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return VacationListPage();
+                        }));
                       }
                       break;
                       case 2:{}

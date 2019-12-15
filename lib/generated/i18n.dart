@@ -45,6 +45,7 @@ class S implements WidgetsLocalizations {
   String get global_hint_verify_code => "Verification Code";
   String get global_ok => "OK";
   String get global_register => "Register";
+  String get global_save => "Save";
   String get global_thermostat => "Thermostat";
   String get global_verify_code_remaining1 => "";
   String get global_verify_code_remaining2 => " seconds left";
@@ -144,6 +145,8 @@ class $zh extends S {
   String get dSet_fan_set => "风扇运行时间闸";
   @override
   String get global_hint_password => "密码";
+  @override
+  String get global_save => "保存";
   @override
   String get about_version => "版本号";
   @override

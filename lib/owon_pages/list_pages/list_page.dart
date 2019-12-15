@@ -99,7 +99,7 @@ class _ListPageState extends State<ListPage> {
                     },
                   ),
                   child: Container(
-                    height: 110,
+                    height: OwonConstant.listHeight,
                     padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                     child: InkWell(
                       onTap: (){
@@ -113,7 +113,7 @@ class _ListPageState extends State<ListPage> {
                                 width: 1.0,
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0))),
+                                  BorderRadius.all(Radius.circular(OwonConstant.cRadius))),
                           child: Container(
                             padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                             child: Row(
