@@ -47,5 +47,16 @@
 
   "appearance_dark": "深色",
   "appearance_light": "浅色",
-  "about_version": "版本号"
+  "about_version": "版本号",
+
+  "dSet_device_setting": "设备设置",
+  "dSet_rename": "设备名称",
+  "dSet_vacation": "假期设置",
+  "dSet_fan_set": "风扇运行时间闸",
+  "dSet_sensor": "传感器设置",
+  "dSet_temp": "温度单位选择",
+  "dSet_device_info": "设备信息",
+  "vacation_noEvent": "当前还没有任何设置",
+  "vacation_delete": "删除假期",
+  "vacation_title": "假期列表"
 }

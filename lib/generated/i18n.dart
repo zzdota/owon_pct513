@@ -28,6 +28,13 @@ class S implements WidgetsLocalizations {
   String get app_title => "app title";
   String get appearance_dark => "Dark";
   String get appearance_light => "Light";
+  String get dSet_device_info => "Device Info";
+  String get dSet_device_setting => "Device Setting";
+  String get dSet_fan_set => "风扇运行时间闸";
+  String get dSet_rename => "Device Rename";
+  String get dSet_sensor => "Sensor Setting";
+  String get dSet_temp => "温度单位选择";
+  String get dSet_vacation => "Vacation Setting";
   String get global_cancel => "Cancel";
   String get global_delete => "Remove";
   String get global_get_verify_code => "Get Code";
@@ -70,6 +77,9 @@ class S implements WidgetsLocalizations {
   String get set_resetPsw => "Reset Password";
   String get tab_list => "Thermostat List";
   String get tab_set => "Setting";
+  String get vacation_delete => "Vacation Delete";
+  String get vacation_noEvent => "You have not created any current or future vacation events";
+  String get vacation_title => "Vacation List";
 }
 
 class $en extends S {
@@ -83,13 +93,9 @@ class $zh extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get login_privacy1 => "登录或注册即代表阅读并同意";
-  @override
   String get list_disconnect => "连接断开";
   @override
   String get set_exit => "退出登录";
-  @override
-  String get login_no_network => "当前没有网络";
   @override
   String get login_button => "登录";
   @override
@@ -97,59 +103,85 @@ class $zh extends S {
   @override
   String get global_verify_code_remaining1 => "剩余";
   @override
-  String get global_hint_password => "密码";
-  @override
   String get login_password_less_six_digits => "密码不得小于6位";
   @override
   String get global_verify_code_remaining2 => " 秒";
   @override
   String get reset_psw_reset => "重置";
   @override
-  String get about_version => "版本号";
-  @override
-  String get reset_psw_confirm => "确认修改";
-  @override
   String get set_resetPsw => "重置密码";
-  @override
-  String get global_cancel => "取消";
-  @override
-  String get tab_set => "设置";
-  @override
-  String get global_thermostat => "温控器";
-  @override
-  String get global_get_verify_code => "校验码";
-  @override
-  String get app_listView => "ListView";
   @override
   String get appearance_dark => "深色";
   @override
+  String get vacation_title => "假期列表";
+  @override
   String get set_help => "帮助";
   @override
-  String get tab_list => "温控器列表";
-  @override
-  String get app_title => "app title";
-  @override
-  String get global_ok => "确认";
+  String get dSet_sensor => "传感器设置";
   @override
   String get set_appearance => "主题";
   @override
-  String get reset_psw_title => "重置密码";
-  @override
-  String get app_test => "test";
-  @override
   String get global_hint_confirm_password => "再次确认密码";
   @override
-  String get login_welcome => "Welcome";
+  String get dSet_vacation => "假期设置";
   @override
   String get global_hint_verify_code => "输入校验码";
   @override
   String get reset_psw_password => "密码";
   @override
+  String get global_register => "注册账号";
+  @override
+  String get vacation_noEvent => "当前还没有任何设置";
+  @override
+  String get global_hint_new_password => "输入新密码";
+  @override
+  String get login_privacy2 => "隐私条例";
+  @override
+  String get login_privacy1 => "登录或注册即代表阅读并同意";
+  @override
+  String get login_no_network => "当前没有网络";
+  @override
+  String get dSet_fan_set => "风扇运行时间闸";
+  @override
+  String get global_hint_password => "密码";
+  @override
+  String get about_version => "版本号";
+  @override
+  String get reset_psw_confirm => "确认修改";
+  @override
+  String get global_cancel => "取消";
+  @override
+  String get tab_set => "设置";
+  @override
+  String get dSet_device_setting => "设备设置";
+  @override
+  String get global_thermostat => "温控器";
+  @override
+  String get global_get_verify_code => "校验码";
+  @override
+  String get dSet_rename => "设备名称";
+  @override
+  String get app_listView => "ListView";
+  @override
+  String get dSet_temp => "温度单位选择";
+  @override
+  String get tab_list => "温控器列表";
+  @override
+  String get app_title => "app title";
+  @override
+  String get vacation_delete => "删除假期";
+  @override
+  String get global_ok => "确认";
+  @override
+  String get reset_psw_title => "重置密码";
+  @override
+  String get app_test => "test";
+  @override
+  String get login_welcome => "Welcome";
+  @override
   String get set_dig => "电子围栏";
   @override
   String get app_name => "OWON";
-  @override
-  String get global_register => "注册账号";
   @override
   String get login_username_null => "请输入用户名";
   @override
@@ -161,11 +193,9 @@ class $zh extends S {
   @override
   String get set_about => "关于";
   @override
-  String get global_hint_new_password => "输入新密码";
+  String get dSet_device_info => "设备信息";
   @override
   String get global_hint_user => "电子邮件/手机号码";
-  @override
-  String get login_privacy2 => "隐私条例";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {

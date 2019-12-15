@@ -55,7 +55,16 @@
 
   "appearance_dark": "Dark",
   "appearance_light": "Light",
-  "about_version": "Version"
+  "about_version": "Version",
 
-
+  "dSet_device_setting": "Device Setting",
+  "dSet_rename": "Device Rename",
+  "dSet_vacation": "Vacation Setting",
+  "dSet_fan_set": "风扇运行时间闸",
+  "dSet_sensor": "Sensor Setting",
+  "dSet_temp": "温度单位选择",
+  "dSet_device_info": "Device Info",
+  "vacation_noEvent": "You have not created any current or future vacation events",
+  "vacation_delete": "Vacation Delete",
+  "vacation_title": "Vacation List"
 }

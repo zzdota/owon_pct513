@@ -132,7 +132,25 @@ flutter:
     - assets/images/management/m_sys_off.svg
 
 
-
+    - assets/images/device_set/dset_cirSetting_b.png
+    - assets/images/device_set/dset_cirSetting_w.png
+    - assets/images/device_set/dset_devInfo_b.png
+    - assets/images/device_set/dset_devInfo_w.png
+    - assets/images/device_set/dset_rename_b.png
+    - assets/images/device_set/dset_rename_w.png
+    - assets/images/device_set/dset_sensorSetting_b.png
+    - assets/images/device_set/dset_sensorSetting_w.png
+    - assets/images/device_set/dset_temSetting_b.png
+    - assets/images/device_set/dset_temSetting_w.png
+    - assets/images/device_set/dset_vacSetting_b.png
+    - assets/images/device_set/dset_vacSetting_w.png
+    - assets/images/device_set/vac_depart_b.png
+    - assets/images/device_set/vac_depart_w.png
+    - assets/images/device_set/vac_return_b.png
+    - assets/images/device_set/vac_return_w.png
+    - assets/images/device_set/vac_vacationSetting_b.png
+    - assets/images/device_set/vac_vacationSetting_w.png
+    - assets/images/device_set/vac_noSetting_b.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

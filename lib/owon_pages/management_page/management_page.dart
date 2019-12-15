@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/device_setting_page.dart';
 import 'package:owon_pct513/owon_utils/owon_bottomsheet.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
@@ -26,7 +27,11 @@ class _ManagementPageState extends State<ManagementPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return DeviceSettingPage();
+              }));
+            },
             color: OwonColor().getCurrent(context, "textColor"),
           )
         ],
@@ -41,26 +46,11 @@ Widget getWidget(context) {
 
   return Column(
     children: <Widget>[
-      Container(
-        padding: EdgeInsets.all(10),
-        color: Colors.grey,
-        child: TextField(
-style: TextStyle(
-//  backgroundColor: Colors.blue,
-  color: Colors.orange
-),
-          decoration: InputDecoration(
-            fillColor: Colors.purple,
-//            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)),borderSide: BorderSide(color: Colors.red)),
-          ),
-        ),
-      ),
       Expanded(
         child: Container(
 //          color: Colors.red,
           child: Row(
             children: <Widget>[
-
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
                 child: OwonAdjustTemp(
@@ -75,7 +65,6 @@ style: TextStyle(
                 ),
               ),
               Expanded(child: OwonTempHumi()),
-
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
                 child: OwonAdjustTemp(
@@ -112,9 +101,8 @@ style: TextStyle(
                 rightTitle: "Emergency Heat",
                 onPressed: () {
                   OwonLog.e("----");
-                  OwonBottomSheet.show(context, dataList).then((val){
-                                        print("--消失后的回调-->$val");
-
+                  OwonBottomSheet.show(context, dataList).then((val) {
+                    print("--消失后的回调-->$val");
                   });
 
 //                  .then((val) {

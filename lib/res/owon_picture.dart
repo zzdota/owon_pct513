@@ -65,6 +65,49 @@ class OwonPic {
   static String mSysOff = "assets/images/management/m_sys_off.svg";
 
 
-
-
+  static String dSetCirSetB = "assets/images/device_set/dset_cirSetting_b.png";
+  static String dSetCirSetW = "assets/images/device_set/dset_cirSetting_w.png";
+  static String dSetDeviceInfoB = "assets/images/device_set/dset_devInfo_b.png";
+  static String dSetDeviceInfoW = "assets/images/device_set/dset_devInfo_w.png";
+  static String dSetRenameB = "assets/images/device_set/dset_rename_b.png";
+  static String dSetRenameW = "assets/images/device_set/dset_rename_w.png";
+  static String dSetSensorSetB = "assets/images/device_set/dset_sensorSetting_b.png";
+  static String dSetSensorSetW = "assets/images/device_set/dset_sensorSetting_w.png";
+  static String dSetTempSetB = "assets/images/device_set/dset_temSetting_b.png";
+  static String dSetTempSetW = "assets/images/device_set/dset_temSetting_w.png";
+  static String dSetVacSetB = "assets/images/device_set/dset_vacSetting_b.png";
+  static String dSetVacSetW = "assets/images/device_set/dset_vacSetting_w.png";
+  static String dVacDepartB = "assets/images/device_set/vac_depart_b.png";
+  static String dVacDepartW = "assets/images/device_set/vac_depart_w.png";
+  static String dVacReturnB = "assets/images/device_set/vac_return_b.png";
+  static String dVacReturnW = "assets/images/device_set/vac_return_w.png";
+  static String dVacVacationSetB = "assets/images/device_set/vac_vacationSetting_b.png";
+  static String dVacVacationSetW = "assets/images/device_set/vac_vacationSetting_w.png";
+  static String dVacNoSetB = "assets/images/device_set/vac_noSetting_b.png";
 }
+
+/*
+    - assets/images/device_set/dset_cirSetting_b.png
+    - assets/images/device_set/dset_cirSetting_w.png
+    - assets/images/device_set/dset_devInfo_b.png
+    - assets/images/device_set/dset_devInfo_w.png
+    - assets/images/device_set/dset_rename_b.png
+    - assets/images/device_set/dset_rename_w.png
+
+    - assets/images/device_set/dset_sensorSetting_b.png
+    - assets/images/device_set/dset_sensorSetting_w.png
+    - assets/images/device_set/dset_temSetting_b.png
+    - assets/images/device_set/dset_temSetting_w.png
+    - assets/images/device_set/dset_vacSetting_b.png
+    - assets/images/device_set/dset_vacSetting_w.png
+    - assets/images/device_set/vac_depart_b.png
+    - assets/images/device_set/vac_depart_w.png
+    - assets/images/device_set/vac_return_b.png
+    - assets/images/device_set/vac_return_w.png
+    - assets/images/device_set/vac_vacationSetting_b.png
+    - assets/images/device_set/vac_vacationSetting_w.png
+    - assets/images/device_set/vac_noSetting_b.png
+
+
+
+ */
