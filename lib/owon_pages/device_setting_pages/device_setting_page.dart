@@ -80,10 +80,10 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
     var name = dataList[index]["name"];
     var imageUrl = myIndex==0?dataList[index]["imageUrl"]:dataList[index]["imageUrlW"];
     return GestureDetector(
-      onTap: (){
-        OwonMqtt.getInstance().disconnect();
-        Navigator.of(context).pop();
-      },
+//      onTap: (){
+//        OwonMqtt.getInstance().disconnect();
+//        Navigator.of(context).pop();
+//      },
       child:  Container(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Row(
