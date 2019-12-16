@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
@@ -13,6 +14,7 @@ import '../../generated/i18n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:cool_ui/cool_ui.dart';
+import '../../owon_api/model/address_model_entity.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -23,7 +25,10 @@ class _ListPageState extends State<ListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
-  var _currentHomeTitle = "My home";
+  AddressModelEntity _addrModels = AddressModelEntity(
+      addrs: [AddressModelAddr(addrid: 1, addrname: "默认地址1")]);
+  AddressModelAddr _addressModel =
+      AddressModelAddr(addrid: 1, addrname: "...", devlist: []);
   @override
   void initState() {
     _listEvenBusSubscription =
@@ -31,10 +36,16 @@ class _ListPageState extends State<ListPage> {
       OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
       OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
       Map<String, dynamic> payload = msg["payload"];
-      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
-      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
+      OwonLoading(context).dismiss();
+      setState(() {
+        _addrModels = AddressModelEntity.fromJson(payload);
+        _addressModel = _addrModels.addrs.first;
+      });
     });
     super.initState();
+    Future.delayed(Duration(milliseconds: 200), () {
+      OwonLoading(context).show();
+    });
     Future.delayed(Duration(seconds: 2), () {
       toGetList();
     });
@@ -59,7 +70,7 @@ class _ListPageState extends State<ListPage> {
             onTap: () {
               OwonLog.e("-----title");
             },
-            child: _buildPopoverButton(_currentHomeTitle, "haha"),
+            child: _buildPopoverButton(_addressModel, _addrModels.addrs),
           ),
           centerTitle: true,
           actions: <Widget>[
@@ -72,104 +83,115 @@ class _ListPageState extends State<ListPage> {
                 ))
           ],
         ),
-        body: EasyRefresh(
-          controller: refreshController,
-          header: ClassicalHeader(
-            textColor: OwonColor().getCurrent(context, "textColor"),
-          ),
-          footer: ClassicalFooter(
-              textColor: OwonColor().getCurrent(context, "textColor"),
-              enableInfiniteLoad: false),
-          onRefresh: () async {
-            toGetList();
-            OwonLog.e("refresh");
-          },
-          onLoad: () async {
-            OwonLog.e("load");
-          },
-          child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return Slidable(
-                  key: Key(index.toString()),
-                  controller: slidableController,
-                  actionPane: SlidableDrawerActionPane(),
-                  actionExtentRatio: 0.25,
-                  enabled: true,
-                  dismissal: SlidableDismissal(
-                    dismissThresholds: {SlideActionType.secondary: 0.6},
-                    child: SlidableDrawerDismissal(),
-                    onDismissed: (actionType) {
-                      OwonLog.e("什么时候调用 啊");
-                    },
-                    onWillDismiss: (actionType) {
-                      return _slideDelete(index);
-                    },
-                  ),
-                  child: Container(
-                    height: OwonConstant.listHeight,
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ManagementPage()));
-                      },
-                      child: Card(
-                          shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: OwonColor()
-                                    .getCurrent(context, "borderNormal"),
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(OwonConstant.cRadius))),
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Image.asset(
-                                      OwonPic.listPctIcon,
-                                      fit: BoxFit.contain,
-                                      height: 35,
+        body: (_addressModel.devlist == null ||
+                _addressModel.devlist.length == 0)
+            ? Center(
+                child: Text(
+                  "当前家庭没有设备",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            : EasyRefresh(
+                controller: refreshController,
+                header: ClassicalHeader(
+                  textColor: OwonColor().getCurrent(context, "textColor"),
+                ),
+                footer: ClassicalFooter(
+                    textColor: OwonColor().getCurrent(context, "textColor"),
+                    enableInfiniteLoad: false),
+                onRefresh: () async {
+                  toGetList();
+                  OwonLog.e("refresh");
+                },
+                onLoad: () async {
+                  OwonLog.e("load");
+                },
+                child: ListView.builder(
+                    itemCount: _addressModel.devlist.length,
+                    itemBuilder: (context, index) {
+                      return Slidable(
+                        key: Key(index.toString()),
+                        controller: slidableController,
+                        actionPane: SlidableDrawerActionPane(),
+                        actionExtentRatio: 0.25,
+                        enabled: true,
+                        dismissal: SlidableDismissal(
+                          dismissThresholds: {SlideActionType.secondary: 0.6},
+                          child: SlidableDrawerDismissal(),
+                          onDismissed: (actionType) {
+                            OwonLog.e("什么时候调用 啊");
+                          },
+                          onWillDismiss: (actionType) {
+                            return _slideDelete(index);
+                          },
+                        ),
+                        child: Container(
+                          height: OwonConstant.listHeight,
+                          padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ManagementPage()));
+                            },
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: OwonColor()
+                                          .getCurrent(context, "borderNormal"),
+                                      width: 1.0,
                                     ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      "PCT513",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: OwonColor().getCurrent(
-                                              context, "textColor")),
-                                    ),
-                                  ],
-                                ),
-                                getRightWidget(true)
-                              ],
-                            ),
-                          )),
-                    ),
-                  ),
-                  secondaryActions: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      child: IconSlideAction(
-                          caption: S.of(context).global_delete,
-                          color: Colors.red,
-                          icon: Icons.delete,
-                          closeOnTap: true,
-                          onTap: () {
-                            _tapDelete(index);
-                          }),
-                    ),
-                  ],
-                );
-              }),
-        ));
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(OwonConstant.cRadius))),
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Image.asset(
+                                            OwonPic.listPctIcon,
+                                            fit: BoxFit.contain,
+                                            height: 35,
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            _addressModel
+                                                .devlist[index].devname,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: OwonColor().getCurrent(
+                                                    context, "textColor")),
+                                          ),
+                                        ],
+                                      ),
+                                      getRightWidget(true)
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        ),
+                        secondaryActions: <Widget>[
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            child: IconSlideAction(
+                                caption: S.of(context).global_delete,
+                                color: Colors.red,
+                                icon: Icons.delete,
+                                closeOnTap: true,
+                                onTap: () {
+                                  _tapDelete(index);
+                                }),
+                          ),
+                        ],
+                      );
+                    }),
+              ));
   }
 
   Widget getRightWidget(bool normal) {
@@ -245,7 +267,10 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  Widget _buildPopoverButton(String btnTitle, String bodyMessage) {
+  Widget _buildPopoverButton(AddressModelAddr addrModel, List addrList) {
+    String btnTitle = addrModel.addrname;
+    OwonLog.e("btntitle=$btnTitle");
+
     return Container(
 //      color: Colors.red,
         child: CupertinoPopoverButton(
@@ -268,78 +293,46 @@ class _ListPageState extends State<ListPage> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         btnTitle,
-                        style: TextStyle(color: OwonColor().getCurrent(context, "textColor"), fontSize: 20),
+                        style: TextStyle(
+                            color: OwonColor().getCurrent(context, "textColor"),
+                            fontSize: 20),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       )),
 //                 SizedBox(width: 10,),
                   Icon(Icons.keyboard_arrow_down,
-                      size: 20.0, color: OwonColor().getCurrent(context, "textColor")),
+                      size: 20.0,
+                      color: OwonColor().getCurrent(context, "textColor")),
                 ],
               ),
             ),
             popoverBuild: (context) {
               return CupertinoPopoverMenuList(
-                children: <Widget>[
-                  Container(
-                    color: Colors.purple,
-                    height: 44,
-                    margin: EdgeInsets.all(10),
-                    child: CupertinoPopoverMenuItem(
-                      leading: Icon(Icons.add_a_photo),
-                      child: Text("Management my home"),
-                      onTap: () {
-                        print("-----0");
-                        setState(() {
-                          _currentHomeTitle = "Management my home";
-                        });
-                        return false;
-                      },
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    margin: EdgeInsets.all(10),
-                    child: CupertinoPopoverMenuItem(
-                      child: Text("bed room"),
-                      onTap: () {
-                        print("-----1");
-
-                        setState(() {
-                          _currentHomeTitle = "bed room";
-                        });
-                        return false;
-                      },
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    margin: EdgeInsets.all(10),
-                    child: CupertinoPopoverMenuItem(
-                      child: Text("room 4"),
-                      onTap: () {
-                        print("-----2");
-                        setState(() {
-                          _currentHomeTitle = "room 4";
-                        });
-                        return false;
-                      },
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    margin: EdgeInsets.all(10),
-                    child: CupertinoPopoverMenuItem(
-                      child: Text("Management Home"),
-                      onTap: () {
-                        print("-----3");
-
-                        return false;
-                      },
-                    ),
-                  ),
-                ],
-              );
+                  children: createAddrWidget(addrList));
             }));
+  }
+
+  List<Widget> createAddrWidget(List addressList) {
+    if (addressList.length == 0) return [];
+    List<Widget> desList = [];
+
+    addressList.forEach((value) {
+      AddressModelAddr addrModel = value;
+      desList.add(Container(
+        height: 30,
+        margin: EdgeInsets.all(10),
+        child: CupertinoPopoverMenuItem(
+          child: Text(addrModel.addrname),
+          onTap: () {
+            print("-----$value");
+            setState(() {
+              _addressModel = value;
+            });
+            return false;
+          },
+        ),
+      ));
+    });
+    return desList;
   }
 }
