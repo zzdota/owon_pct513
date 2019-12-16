@@ -12,6 +12,8 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../../generated/i18n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:cool_ui/cool_ui.dart';
+
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
@@ -20,11 +22,12 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
-  StreamSubscription<Map<dynamic,dynamic>> _listEvenBusSubscription;
-
+  StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
+  var _currentHomeTitle = "My home";
   @override
   void initState() {
-    _listEvenBusSubscription = ListEventBus.getDefault().register<Map<dynamic,dynamic>>((msg){
+    _listEvenBusSubscription =
+        ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
       OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
       OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
       Map<String, dynamic> payload = msg["payload"];
@@ -32,12 +35,12 @@ class _ListPageState extends State<ListPage> {
       OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
     });
     super.initState();
-    Future.delayed(Duration(seconds: 2),(){
-        toGetList();
+    Future.delayed(Duration(seconds: 2), () {
+      toGetList();
     });
   }
 
-  toGetList()async {
+  toGetList() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic = "api/cloud/$clientID";
@@ -46,21 +49,27 @@ class _ListPageState extends State<ListPage> {
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
-          title: Text(S.of(context).global_thermostat),
+          title: GestureDetector(
+            onTap: () {
+              OwonLog.e("-----title");
+            },
+            child: _buildPopoverButton(_currentHomeTitle, "haha"),
+          ),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-              onPressed: (){},
+                onPressed: () {},
                 icon: Icon(
-              Icons.add,
-              color: OwonColor().getCurrent(context, "textColor"),
-              size: 30,
-            ))
+                  Icons.add,
+                  color: OwonColor().getCurrent(context, "textColor"),
+                  size: 30,
+                ))
           ],
         ),
         body: EasyRefresh(
@@ -70,8 +79,7 @@ class _ListPageState extends State<ListPage> {
           ),
           footer: ClassicalFooter(
               textColor: OwonColor().getCurrent(context, "textColor"),
-              enableInfiniteLoad: false
-              ),
+              enableInfiniteLoad: false),
           onRefresh: () async {
             toGetList();
             OwonLog.e("refresh");
@@ -102,8 +110,9 @@ class _ListPageState extends State<ListPage> {
                     height: OwonConstant.listHeight,
                     padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                     child: InkWell(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagementPage()));
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ManagementPage()));
                       },
                       child: Card(
                           shape: RoundedRectangleBorder(
@@ -112,8 +121,8 @@ class _ListPageState extends State<ListPage> {
                                     .getCurrent(context, "borderNormal"),
                                 width: 1.0,
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(OwonConstant.cRadius))),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(OwonConstant.cRadius))),
                           child: Container(
                             padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                             child: Row(
@@ -134,8 +143,8 @@ class _ListPageState extends State<ListPage> {
                                       "PCT513",
                                       style: TextStyle(
                                           fontSize: 13,
-                                          color: OwonColor()
-                                              .getCurrent(context, "textColor")),
+                                          color: OwonColor().getCurrent(
+                                              context, "textColor")),
                                     ),
                                   ],
                                 ),
@@ -234,5 +243,103 @@ class _ListPageState extends State<ListPage> {
         );
       },
     );
+  }
+
+  Widget _buildPopoverButton(String btnTitle, String bodyMessage) {
+    return Container(
+//      color: Colors.red,
+        child: CupertinoPopoverButton(
+            radius: OwonConstant.cRadius,
+            popoverConstraints: BoxConstraints(
+              minWidth: 50,
+              maxWidth: 210.99,
+              minHeight: 250,
+              maxHeight: 400,
+            ),
+            child: Container(
+              alignment: Alignment.center,
+              width: 203, //支持28个单词了
+              height: 55,
+//              color: Colors.red,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        btnTitle,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      )),
+//                 SizedBox(width: 10,),
+                  Icon(Icons.keyboard_arrow_down,
+                      size: 20.0, color: Colors.white),
+                ],
+              ),
+            ),
+            popoverBuild: (context) {
+              return CupertinoPopoverMenuList(
+                children: <Widget>[
+                  Container(
+                    color: Colors.purple,
+                    height: 44,
+                    margin: EdgeInsets.all(10),
+                    child: CupertinoPopoverMenuItem(
+                      leading: Icon(Icons.add_a_photo),
+                      child: Text("Management my home"),
+                      onTap: () {
+                        print("-----0");
+                        setState(() {
+                          _currentHomeTitle = "Management my home";
+                        });
+                        return false;
+                      },
+                    ),
+                  ),
+                  Container(
+                    height: 30,
+                    margin: EdgeInsets.all(10),
+                    child: CupertinoPopoverMenuItem(
+                      child: Text("bed room"),
+                      onTap: () {
+                        print("-----1");
+
+                        setState(() {
+                          _currentHomeTitle = "bed room";
+                        });
+                        return false;
+                      },
+                    ),
+                  ),
+                  Container(
+                    height: 30,
+                    margin: EdgeInsets.all(10),
+                    child: CupertinoPopoverMenuItem(
+                      child: Text("room 4"),
+                      onTap: () {
+                        print("-----2");
+                        setState(() {
+                          _currentHomeTitle = "room 4";
+                        });
+                        return false;
+                      },
+                    ),
+                  ),
+                  Container(
+                    height: 30,
+                    margin: EdgeInsets.all(10),
+                    child: CupertinoPopoverMenuItem(
+                      child: Text("Management Home"),
+                      onTap: () {
+                        print("-----3");
+
+                        return false;
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }));
   }
 }
