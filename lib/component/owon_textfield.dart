@@ -4,12 +4,14 @@ import '../res/owon_themeColor.dart';
 
 class OwonTextField {
   static Widget textField(BuildContext context,
-      TextEditingController textEditingController, String hint, String imageUrl,
+      TextEditingController textEditingController, String hint, String imageUrl, FocusNode focusNode,
+      bool offstage,
       {double width = double.infinity}) {
     return Container(
       width: width,
       child: TextField(
           controller: textEditingController,
+          focusNode: focusNode,
           maxLines: 1,
           autofocus: false,
           textAlign: TextAlign.left,
@@ -37,6 +39,19 @@ class OwonTextField {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                   color: OwonColor().getCurrent(context, "textfieldColor")),
+            ),
+            suffixIcon: Offstage(
+              offstage: offstage,
+              child: IconButton(
+                icon: Icon(
+                  Icons.clear,
+                  color: OwonColor().getCurrent(
+                      context, "textColor"),
+                ),
+                onPressed: () {
+                  textEditingController.clear();
+                },
+              ),
             ),
             hintText: hint,
             hintStyle: TextStyle(

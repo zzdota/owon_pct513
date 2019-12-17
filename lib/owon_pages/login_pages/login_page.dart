@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:owon_pct513/owon_utils/owon_dialog.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../../owon_api/model/owon_login_model_entity.dart';
+import '../../owon_api/model/login_model_entity.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 import '../../owon_utils/owon_clientid.dart';
 import '../../owon_utils/owon_mqtt.dart';
@@ -48,21 +48,6 @@ class _LoginPageState extends State<LoginPage> {
   String _userName = "", _password = "";
   bool _userNameIsEmpty = true, _passwordIsEmpty = true;
   bool _countryCodeIsVisibity = false;
-
-  @override
-  initState() {
-    getExistUserInfo();
-    setSuffixIconStatus();
-//    applyPermission();
-//    getPhoneCountryCode();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   Future applyPermission() async {
     bool isSHow = await PermissionHandler()
@@ -224,7 +209,6 @@ class _LoginPageState extends State<LoginPage> {
           pre.setString(
               OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
           initMqtt(pre);
-
           break;
         case 110:
           OwonToast.show(S.of(context).login_fail);
@@ -244,6 +228,7 @@ class _LoginPageState extends State<LoginPage> {
           OwonToast.show(S.of(context).login_lock_account);
           break;
       }
+      OwonLoading(context).dismiss();
     }, (value) {
       OwonLog.e("error-------$value");
     });
@@ -265,7 +250,6 @@ class _LoginPageState extends State<LoginPage> {
       OwonLog.e("res=$v");
       if (v.returnCode == MqttConnectReturnCode.connectionAccepted) {
         OwonLog.e("恭喜你~ ====mqtt连接成功");
-        OwonLoading(context).dismiss();
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return HomePage();
         }));
@@ -274,7 +258,6 @@ class _LoginPageState extends State<LoginPage> {
         toSubscribe(clientId);
       } else {
         OwonLog.e("有事做了~ ====mqtt连接失败!!!");
-        OwonLoading(context).dismiss();
         OwonToast.show(S.of(context).login_fail);
       }
     });
@@ -303,6 +286,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _privacy() {}
+
+  @override
+  initState() {
+    getExistUserInfo();
+    setSuffixIconStatus();
+//    applyPermission();
+//    getPhoneCountryCode();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

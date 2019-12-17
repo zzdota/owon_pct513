@@ -23,7 +23,7 @@ class OwonApiHttp {
     int cType,
   ) {
     return <String, dynamic>{
-      'type': "/nt/user/register",
+      'type': "/nt/sendvcode",
       'ts': DateTime.now().millisecondsSinceEpoch.toString(),
       'token': "",
       'param': <String, dynamic>{
@@ -36,16 +36,15 @@ class OwonApiHttp {
   }
 
   Map<String, dynamic> registerAccount(String userName, String password,
-      String cType, String lang, String timezoneId, String verifyCode) {
+      String verifyCode, String lang, String timezoneId) {
     return <String, dynamic>{
-      'type': "/sendvcode",
+      'type': "/nt/user/register",
       'ts': DateTime.now().millisecondsSinceEpoch.toString(),
       'token': "",
       'param': <String, dynamic>{
         "account": userName,
         "password": password,
         "atype": RegexUtil.isEmail(userName) ? 1 : 2,
-        "ctype": cType,
         "agentid": OwonConstant.agentID,
         "lang": lang,
         "timezoneid": timezoneId,
@@ -54,8 +53,8 @@ class OwonApiHttp {
     };
   }
 
-  Map<String, dynamic> changePassword(String userName, String oldPassword,
-      String newPassword) {
+  Map<String, dynamic> changePassword(
+      String userName, String oldPassword, String newPassword) {
     return <String, dynamic>{
       'type': "/nt/user/pswmodify",
       'ts': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -68,7 +67,8 @@ class OwonApiHttp {
     };
   }
 
-  Map<String, dynamic> recoveryPassword(String userName, String newPassword,String verifyCode) {
+  Map<String, dynamic> recoveryPassword(
+      String userName, String newPassword, String verifyCode) {
     return <String, dynamic>{
       'type': "/nt/user/pswrecovery",
       'ts': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -81,6 +81,4 @@ class OwonApiHttp {
       },
     };
   }
-
-
 }
