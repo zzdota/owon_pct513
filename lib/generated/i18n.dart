@@ -32,6 +32,7 @@ class S implements WidgetsLocalizations {
   String get dSet_device_setting => "Device Setting";
   String get dSet_fan_set => "风扇运行时间闸";
   String get dSet_rename => "Device Rename";
+  String get dSet_rename_tip => "Please enter device name";
   String get dSet_sensor => "Sensor Setting";
   String get dSet_temp => "温度单位选择";
   String get dSet_vacation => "Vacation Setting";
@@ -113,6 +114,8 @@ class $zh extends S {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  @override
+  String get dSet_rename_tip => "请输入设备名称";
   @override
   String get list_disconnect => "连接断开";
   @override

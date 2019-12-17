@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/device_rename_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/vacation_setting_pages/vacation_list_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
@@ -37,7 +38,11 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                 child: InkWell(
                   onTap: (){
                     switch(index){
-                      case 0:{}
+                      case 0:{
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return DeviceRenamePage();
+                        }));
+                      }
                       break;
                       case 1:{
                         Navigator.of(context).push(MaterialPageRoute(builder: (context){
