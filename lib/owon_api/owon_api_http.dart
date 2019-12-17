@@ -43,7 +43,7 @@ class OwonApiHttp {
       'token': "",
       'param': <String, dynamic>{
         "account": userName,
-        "password": password,
+        "password": EnDecodeUtil.encodeMd5(password),
         "atype": RegexUtil.isEmail(userName) ? 1 : 2,
         "agentid": OwonConstant.agentID,
         "lang": lang,
@@ -61,8 +61,8 @@ class OwonApiHttp {
       'token': "",
       'param': <String, dynamic>{
         "account": userName,
-        "opsw": oldPassword,
-        "npsw": newPassword,
+        "opsw": EnDecodeUtil.encodeMd5(oldPassword),
+        "npsw": EnDecodeUtil.encodeMd5(newPassword),
       },
     };
   }
@@ -76,7 +76,7 @@ class OwonApiHttp {
       'param': <String, dynamic>{
         "account": userName,
         "atype": RegexUtil.isEmail(userName) ? 1 : 2,
-        "npsw": newPassword,
+        "npsw": EnDecodeUtil.encodeMd5(newPassword),
         "vcode": verifyCode
       },
     };
