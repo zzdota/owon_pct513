@@ -30,4 +30,6 @@ class OwonConstant {
   static const Color toastBg = Color(0xFF616161);
 
   static const int passwordLessLength = 6;
+  static const String userNameRegexString = "^[a-zA-Z0-9][\\sa-zA-Z0-9_@]{2,13}[a-zA-Z0-9_@]\$";
+  static const String passwordRegexString = "^[a-zA-Z0-9`~!@#\\\$\\%\\^&\\*\\(\\)_\\+\\-\\=\\{\\}\\|\\[\\]:\';'\\<\\>\\?,.]{6,16}\$";
 }

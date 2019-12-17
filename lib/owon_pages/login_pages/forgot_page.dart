@@ -1,16 +1,23 @@
-import 'dart:async';
-
+import 'dart:ui' as ui;
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/component/owon_header.dart';
-import 'package:owon_pct513/component/owon_textfield.dart';
-import 'package:owon_pct513/component/owon_verification.dart';
-import 'package:owon_pct513/owon_utils/owon_bottomsheet.dart';
-import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
-import 'package:owon_pct513/res/owon_country_code.dart';
-import 'package:owon_pct513/res/owon_picture.dart';
+import '../../owon_api/model/get_verify_code_model_entity.dart';
+import '../../owon_api/model/reset_psw_model_entity.dart';
+import '../../owon_api/owon_api_http.dart';
+import '../../owon_utils/owon_http.dart';
+import '../../owon_utils/owon_loading.dart';
+import '../../owon_utils/owon_log.dart';
+import '../../owon_utils/owon_toast.dart';
+import '../../component/owon_header.dart';
+import '../../component/owon_textfield.dart';
+import '../../component/owon_verification.dart';
+import '../../owon_utils/owon_bottomsheet.dart';
+import '../../owon_utils/owon_text_icon_button.dart';
+import '../../res/owon_constant.dart';
+import '../../res/owon_country_code.dart';
+import '../../res/owon_picture.dart';
 import '../../res/owon_themeColor.dart';
 import '../../generated/i18n.dart';
 
@@ -24,22 +31,105 @@ class _ForgotPageState extends State<ForgotPage> {
   final TextEditingController _verifyController = TextEditingController();
   final TextEditingController _newPwdController = TextEditingController();
   final TextEditingController _confirmPwdController = TextEditingController();
+  FocusNode _useFocusNode = FocusNode();
+  FocusNode _verFocusNode = FocusNode();
+  FocusNode _nPswFocusNode = FocusNode();
+  FocusNode _cPswFocusNode = FocusNode();
   String _userName = "",
       _verifyCode = "",
       _newPassword = "",
-      _confirmPassword = "";
+      _confirmPassword = "",
+      _userNameCountryCode;
+  bool _userNameIsEmpty = true,
+      _verifyIsEmpty = true,
+      _nPswIsEmpty = true,
+      _cPswIsEmpty = true;
   String _countryCode = "+86";
-  bool _isShowCodeBtn = true;
+  bool _countryCodeIsVisibity = false;
 
-  Timer _timer;
+  TimerUtil _countDownTimerUtil;
+  String _countDownBtnTxt;
   int _countdownTime = 0;
 
   _getVerifyCode() {
-    setState(() {
-      _countdownTime = 60;
-    });
+    if (TextUtil.isEmpty(_userName)) {
+      OwonToast.show(S.of(context).login_username_null);
+      return;
+    }
     //开始倒计时
+    if (_countDownTimerUtil != null) {
+      return;
+    }
+    _userName = _useController.text;
+    if (!RegexUtil.isEmail(_userName)) {
+      if (_userNameCountryCode == null || _userNameCountryCode.isEmpty) {
+        String code = _countryCode.substring(1, _countryCode.length);
+        _userNameCountryCode = "$code-";
+      }
+      _userName = _userNameCountryCode + _userName;
+    }
     startCountdownTimer();
+    OwonLoading(context).show();
+    OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
+        OwonApiHttp().getVerifyCode(_userName, 2), (value) async {
+      OwonLog.e(value);
+      GetVerifyCodeModelEntity getVerifyCodeModelEntity =
+          GetVerifyCodeModelEntity.fromJson(value);
+      switch (int.parse(getVerifyCodeModelEntity.code)) {
+        case 100:
+          if (RegexUtil.isEmail(_userName)) {
+            OwonToast.show(S.of(context).global_get_verify_code_email_success);
+          } else {
+            OwonToast.show(S.of(context).global_get_verify_code_phone_success);
+          }
+          break;
+        case 110:
+          OwonToast.show(S.of(context).global_unknown);
+          break;
+        case 302:
+          OwonToast.show(S.of(context).global_get_verify_code_phone_num_error);
+          break;
+        case 303:
+          OwonToast.show(S.of(context).global_account_exist);
+          break;
+        case 301:
+        case 304:
+        case 305:
+          OwonToast.show(S.of(context).global_get_verify_code_often);
+          break;
+        case 307:
+          OwonToast.show(S.of(context).global_get_verify_code_fail);
+          break;
+        case 308:
+          OwonToast.show(S.of(context).global_not_account);
+          break;
+        case 309:
+          OwonToast.show(S.of(context).global_lock_account);
+          break;
+        case 310:
+          OwonToast.show(S.of(context).global_not_agentid);
+          break;
+      }
+      OwonLoading(context).dismiss();
+      if (_countDownTimerUtil != null &&
+          int.parse(getVerifyCodeModelEntity.code) != 100) {
+        setState(() {
+          _countDownTimerUtil.cancel();
+          _countDownTimerUtil = null;
+          _countDownBtnTxt = S.of(context).global_get_verify_code;
+        });
+      }
+    }, (value) {
+      OwonToast.show(S.of(context).global_get_verify_code_fail);
+      OwonLoading(context).dismiss();
+      if (_countDownTimerUtil != null) {
+        setState(() {
+          _countDownTimerUtil.cancel();
+          _countDownTimerUtil = null;
+          _countDownBtnTxt = S.of(context).global_get_verify_code;
+        });
+      }
+    });
   }
 
   _setPhoneCountryCode() {
@@ -48,17 +138,183 @@ class _ForgotPageState extends State<ForgotPage> {
         .then((val) {
       setState(() {
         _countryCode = "+" + countryCode[val]["code"].toString();
+        _userNameCountryCode = countryCode[val]["code"].toString() + "-";
       });
     });
   }
 
-  _confirm() {}
+  String getPhoneCountryCode() {
+    String code = ui.window.locale.countryCode.toString();
+    setState(() {
+      for (int i = 0; i < countryCode.length; i++) {
+        if (code == countryCode[i]["locale"]) {
+          _countryCode = "+${countryCode[i]["code"]}";
+          break;
+        }
+      }
+      if (_countryCode == null || _countryCode.isEmpty) {
+        _countryCode = "+86";
+      }
+    });
+    return code;
+  }
+
+  _confirm() {
+    _userName = _useController.text;
+    if (TextUtil.isEmpty(_userName)) {
+      OwonToast.show(S.of(context).login_username_null);
+      return;
+    }
+    if (TextUtil.isEmpty(_verifyCode)) {
+      OwonToast.show(S.of(context).global_enter_verify_null);
+      return;
+    }
+    if (TextUtil.isEmpty(_newPassword) ||
+        _newPassword.length < OwonConstant.passwordLessLength) {
+      OwonToast.show(S.of(context).login_password_less_six_digits);
+      return;
+    }
+    if (TextUtil.isEmpty(_confirmPassword) ||
+        _confirmPassword.length < OwonConstant.passwordLessLength) {
+      OwonToast.show(S.of(context).login_password_less_six_digits);
+      return;
+    }
+    if (_confirmPassword != _newPassword) {
+      OwonToast.show(S.of(context).global_enter_psw_not_match);
+      return;
+    }
+    if (!RegExp(OwonConstant.userNameRegexString).hasMatch(_userName)) {
+      OwonToast.show(S.of(context).global_user_name_regex_string);
+      return;
+    }
+    if (!RegExp(OwonConstant.passwordRegexString).hasMatch(_newPassword) ||
+        !RegExp(OwonConstant.passwordRegexString).hasMatch(_confirmPassword)) {
+      OwonToast.show(S.of(context).global_password_regex_string);
+      return;
+    }
+    OwonLoading(context).show();
+    if (!RegexUtil.isEmail(_userName)) {
+      if (_userNameCountryCode == null || _userNameCountryCode.isEmpty) {
+        String code = _countryCode.substring(1, _countryCode.length);
+        _userNameCountryCode = "$code-";
+      }
+      _userName = _userNameCountryCode + _userName;
+    }
+    OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
+        OwonApiHttp().recoveryPassword(_userName, _newPassword, _verifyCode),
+        (value) async {
+      ResetPswModelEntity resetPswModelEntity =
+          ResetPswModelEntity.fromJson(value);
+      switch (int.parse(resetPswModelEntity.code)) {
+        case 100:
+          OwonToast.show(S.of(context).reset_psw_success);
+          Navigator.pop(context);
+          break;
+        case 110:
+          OwonToast.show(S.of(context).global_unknown);
+          break;
+        case 301:
+          OwonToast.show(S.of(context).global_not_account);
+          break;
+        case 304:
+          OwonToast.show(S.of(context).global_lock_account);
+          break;
+        case 306:
+          OwonToast.show(S.of(context).global_verify_code_error);
+          break;
+        case 307:
+          OwonToast.show(S.of(context).global_psw_retry_limit);
+          break;
+      }
+      OwonLoading(context).dismiss();
+    }, (value) {
+      OwonToast.show(S.of(context).reset_psw_fail);
+      OwonLoading(context).dismiss();
+    });
+  }
+
+  setSuffixIconStatus() {
+    _useFocusNode.addListener(() {
+      setState(() {
+        if (TextUtil.isEmpty(_useController.text)) {
+          if (_useFocusNode.hasFocus) {
+            _userNameIsEmpty = true;
+          } else {
+            _userNameIsEmpty = true;
+          }
+        } else {
+          if (_useFocusNode.hasFocus) {
+            _userNameIsEmpty = false;
+          } else {
+            _userNameIsEmpty = true;
+          }
+        }
+      });
+    });
+    _verFocusNode.addListener(() {
+      setState(() {
+        if (TextUtil.isEmpty(_verifyController.text)) {
+          if (_verFocusNode.hasFocus) {
+            _verifyIsEmpty = true;
+          } else {
+            _verifyIsEmpty = true;
+          }
+        } else {
+          if (_verFocusNode.hasFocus) {
+            _verifyIsEmpty = false;
+          } else {
+            _verifyIsEmpty = true;
+          }
+        }
+      });
+    });
+    _nPswFocusNode.addListener(() {
+      setState(() {
+        if (TextUtil.isEmpty(_newPwdController.text)) {
+          if (_nPswFocusNode.hasFocus) {
+            _nPswIsEmpty = true;
+          } else {
+            _nPswIsEmpty = true;
+          }
+        } else {
+          if (_nPswFocusNode.hasFocus) {
+            _nPswIsEmpty = false;
+          } else {
+            _nPswIsEmpty = true;
+          }
+        }
+      });
+    });
+    _cPswFocusNode.addListener(() {
+      setState(() {
+        if (TextUtil.isEmpty(_confirmPwdController.text)) {
+          if (_cPswFocusNode.hasFocus) {
+            _cPswIsEmpty = true;
+          } else {
+            _cPswIsEmpty = true;
+          }
+        } else {
+          if (_cPswFocusNode.hasFocus) {
+            _cPswIsEmpty = false;
+          } else {
+            _cPswIsEmpty = true;
+          }
+        }
+      });
+    });
+  }
+
+  @override
+  initState() {
+    setSuffixIconStatus();
+    super.initState();
+  }
 
   @override
   void dispose() {
     super.dispose();
-    if (_timer != null) {
-      _timer.cancel();
+    if (_countDownTimerUtil != null) {
+      _countDownTimerUtil.cancel();
     }
   }
 
@@ -66,6 +322,24 @@ class _ForgotPageState extends State<ForgotPage> {
   Widget build(BuildContext context) {
     _useController.addListener(() {
       _userName = _useController.text;
+      setState(() {
+        if (!TextUtil.isEmpty(_useController.text)) {
+          try {
+            if (int.parse(_userName) is num && _userName.length < 12) {
+              _countryCodeIsVisibity = true;
+              if (_userName.length == 1) {
+                getPhoneCountryCode();
+              }
+            } else {
+              _countryCodeIsVisibity = false;
+            }
+          } catch (e) {
+            _countryCodeIsVisibity = false;
+          }
+        } else {
+          _countryCodeIsVisibity = false;
+        }
+      });
     });
 
     _verifyController.addListener(() {
@@ -96,25 +370,29 @@ class _ForgotPageState extends State<ForgotPage> {
                 ),
                 OwonHeader.header(context, OwonPic.loginResetPswHeader,
                     S.of(context).reset_psw_reset,
-                    width: 250,
-                    subTitle: S.of(context).reset_psw_password),
+                    width: 250, subTitle: S.of(context).reset_psw_password),
                 Container(
+                  width: double.infinity,
                   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: _countryCodeIsVisibity
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.start,
                     children: <Widget>[
                       OwonTextField.textField(
                           context,
                           _useController,
                           S.of(context).global_hint_user,
                           OwonPic.loginUsernameIcon,
-                          width: _isShowCodeBtn
+                          _useFocusNode,
+                          _userNameIsEmpty,
+                          width: _countryCodeIsVisibity
                               ? ScreenUtil().setWidth(800)
-                              : double.infinity),
-                      _isShowCodeBtn
+                              : ScreenUtil().setWidth(1100)),
+                      _countryCodeIsVisibity
                           ? OwonVerify.button(context, _countryCode,
                               onPressed: _setPhoneCountryCode,
-                              width: ScreenUtil().setWidth(260),
+                              width: ScreenUtil().setWidth(300),
                               height: ScreenUtil().setHeight(200))
                           : Container(height: 0.0, width: 0.0),
                     ],
@@ -130,16 +408,16 @@ class _ForgotPageState extends State<ForgotPage> {
                           _verifyController,
                           S.of(context).global_hint_verify_code,
                           OwonPic.loginVerifyCodeIcon,
-                          width: ScreenUtil().setWidth(750)),
+                          _verFocusNode,
+                          _verifyIsEmpty,
+                          width: ScreenUtil().setWidth(650)),
                       OwonVerify.button(
                           context,
-                          _countdownTime > 0
-                              ? S.of(context).global_verify_code_remaining1 +
-                                  '$_countdownTime' +
-                                  S.of(context).global_verify_code_remaining2
-                              : S.of(context).global_get_verify_code,
+                          _countDownBtnTxt == null
+                              ? S.of(context).global_get_verify_code
+                              : _countDownBtnTxt,
                           onPressed: _getVerifyCode,
-                          width: ScreenUtil().setWidth(350),
+                          width: ScreenUtil().setWidth(450),
                           height: ScreenUtil().setHeight(200)),
                     ],
                   ),
@@ -147,18 +425,24 @@ class _ForgotPageState extends State<ForgotPage> {
                 Container(
                   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
                   child: OwonTextField.textField(
-                      context,
-                      _newPwdController,
-                      S.of(context).global_hint_new_password,
-                      OwonPic.loginNewPswIcon),
+                    context,
+                    _newPwdController,
+                    S.of(context).global_hint_new_password,
+                    OwonPic.loginNewPswIcon,
+                    _nPswFocusNode,
+                    _nPswIsEmpty,
+                  ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
                   child: OwonTextField.textField(
-                      context,
-                      _confirmPwdController,
-                      S.of(context).global_hint_confirm_password,
-                      OwonPic.loginConfirmPswIcon),
+                    context,
+                    _confirmPwdController,
+                    S.of(context).global_hint_confirm_password,
+                    OwonPic.loginConfirmPswIcon,
+                    _cPswFocusNode,
+                    _cPswIsEmpty,
+                  ),
                 ),
                 Container(
                   width: double.infinity,
@@ -191,17 +475,25 @@ class _ForgotPageState extends State<ForgotPage> {
   }
 
   void startCountdownTimer() {
-    const oneSec = const Duration(seconds: 1);
-    var callback = (timer) {
+    _countDownTimerUtil = new TimerUtil(mInterval: 1000, mTotalTime: 60 * 1000);
+    _countDownTimerUtil.setOnTimerTickCallback((int tick) {
+      double _tick = tick / 1000;
+      if (_tick.toInt() == 0) {
+        _countDownTimerUtil.setTotalTime(60 * 1000);
+      }
       setState(() {
-        if (_countdownTime < 1) {
-          _timer.cancel();
+        _countdownTime = _tick.toInt();
+        if (_tick.toInt() == 0) {
+          _countDownBtnTxt = S.of(context).global_get_verify_code;
+          _countDownTimerUtil.cancel();
+          _countDownTimerUtil = null;
         } else {
-          _countdownTime = _countdownTime - 1;
+          _countDownBtnTxt = S.of(context).global_verify_code_remaining1 +
+              '$_countdownTime' +
+              S.of(context).global_verify_code_remaining2;
         }
       });
-    };
-
-    _timer = Timer.periodic(oneSec, callback);
+    });
+    _countDownTimerUtil.startCountDown();
   }
 }
