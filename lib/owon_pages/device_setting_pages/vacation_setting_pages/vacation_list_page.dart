@@ -23,7 +23,7 @@ class _VacationListPageState extends State<VacationListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
-  bool hadData = false;
+  bool hadData = true;
   @override
   void initState() {
     _listEvenBusSubscription =

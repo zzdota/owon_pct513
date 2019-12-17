@@ -32,15 +32,20 @@ class DeviceRenamePage extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.all(20),
         child: TextField(
+//          autofocus: true,
             style: TextStyle(
               color: OwonColor().getCurrent(
                 context,
                 "textColor",
               ),
-              fontSize: 20.0
+              fontSize: 24.0
             ),
             controller: _tfVC,
             decoration: InputDecoration(
+              labelText: S.of(context).dSet_rename_tip,
+              labelStyle:  TextStyle(
+                  fontSize: 14,
+                  color: OwonColor().getCurrent(context, "blue")),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
               filled: false,
@@ -52,10 +57,10 @@ class DeviceRenamePage extends StatelessWidget {
                 borderSide: BorderSide(
                     color: OwonColor().getCurrent(context, "textfieldColor")),
               ),
-              hintText: S.of(context).dSet_rename_tip,
-              hintStyle: TextStyle(
-                  fontSize: 14,
-                  color: OwonColor().getCurrent(context, "textColor")),
+//              hintText: S.of(context).dSet_rename_tip,
+//              hintStyle: TextStyle(
+//                  fontSize: 14,
+//                  color: OwonColor().getCurrent(context, "textColor")),
             )),
       ),
     );
