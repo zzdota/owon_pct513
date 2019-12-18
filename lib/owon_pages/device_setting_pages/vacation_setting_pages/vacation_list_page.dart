@@ -28,11 +28,11 @@ class _VacationListPageState extends State<VacationListPage> {
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
-      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
-      Map<String, dynamic> payload = msg["payload"];
-      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
-      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
+//      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
+//      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
+//      Map<String, dynamic> payload = msg["payload"];
+//      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
+//      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
     });
     super.initState();
     Future.delayed(Duration(seconds: 2), () {

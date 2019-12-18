@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:owon_pct513/component/owon_timeTextfield.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
@@ -13,6 +14,7 @@ class VacationSettingPage extends StatefulWidget {
 
 class _VacationSettingPageState extends State<VacationSettingPage> {
   TextEditingController vc = TextEditingController(text: "hehe");
+  int _heatValue = 23, _coolValue = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +25,22 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
         actions: <Widget>[
           FlatButton(
 //            splashColor: Colors.red,
-            onPressed: () async{
+            onPressed: () {
               OwonLog.e("save is tap text=${vc.text}");
-              var picker = await showDatePicker(
-                  context: context,
-                  initialDate: new DateTime.now(),
-                  firstDate: new DateTime.now().subtract(new Duration(days: 30)),
-                  lastDate: new DateTime.now().add(new Duration(days: 30)),
-                  locale: Locale('zh')
-              );
+              OwonLog.e("heat:====>$_heatValue====cool:=====>$_coolValue");
               setState(() {
-                vc.text = picker.toString();
+                _coolValue = 30;
               });
+//              var picker = await showDatePicker(
+//                  context: context,
+//                  initialDate: new DateTime.now(),
+//                  firstDate:
+//                      new DateTime.now().subtract(new Duration(days: 30)),
+//                  lastDate: new DateTime.now().add(new Duration(days: 30)),
+//                  locale: Locale('zh'));
+//              setState(() {
+//                vc.text = picker.toString();
+//              });
             },
             child: Text(
               S.of(context).global_save,
@@ -78,14 +84,15 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: OwonTimeTextField(context, vc,()async{
+                  child: OwonTimeTextField(context, vc, () async {
                     var picker = await showDatePicker(
                         context: context,
                         initialDate: new DateTime.now(),
-                        firstDate: new DateTime.now().subtract(new Duration(days: 30)),
-                        lastDate: new DateTime.now().add(new Duration(days: 30)),
-                        locale: Locale('zh')
-                    );
+                        firstDate:
+                            new DateTime.now().subtract(new Duration(days: 30)),
+                        lastDate:
+                            new DateTime.now().add(new Duration(days: 30)),
+                        locale: Locale('zh'));
                     setState(() {
                       vc.text = picker.toString();
                     });
@@ -95,14 +102,15 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                   width: 20,
                 ),
                 Expanded(
-                  child: OwonTimeTextField(context, vc,()async{
+                  child: OwonTimeTextField(context, vc, () async {
                     var picker = await showDatePicker(
                         context: context,
                         initialDate: new DateTime.now(),
-                        firstDate: new DateTime.now().subtract(new Duration(days: 30)),
-                        lastDate: new DateTime.now().add(new Duration(days: 30)),
-                        locale: Locale('zh')
-                    );
+                        firstDate:
+                            new DateTime.now().subtract(new Duration(days: 30)),
+                        lastDate:
+                            new DateTime.now().add(new Duration(days: 30)),
+                        locale: Locale('zh'));
                     setState(() {
                       vc.text = picker.toString();
                     });
@@ -139,14 +147,15 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: OwonTimeTextField(context, vc,()async{
+                  child: OwonTimeTextField(context, vc, () async {
                     var picker = await showDatePicker(
                         context: context,
                         initialDate: new DateTime.now(),
-                        firstDate: new DateTime.now().subtract(new Duration(days: 30)),
-                        lastDate: new DateTime.now().add(new Duration(days: 30)),
-                        locale: Locale('zh')
-                    );
+                        firstDate:
+                            new DateTime.now().subtract(new Duration(days: 30)),
+                        lastDate:
+                            new DateTime.now().add(new Duration(days: 30)),
+                        locale: Locale('zh'));
                     setState(() {
                       vc.text = picker.toString();
                     });
@@ -156,14 +165,15 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                   width: 20,
                 ),
                 Expanded(
-                  child: OwonTimeTextField(context, vc,()async{
+                  child: OwonTimeTextField(context, vc, () async {
                     var picker = await showDatePicker(
                         context: context,
                         initialDate: new DateTime.now(),
-                        firstDate: new DateTime.now().subtract(new Duration(days: 30)),
-                        lastDate: new DateTime.now().add(new Duration(days: 30)),
-                        locale: Locale('zh')
-                    );
+                        firstDate:
+                            new DateTime.now().subtract(new Duration(days: 30)),
+                        lastDate:
+                            new DateTime.now().add(new Duration(days: 30)),
+                        locale: Locale('zh'));
                     setState(() {
                       vc.text = picker.toString();
                     });
@@ -199,48 +209,69 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Row(
               children: <Widget>[
-                Expanded(
-                  child:Text("")
-                ),
+                Expanded(child: Text("")),
                 SizedBox(
                   width: 20,
                 ),
-                Expanded(
-                  child:Picker().makePicker(
-
-                  ),
-
+                NumberPicker.integer(
+                    initialValue: _heatValue,
+                    minValue: 0,
+                    maxValue: 100,
+                    decoration: BoxDecoration(
+//                        color: Colors.white,
+                        border: Border(
+                            bottom: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")),
+                            top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _heatValue = newValue;
+                      });
+                    }),
+                SizedBox(
+                  width: 10,
                 ),
+                NumberPicker.integer(
+                    initialValue: _coolValue,
+                    minValue: 0,
+                    maxValue: 100,
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 1,
+                                color: OwonColor().getCurrent(context, "blue")),
+                            top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _coolValue = newValue;
+                      });
+                    }),
               ],
             ),
           ),
-
         ],
       ),
     );
-
-
   }
-
-  showPickerNumber(BuildContext context) {
-    new Picker(
-        adapter: NumberPickerAdapter(data: [
-          NumberPickerColumn(begin: 0, end: 999),
-          NumberPickerColumn(begin: 100, end: 200),
-        ]),
-        delimiter: [
-          PickerDelimiter(child: Container(
-            width: 30.0,
-            alignment: Alignment.center,
-            child: Icon(Icons.more_vert),
-          ))
-        ],
-        hideHeader: true,
-        title: new Text("Please Select"),
-        onConfirm: (Picker picker, List value) {
-          print(value.toString());
-          print(picker.getSelectedValues());
-        }
-    ).showDialog(context);
-  }
+//
+//  showPickerNumber(BuildContext context) {
+//    new Picker(
+//        adapter: NumberPickerAdapter(data: [
+//          NumberPickerColumn(begin: 0, end: 999),
+//          NumberPickerColumn(begin: 100, end: 200),
+//        ]),
+//        delimiter: [
+//          PickerDelimiter(child: Container(
+//            width: 30.0,
+//            alignment: Alignment.center,
+//            child: Icon(Icons.more_vert),
+//          ))
+//        ],
+//        hideHeader: true,
+//        title: new Text("Please Select"),
+//        onConfirm: (Picker picker, List value) {
+//          print(value.toString());
+//          print(picker.getSelectedValues());
+//        }
+//    ).showDialog(context);
+//  }
 }

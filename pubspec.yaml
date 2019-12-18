@@ -46,6 +46,7 @@ dependencies:
   flutter_native_timezone: ^1.0.4
   cool_ui: ^0.3.1
   flutter_picker: ^1.1.0
+  numberpicker: ^1.1.0
 #  google_maps_flutter: ^0.5.21
 #  firebase_core: 0.4.0
 #  cloud_firestore: ^0.12.10
