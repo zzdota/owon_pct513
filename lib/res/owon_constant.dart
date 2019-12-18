@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
 class OwonConstant {
-  static final String agentID="owon20181107";//代理商ID
+  static final String agentID = "owon20181107"; //代理商ID
   static const String foreignServerIp = "https://connect.owon.com"; //国外服务器ip
-  static const String domesticServerIp = "https://gn1.owon.com";//国内服务器ip
+  static const String domesticServerIp = "https://gn1.owon.com"; //国内服务器ip
   static const int foreignServerPort = 443; //国外服务器端口
   static const int domesticServerPort = 8443; //国内服务器端口
 
-  static const String foreignServerBase = "$foreignServerIp:$foreignServerPort/";
-  static const String domesticServerBase = "$domesticServerIp:$domesticServerPort/";
-  static const String foreignServerHttp = "$foreignServerBase" + "accsystem/api/json/";
-  static const String domesticServerHttp = "$domesticServerBase" + "accsystem/api/json/";
+  static const String foreignServerBase =
+      "$foreignServerIp:$foreignServerPort/";
+  static const String domesticServerBase =
+      "$domesticServerIp:$domesticServerPort/";
+  static const String foreignServerHttp =
+      "$foreignServerBase" + "accsystem/api/json/";
+  static const String domesticServerHttp =
+      "$domesticServerBase" + "accsystem/api/json/";
 
   static const double designWidth = 1242;
   static const double designHeight = 2688;
@@ -29,7 +33,12 @@ class OwonConstant {
   static const double systemHeight = 70.0; //控件界面模式的高度
   static const Color toastBg = Color(0xFF616161);
 
+  static const double scheduleWeekFontsizeSelect = 25;
+  static const double scheduleWeekFontsizeNoSelect = 16;
+
   static const int passwordLessLength = 6;
-  static const String userNameRegexString = "^[a-zA-Z0-9][\\sa-zA-Z0-9_@]{2,13}[a-zA-Z0-9_@]\$";
-  static const String passwordRegexString = "^[a-zA-Z0-9`~!@#\\\$\\%\\^&\\*\\(\\)_\\+\\-\\=\\{\\}\\|\\[\\]:\';'\\<\\>\\?,.]{6,16}\$";
+  static const String userNameRegexString =
+      "^[a-zA-Z0-9][\\sa-zA-Z0-9_@]{2,13}[a-zA-Z0-9_@]\$";
+  static const String passwordRegexString =
+      "^[a-zA-Z0-9`~!@#\\\$\\%\\^&\\*\\(\\)_\\+\\-\\=\\{\\}\\|\\[\\]:\';'\\<\\>\\?,.]{6,16}\$";
 }

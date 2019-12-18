@@ -100,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
         _countryCode = "+86";
       }
     });
-    OwonLog.e("==========------$code");
     return code;
   }
 
@@ -232,6 +231,7 @@ class _LoginPageState extends State<LoginPage> {
       OwonLoading(context).dismiss();
     }, (value) {
       OwonLog.e("error-------$value");
+      OwonLoading(context).dismiss();
     });
   }
 

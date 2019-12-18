@@ -10,7 +10,6 @@
   "global_delete": "Remove",
   "global_save": "Save",
 
-
   "global_hint_user": "E-Mail / Phone",
   "global_hint_password": "Password",
   "global_hint_verify_code": "Verification Code",
@@ -90,5 +89,22 @@
   "vacation_title": "Vacation List",
   "dSet_rename_tip": "Please enter device name",
   "vacation_depart": "Depart",
-  "vacation_return": "Return"
+  "vacation_return": "Return",
+
+  "global_mon": "Mon",
+  "global_tues": "Tues",
+  "global_wed": "Wed",
+  "global_thur": "Thur",
+  "global_fri": "Fri",
+  "global_sat": "Sat",
+  "global_sun": "Sun",
+  "schedule_title": "Schedule",
+  "schedule_setting_title": "Schedule Settings",
+  "schedule_mode_home": "Home",
+  "schedule_mode_away": "Away",
+  "schedule_mode_wake": "Wake",
+  "schedule_mode_sleep": "Sleep",
+  "schedule_copy_sch": "Copy to other day",
+  "schedule_disabled_tip": "The schedule has been disabled."
+
 }

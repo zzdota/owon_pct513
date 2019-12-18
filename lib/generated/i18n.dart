@@ -41,6 +41,7 @@ class S implements WidgetsLocalizations {
   String get global_delete => "Remove";
   String get global_enter_psw_not_match => "New Password and Confirmed Password do not match";
   String get global_enter_verify_null => "Please enter your verification code";
+  String get global_fri => "Fri";
   String get global_get_verify_code => "Get Code";
   String get global_get_verify_code_email_success => "A verification code has been sent to your email";
   String get global_get_verify_code_fail => "Failed to send";
@@ -53,6 +54,7 @@ class S implements WidgetsLocalizations {
   String get global_hint_user => "E-Mail / Phone";
   String get global_hint_verify_code => "Verification Code";
   String get global_lock_account => "Your account has been locked";
+  String get global_mon => "Mon";
   String get global_not_account => "Account does not exist";
   String get global_not_agentid => "Agent does not exist";
   String get global_ok => "OK";
@@ -61,13 +63,18 @@ class S implements WidgetsLocalizations {
   String get global_register => "Register";
   String get global_register_account_fail => "Registration failed";
   String get global_register_account_success => "Registration successful";
+  String get global_sat => "Sat";
   String get global_save => "Save";
+  String get global_sun => "Sun";
   String get global_thermostat => "Thermostat";
+  String get global_thur => "Thur";
+  String get global_tues => "Tues";
   String get global_unknown => "Unknow";
   String get global_user_name_regex_string => "The name can only contain (0-9,a-z,A-Z,\"_\",\"@\",\" \"),and can only start with letters or numbers,the length range is from 4 to 15 characteristics.";
   String get global_verify_code_error => "Verification code error";
   String get global_verify_code_remaining1 => "";
   String get global_verify_code_remaining2 => " seconds left";
+  String get global_wed => "Wed";
   String get list_disconnect => "Disconnected";
   String get login_button => "Login";
   String get login_fail => "Login failed";
@@ -91,6 +98,14 @@ class S implements WidgetsLocalizations {
   String get reset_psw_reset => "Reset";
   String get reset_psw_success => "Password reset succeeded";
   String get reset_psw_title => "Reset Password";
+  String get schedule_copy_sch => "Copy to other day";
+  String get schedule_disabled_tip => "The schedule has been disabled.";
+  String get schedule_mode_away => "Away";
+  String get schedule_mode_home => "Home";
+  String get schedule_mode_sleep => "Sleep";
+  String get schedule_mode_wake => "Wake";
+  String get schedule_setting_title => "Schedule Settings";
+  String get schedule_title => "Schedule";
   String get set_about => "About";
   String get set_appearance => "Appearance";
   String get set_dig => "Electric Fence";
@@ -117,13 +132,7 @@ class $zh extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get dSet_rename_tip => "请输入设备名称";
-  @override
-  String get list_disconnect => "连接断开";
-  @override
-  String get set_exit => "退出登录";
-  @override
-  String get global_account_exist => "账号已注册";
+  String get login_retry_limit => "密码重试次数超出限制";
   @override
   String get login_button => "登录";
   @override
@@ -133,8 +142,6 @@ class $zh extends S {
   @override
   String get global_verify_code_remaining1 => "剩余";
   @override
-  String get login_password_less_six_digits => "密码不得小于6位";
-  @override
   String get reset_psw_fail => "重置密码失败";
   @override
   String get global_verify_code_remaining2 => " 秒";
@@ -143,31 +150,17 @@ class $zh extends S {
   @override
   String get global_register_account_success => "账号注册成功";
   @override
-  String get reset_psw_reset => "重置";
-  @override
-  String get set_resetPsw => "重置密码";
-  @override
-  String get global_register_account_fail => "账号注册失败";
-  @override
-  String get global_verify_code_error => "验证码错误";
+  String get schedule_mode_away => "外出";
   @override
   String get appearance_dark => "深色";
   @override
-  String get global_not_agentid => "代理商不存在";
-  @override
-  String get vacation_title => "假期列表";
-  @override
   String get global_enter_verify_null => "请输入验证码";
-  @override
-  String get set_help => "帮助";
   @override
   String get dSet_sensor => "传感器设置";
   @override
-  String get set_appearance => "主题";
+  String get login_retry_time_alert => " 次后,账户会被锁定";
   @override
-  String get global_hint_confirm_password => "再次确认密码";
-  @override
-  String get dSet_vacation => "假期设置";
+  String get schedule_mode_home => "在家";
   @override
   String get global_hint_verify_code => "输入校验码";
   @override
@@ -175,11 +168,105 @@ class $zh extends S {
   @override
   String get global_register => "注册账号";
   @override
+  String get login_no_account => "账号不存在";
+  @override
+  String get schedule_setting_title => "计划表设置";
+  @override
+  String get global_hint_new_password => "输入新密码";
+  @override
+  String get schedule_disabled_tip => "The schedule has been disabled.";
+  @override
+  String get global_get_verify_code_fail => "验证码发送失败";
+  @override
+  String get global_hint_password => "密码";
+  @override
+  String get global_save => "保存";
+  @override
+  String get global_cancel => "取消";
+  @override
+  String get global_fri => "周五";
+  @override
+  String get global_thermostat => "温控器";
+  @override
+  String get global_get_verify_code => "校验码";
+  @override
+  String get global_get_verify_code_phone_num_error => "手机号错误";
+  @override
+  String get global_lock_account => "账号被锁定";
+  @override
+  String get login_lock_account => "账号被限制，请联系管理员";
+  @override
+  String get global_sun => "周日";
+  @override
+  String get app_title => "app title";
+  @override
+  String get vacation_delete => "删除假期";
+  @override
+  String get schedule_mode_wake => "起床";
+  @override
+  String get global_enter_psw_not_match => "输入密码不一致，请重新输入";
+  @override
+  String get app_test => "test";
+  @override
+  String get login_welcome => "Welcome";
+  @override
+  String get global_wed => "周三";
+  @override
+  String get set_dig => "电子围栏";
+  @override
+  String get app_name => "OWON";
+  @override
+  String get global_delete => "删除";
+  @override
+  String get dSet_device_info => "设备信息";
+  @override
+  String get global_not_account => "账号不存在";
+  @override
+  String get dSet_rename_tip => "请输入设备名称";
+  @override
+  String get list_disconnect => "连接断开";
+  @override
+  String get set_exit => "退出登录";
+  @override
+  String get global_account_exist => "账号已注册";
+  @override
+  String get schedule_copy_sch => "拷贝到其他天";
+  @override
+  String get login_password_less_six_digits => "密码不得小于6位";
+  @override
+  String get reset_psw_reset => "重置";
+  @override
+  String get set_resetPsw => "重置密码";
+  @override
+  String get login_retry_time => "分钟后才能重试";
+  @override
+  String get global_register_account_fail => "账号注册失败";
+  @override
+  String get global_verify_code_error => "验证码错误";
+  @override
+  String get schedule_title => "计划表";
+  @override
+  String get global_not_agentid => "代理商不存在";
+  @override
+  String get global_sat => "周六";
+  @override
+  String get login_wrong_psw => "密码错误";
+  @override
+  String get vacation_title => "假期列表";
+  @override
+  String get set_help => "帮助";
+  @override
+  String get global_mon => "周一";
+  @override
+  String get set_appearance => "主题";
+  @override
+  String get global_hint_confirm_password => "再次确认密码";
+  @override
+  String get dSet_vacation => "假期设置";
+  @override
   String get global_psw_retry_limit => "密码重试次数超出限制";
   @override
   String get vacation_noEvent => "当前还没有任何设置";
-  @override
-  String get global_hint_new_password => "输入新密码";
   @override
   String get vacation_depart => "离家";
   @override
@@ -195,27 +282,19 @@ class $zh extends S {
   @override
   String get dSet_fan_set => "风扇运行时间闸";
   @override
-  String get global_get_verify_code_fail => "验证码发送失败";
-  @override
   String get global_password_regex_string => "密码不能包含空格和其他特殊字符，长度请控制在6到16之间";
-  @override
-  String get global_hint_password => "密码";
-  @override
-  String get global_save => "保存";
   @override
   String get about_version => "版本号";
   @override
   String get reset_psw_confirm => "确认修改";
   @override
-  String get global_cancel => "取消";
-  @override
   String get tab_set => "设置";
   @override
+  String get global_tues => "周二";
+  @override
+  String get schedule_mode_sleep => "睡觉";
+  @override
   String get dSet_device_setting => "设备设置";
-  @override
-  String get global_thermostat => "温控器";
-  @override
-  String get global_get_verify_code => "校验码";
   @override
   String get dSet_rename => "设备名称";
   @override
@@ -223,35 +302,17 @@ class $zh extends S {
   @override
   String get app_listView => "ListView";
   @override
-  String get global_get_verify_code_phone_num_error => "手机号错误";
-  @override
-  String get global_lock_account => "账号被锁定";
-  @override
   String get dSet_temp => "温度单位选择";
   @override
   String get tab_list => "温控器列表";
   @override
-  String get app_title => "app title";
-  @override
-  String get vacation_delete => "删除假期";
-  @override
   String get global_ok => "确认";
   @override
-  String get global_enter_psw_not_match => "输入密码不一致，请重新输入";
-  @override
   String get reset_psw_title => "重置密码";
-  @override
-  String get app_test => "test";
-  @override
-  String get login_welcome => "Welcome";
   @override
   String get global_get_verify_code_often => "操作过于频繁，请稍后在尝试";
   @override
   String get global_unknown => "未知错误";
-  @override
-  String get set_dig => "电子围栏";
-  @override
-  String get app_name => "OWON";
   @override
   String get login_username_null => "请输入用户名";
   @override
@@ -259,13 +320,11 @@ class $zh extends S {
   @override
   String get login_forgot => "忘记密码";
   @override
-  String get global_delete => "删除";
-  @override
   String get set_about => "关于";
   @override
-  String get dSet_device_info => "设备信息";
+  String get login_fail => "登录失败";
   @override
-  String get global_not_account => "账号不存在";
+  String get global_thur => "周四";
   @override
   String get global_hint_user => "电子邮件/手机号码";
 }

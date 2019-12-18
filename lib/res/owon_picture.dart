@@ -84,6 +84,21 @@ class OwonPic {
   static String dVacVacationSetB = "assets/images/device_set/vac_vacationSetting_b.png";
   static String dVacVacationSetW = "assets/images/device_set/vac_vacationSetting_w.png";
   static String dVacNoSetB = "assets/images/device_set/vac_noSetting_b.png";
+
+  static String scheduleCopy = "assets/images/device_set/schedule/schedule_copy.svg";
+  static String scheduleCopyNoSelect = "assets/images/device_set/schedule/schedule_copy_no_select.svg";
+  static String scheduleCopySelect="assets/images/device_set/schedule/schedule_copy_select.svg";
+  static String scheduleDisabled="assets/images/device_set/schedule/schedule_disabled.png";
+  static String scheduleModeAway="assets/images/device_set/schedule/schedule_mode_away.svg";
+  static String scheduleModeHome="assets/images/device_set/schedule/schedule_mode_home.svg";
+  static String scheduleModeSleep="assets/images/device_set/schedule/schedule_mode_sleep.svg";
+  static String scheduleModeWake="assets/images/device_set/schedule/schedule_mode_wake.svg";
+  static String scheduleSettingCopy="assets/images/device_set/schedule/schedule_setting_copy.png";
+  static String scheduleSettingModeAway="assets/images/device_set/schedule/schedule_setting_mode_away.png";
+  static String scheduleSettingModeHome="assets/images/device_set/schedule/schedule_setting_mode_home.png";
+  static String scheduleSettingModeSleep="assets/images/device_set/schedule/schedule_setting_mode_sleep.png";
+  static String scheduleSettingModeWake="assets/images/device_set/schedule/schedule_setting_mode_wake.png";
+  static String scheduleTimeIcon = "assets/images/device_set/schedule/schedule_time_icon.svg";
 }
 
 /*

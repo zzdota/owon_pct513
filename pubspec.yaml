@@ -155,6 +155,21 @@ flutter:
     - assets/images/device_set/vac_vacationSetting_w.png
     - assets/images/device_set/vac_noSetting_b.png
 
+    - assets/images/device_set/schedule/schedule_copy.svg
+    - assets/images/device_set/schedule/schedule_copy_no_select.svg
+    - assets/images/device_set/schedule/schedule_copy_select.svg
+    - assets/images/device_set/schedule/schedule_disabled.png
+    - assets/images/device_set/schedule/schedule_mode_away.svg
+    - assets/images/device_set/schedule/schedule_mode_home.svg
+    - assets/images/device_set/schedule/schedule_mode_sleep.svg
+    - assets/images/device_set/schedule/schedule_mode_wake.svg
+    - assets/images/device_set/schedule/schedule_setting_copy.png
+    - assets/images/device_set/schedule/schedule_setting_mode_away.png
+    - assets/images/device_set/schedule/schedule_setting_mode_home.png
+    - assets/images/device_set/schedule/schedule_setting_mode_sleep.png
+    - assets/images/device_set/schedule/schedule_setting_mode_wake.png
+    - assets/images/device_set/schedule/schedule_time_icon.svg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

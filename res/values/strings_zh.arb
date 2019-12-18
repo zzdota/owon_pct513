@@ -47,6 +47,13 @@
   "login_privacy2": "隐私条例",
   "login_username_null": "请输入用户名",
   "login_password_less_six_digits": "密码不得小于6位",
+  "login_fail": "登录失败",
+  "login_no_account": "账号不存在",
+  "login_retry_limit": "密码重试次数超出限制",
+  "login_retry_time": "分钟后才能重试",
+  "login_wrong_psw": "密码错误",
+  "login_retry_time_alert": " 次后,账户会被锁定",
+  "login_lock_account": "账号被限制，请联系管理员",
   "login_no_network": "当前没有网络",
 
   "reset_psw_title": "重置密码",
@@ -82,5 +89,22 @@
   "vacation_title": "假期列表",
   "dSet_rename_tip": "请输入设备名称",
   "vacation_depart": "离家",
-  "vacation_return": "回家"
+  "vacation_return": "回家",
+
+  "global_mon": "周一",
+  "global_tues": "周二",
+  "global_wed": "周三",
+  "global_thur": "周四",
+  "global_fri": "周五",
+  "global_sat": "周六",
+  "global_sun": "周日",
+  "schedule_title": "计划表",
+  "schedule_setting_title": "计划表设置",
+  "schedule_mode_home": "在家",
+  "schedule_mode_away": "外出",
+  "schedule_mode_wake": "起床",
+  "schedule_mode_sleep": "睡觉",
+  "schedule_copy_sch": "拷贝到其他天",
+  "schedule_disabled_tip": "The schedule has been disabled."
+
 }
