@@ -34,6 +34,7 @@ import '../../res/owon_themeColor.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'forgot_page.dart';
 import 'package:typed_data/typed_buffers.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -111,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
       int index = _userName.indexOf("-");
       if (index > 0) {
         _countryCode = "+${_userName.substring(0, index)}";
-        _userNameCountryCode = "${_userName.substring(0,index)}-";
+        _userNameCountryCode = "${_userName.substring(0, index)}-";
         _userName = _userName.substring(index + 1, _userName.length);
       }
     }
@@ -167,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  _login() async{
+  _login() async {
     OwonLoading(context).show();
     _userName = _useController.text;
     if (TextUtil.isEmpty(_userName)) {
@@ -276,43 +277,36 @@ class _LoginPageState extends State<LoginPage> {
   _onData(List<MqttReceivedMessage<MqttMessage>> data) {
     final MqttPublishMessage recMess = data[0].payload;
     final String topic = data[0].topic;
-    if(topic.contains("reply/cloud")) {
+    if (topic.contains("reply/cloud")) {
       final String pt =
-      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-     String desString = "topic is <$topic>, payload is <-- $pt -->";
-     OwonLog.e("json =$desString");
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      String desString = "topic is <$topic>, payload is <-- $pt -->";
+      OwonLog.e("json =$desString");
       Map p = Map();
       p["topic"] = topic;
       p["type"] = "json";
       p["payload"] = jsonDecode(pt);
-
       ListEventBus.getDefault().post(p);
-    }else if(topic.contains("raw")){
+    } else if (topic.contains("raw")) {
       List bu = recMess.payload.message.toList();
-
-      String desString = "topic is <$topic>, payload is <-- $data -->";
+      String desString = "topic is <$topic>, payload is <-- $bu -->";
       OwonLog.e("raw =$desString");
       Map p = Map();
       p["topic"] = topic;
       p["type"] = "raw";
       p["payload"] = bu;
-
       ListEventBus.getDefault().post(p);
-    }else if (topic.contains("attribute")){
-      String desString = "topic is <$topic>, payload is <-- $data -->";
-      OwonLog.e("string =$desString");
-
+    } else if (topic.contains("attribute")) {
       final String pt =
-      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      String desString = "topic is <$topic>, payload is <-- $pt -->";
+      OwonLog.e("string =$desString");
       Map p = Map();
       p["topic"] = topic;
       p["type"] = "string";
       p["payload"] = pt;
-
       ListEventBus.getDefault().post(p);
-
-
-    }else {
+    } else {
       OwonLog.e("未知类型");
     }
   }

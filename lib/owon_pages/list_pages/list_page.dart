@@ -33,26 +33,21 @@ class _ListPageState extends State<ListPage> {
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
-      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
-      Map<String, dynamic> payload = msg["payload"];
-      OwonLoading(context).dismiss();
-      setState(() {
-        _addrModels = AddressModelEntity.fromJson(payload);
-        _addressModel = _addrModels.addrs.first;
-
-        _addrModels.addrs.forEach((item){
-          item.devlist.forEach((deviceItem){
-            String deviceId = deviceItem.deviceid;
-            String deviceTopic = "device/$deviceId/attribute/+";
-            OwonMqtt.getInstance().subscribeMessage(deviceTopic);
+      if(msg["type"] == "json"){
+        Map<String, dynamic> payload = msg["payload"];
+        OwonLoading(context).dismiss();
+        setState(() {
+          _addrModels = AddressModelEntity.fromJson(payload);
+          _addressModel = _addrModels.addrs.first;
+          _addrModels.addrs.forEach((item){
+            item.devlist.forEach((deviceItem){
+              String deviceId = deviceItem.deviceid;
+              String deviceTopic = "device/$deviceId/attribute/+";
+              OwonMqtt.getInstance().subscribeMessage(deviceTopic);
+            });
           });
-
         });
-
-
-      });
-
+      }
     });
     super.initState();
     Future.delayed(Duration(milliseconds: 200), () {
@@ -281,10 +276,7 @@ class _ListPageState extends State<ListPage> {
 
   Widget _buildPopoverButton(AddressModelAddr addrModel, List addrList) {
     String btnTitle = addrModel.addrname;
-    OwonLog.e("btntitle=$btnTitle");
-
     return Container(
-//      color: Colors.red,
         child: CupertinoPopoverButton(
             radius: OwonConstant.cRadius,
             popoverConstraints: BoxConstraints(
@@ -311,7 +303,6 @@ class _ListPageState extends State<ListPage> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       )),
-//                 SizedBox(width: 10,),
                   Icon(Icons.keyboard_arrow_down,
                       size: 20.0,
                       color: OwonColor().getCurrent(context, "textColor")),

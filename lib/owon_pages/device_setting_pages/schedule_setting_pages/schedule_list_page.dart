@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../owon_utils/owon_text_icon_button.dart';
+import '../../../res/owon_constant.dart';
 import '../../../res/owon_picture.dart';
 import '../../../owon_utils/owon_log.dart';
 import '../../../res/owon_themeColor.dart';
@@ -28,26 +31,27 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
-      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
-      Map<String, dynamic> payload = msg["payload"];
-      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
-      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
+          OwonLog.e("======>>>>>>>${msg["type"]}");
+//      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
+//      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
+//      Map<String, dynamic> payload = msg["payload"];
+//      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
+//      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
     });
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-      toGetScheduleList();
+//      toGetScheduleList();
     });
   }
 
   toGetScheduleList() async {
-//    SharedPreferences pre = await SharedPreferences.getInstance();
-//    var clientID = pre.get(OwonConstant.clientID);
-//    String topic = "api/cloud/$clientID";
-//    Map p = Map();
-//    p["command"] = "addr.dev.list";
-//    var msg = JsonEncoder.withIndent("  ").convert(p);
-//    OwonMqtt.getInstance().publishMessage(topic, msg);
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "addr.dev.list";
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
   }
 
   @override
