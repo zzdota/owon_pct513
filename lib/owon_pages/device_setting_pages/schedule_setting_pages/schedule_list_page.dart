@@ -67,7 +67,6 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                 CupertinoSwitch(
                     value: _switchValue,
                     activeColor: OwonColor().getCurrent(context, "blue"),
-                    trackColor: OwonColor().getCurrent(context, "textColor"),
                     onChanged: (bool value) {
                       ///点击切换开关的状态
                       setState(() {
