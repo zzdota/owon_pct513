@@ -88,6 +88,7 @@
   "vacation_noEvent": "You have not created any current or future vacation events",
   "vacation_delete": "Vacation Delete",
   "vacation_title": "Vacation List",
-  "dSet_rename_tip": "Please enter device name"
-
+  "dSet_rename_tip": "Please enter device name",
+  "vacation_depart": "Depart",
+  "vacation_return": "Return"
 }

@@ -40,7 +40,19 @@ class _ListPageState extends State<ListPage> {
       setState(() {
         _addrModels = AddressModelEntity.fromJson(payload);
         _addressModel = _addrModels.addrs.first;
+
+        _addrModels.addrs.forEach((item){
+          item.devlist.forEach((deviceItem){
+            String deviceId = deviceItem.deviceid;
+            String deviceTopic = "device/$deviceId/attribute/+";
+            OwonMqtt.getInstance().subscribeMessage(deviceTopic);
+          });
+
+        });
+
+
       });
+
     });
     super.initState();
     Future.delayed(Duration(milliseconds: 200), () {

@@ -100,7 +100,9 @@ class S implements WidgetsLocalizations {
   String get tab_list => "Thermostat List";
   String get tab_set => "Setting";
   String get vacation_delete => "Vacation Delete";
+  String get vacation_depart => "Depart";
   String get vacation_noEvent => "You have not created any current or future vacation events";
+  String get vacation_return => "Return";
   String get vacation_title => "Vacation List";
 }
 
@@ -179,11 +181,15 @@ class $zh extends S {
   @override
   String get global_hint_new_password => "输入新密码";
   @override
+  String get vacation_depart => "离家";
+  @override
   String get global_get_verify_code_email_success => "校验码已发送到您的电子邮箱，请查收";
   @override
   String get login_privacy2 => "隐私条例";
   @override
   String get login_privacy1 => "登录或注册即代表阅读并同意";
+  @override
+  String get vacation_return => "回家";
   @override
   String get login_no_network => "当前没有网络";
   @override

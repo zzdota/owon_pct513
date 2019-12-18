@@ -80,6 +80,7 @@
   "vacation_noEvent": "当前还没有任何设置",
   "vacation_delete": "删除假期",
   "vacation_title": "假期列表",
-  "dSet_rename_tip": "请输入设备名称"
-
+  "dSet_rename_tip": "请输入设备名称",
+  "vacation_depart": "离家",
+  "vacation_return": "回家"
 }
