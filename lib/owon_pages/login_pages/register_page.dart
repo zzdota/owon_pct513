@@ -367,8 +367,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: OwonColor().getCurrent(context, "primaryColor"),
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(S.of(context).global_register),
+        backgroundColor: OwonColor().getCurrent(context, "primaryColor"),
       ),
       body: Container(
         child: ListView(

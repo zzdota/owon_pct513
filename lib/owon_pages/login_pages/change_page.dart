@@ -169,8 +169,7 @@ class _ChangePageState extends State<ChangePage> {
     return Scaffold(
       backgroundColor: OwonColor().getCurrent(context, "primaryColor"),
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(S.of(context).change_psw_title),
+        backgroundColor: OwonColor().getCurrent(context, "primaryColor"),
       ),
       body: Container(
         child: ListView(

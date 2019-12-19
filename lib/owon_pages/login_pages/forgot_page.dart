@@ -357,8 +357,7 @@ class _ForgotPageState extends State<ForgotPage> {
     return Scaffold(
       backgroundColor: OwonColor().getCurrent(context, "primaryColor"),
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(S.of(context).reset_psw_title),
+        backgroundColor: OwonColor().getCurrent(context, "primaryColor"),
       ),
       body: Container(
         child: ListView(

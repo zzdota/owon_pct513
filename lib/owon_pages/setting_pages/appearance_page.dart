@@ -20,8 +20,7 @@ class _AppearancePageState extends State<AppearancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).set_appearance),
-        centerTitle: true,
+        backgroundColor: OwonColor().getCurrent(context, "primaryColor"),
       ),
       body: Column(
         children: <Widget>[
