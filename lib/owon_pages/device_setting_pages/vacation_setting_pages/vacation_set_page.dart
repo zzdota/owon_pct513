@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/component/owon_pickerView.dart';
 import 'package:owon_pct513/component/owon_timeTextfield.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
+import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import '../../../generated/i18n.dart';
 import '../../../res/owon_themeColor.dart';
@@ -206,72 +209,105 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Expanded(child: Text("")),
-                SizedBox(
-                  width: 20,
-                ),
-                NumberPicker.integer(
-                    initialValue: _heatValue,
-                    minValue: 0,
-                    maxValue: 100,
-                    decoration: BoxDecoration(
+                Row(
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      OwonPic.mSysHeat,
+                      color:
+                          OwonColor().getCurrent(context, "borderDisconnect"),
+                      width: 20,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                      width: 60,
+                      child: OwonNumberPicker.integer(
+                          initialValue: _heatValue,
+                          minValue: 0,
+                          maxValue: 100,
+                          decoration: BoxDecoration(
 //                        color: Colors.white,
-                        border: Border(
-                            bottom: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")),
-                            top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _heatValue = newValue;
-                      });
-                    }),
-                SizedBox(
-                  width: 10,
+                              border: Border(
+                                  bottom: BorderSide(
+                                      width: 1,
+                                      color: OwonColor()
+                                          .getCurrent(context, "blue")),
+                                  top: BorderSide(
+                                      width: 1,
+                                      color: OwonColor()
+                                          .getCurrent(context, "blue")))),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _heatValue = newValue;
+                            });
+                          }),
+                    ),
+                  ],
                 ),
-                NumberPicker.integer(
-                    initialValue: _coolValue,
-                    minValue: 0,
-                    maxValue: 100,
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                width: 1,
-                                color: OwonColor().getCurrent(context, "blue")),
-                            top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _coolValue = newValue;
-                      });
-                    }),
+                Row(
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      OwonPic.mSysCool,
+                      color: OwonColor().getCurrent(context, "blue"),
+                      width: 20,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                      width: 60,
+                      child: OwonNumberPicker.integer(
+                          initialValue: _coolValue,
+                          minValue: 0,
+                          maxValue: 100,
+                          decoration: BoxDecoration(
+//                        color: Colors.white,
+                              border: Border(
+                                  bottom: BorderSide(
+                                      width: 1,
+                                      color: OwonColor()
+                                          .getCurrent(context, "blue")),
+                                  top: BorderSide(
+                                      width: 1,
+                                      color: OwonColor()
+                                          .getCurrent(context, "blue")))),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _coolValue = newValue;
+                            });
+                          }),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            height: OwonConstant.systemHeight,
+            width: double.infinity,
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: OwonTextIconButton.icon(
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(OwonConstant.cRadius),
+                ),
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    S.of(context).vacation_delete,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20
+                    ),
+                  ),
+                  iconTextAlignment: TextIconAlignment.iconRightTextLeft))
         ],
       ),
     );
   }
-//
-//  showPickerNumber(BuildContext context) {
-//    new Picker(
-//        adapter: NumberPickerAdapter(data: [
-//          NumberPickerColumn(begin: 0, end: 999),
-//          NumberPickerColumn(begin: 100, end: 200),
-//        ]),
-//        delimiter: [
-//          PickerDelimiter(child: Container(
-//            width: 30.0,
-//            alignment: Alignment.center,
-//            child: Icon(Icons.more_vert),
-//          ))
-//        ],
-//        hideHeader: true,
-//        title: new Text("Please Select"),
-//        onConfirm: (Picker picker, List value) {
-//          print(value.toString());
-//          print(picker.getSelectedValues());
-//        }
-//    ).showDialog(context);
-//  }
 }
