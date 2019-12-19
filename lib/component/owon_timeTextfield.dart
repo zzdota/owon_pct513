@@ -6,6 +6,7 @@ class OwonTimeTextField extends TextField {
   OwonTimeTextField(BuildContext context,TextEditingController vc,VoidCallback myTap):super(
     onTap:myTap,
       controller:vc,
+      autofocus: false,
       style: TextStyle(color: OwonColor().getCurrent(context, "textColor"), fontSize: 20.0),
       decoration:InputDecoration(
         suffixIcon: Icon(Icons.keyboard_arrow_down,color: OwonColor().getCurrent(context, "textColor"),),

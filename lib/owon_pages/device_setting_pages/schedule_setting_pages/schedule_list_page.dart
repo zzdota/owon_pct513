@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_arguments.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_set_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../owon_utils/owon_text_icon_button.dart';
@@ -25,13 +27,13 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   bool hadData = true;
 
   bool _switchValue = false;
-  int _selectTab;
+  int _selectTab = 0;
 
   @override
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-          OwonLog.e("======>>>>>>>${msg["type"]}");
+      OwonLog.e("======>>>>>>>${msg["type"]}");
 //      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
 //      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
 //      Map<String, dynamic> payload = msg["payload"];
@@ -75,128 +77,137 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                       });
                     })
               ],
-              bottom: PreferredSize(
-                preferredSize: Size(200.0, 120.0),
-                child: Container(
-                  color: OwonColor().getCurrent(context, "primaryColor"),
-                  width: double.infinity,
-                  height: 120,
-                  child: TabBar(
-                      isScrollable: false,
-                      unselectedLabelColor:
-                          OwonColor().getCurrent(context, "textColor"),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: OwonColor().getCurrent(context, "blue")),
-                      labelPadding: EdgeInsets.all(1),
-                      onTap: (v) {
-                        setState(() {
-                          _selectTab = v;
-                        });
-                      },
-                      tabs: [
-                        Tab(
-                          child: Text(
-                            S.of(context).global_mon,
-                            style: TextStyle(
-                                color: _selectTab == 0
-                                    ? Colors.white
-                                    : OwonColor()
-                                        .getCurrent(context, "textColor"),
-                                fontSize: _selectTab == 0
-                                    ? OwonConstant.scheduleWeekFontsizeSelect
-                                    : OwonConstant
-                                        .scheduleWeekFontsizeNoSelect),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            S.of(context).global_tues,
-                            style: TextStyle(
-                                color: _selectTab == 1
-                                    ? Colors.white
-                                    : OwonColor()
-                                        .getCurrent(context, "textColor"),
-                                fontSize: _selectTab == 1
-                                    ? OwonConstant.scheduleWeekFontsizeSelect
-                                    : OwonConstant
-                                        .scheduleWeekFontsizeNoSelect),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            S.of(context).global_wed,
-                            style: TextStyle(
-                                color: _selectTab == 2
-                                    ? Colors.white
-                                    : OwonColor()
-                                        .getCurrent(context, "textColor"),
-                                fontSize: _selectTab == 2
-                                    ? OwonConstant.scheduleWeekFontsizeSelect
-                                    : OwonConstant
-                                        .scheduleWeekFontsizeNoSelect),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            S.of(context).global_thur,
-                            style: TextStyle(
-                                color: _selectTab == 3
-                                    ? Colors.white
-                                    : OwonColor()
-                                        .getCurrent(context, "textColor"),
-                                fontSize: _selectTab == 3
-                                    ? OwonConstant.scheduleWeekFontsizeSelect
-                                    : OwonConstant
-                                        .scheduleWeekFontsizeNoSelect),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            S.of(context).global_fri,
-                            style: TextStyle(
-                                color: _selectTab == 4
-                                    ? Colors.white
-                                    : OwonColor()
-                                        .getCurrent(context, "textColor"),
-                                fontSize: _selectTab == 4
-                                    ? OwonConstant.scheduleWeekFontsizeSelect
-                                    : OwonConstant
-                                        .scheduleWeekFontsizeNoSelect),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            S.of(context).global_sat,
-                            style: TextStyle(
-                                color: _selectTab == 5
-                                    ? Colors.white
-                                    : OwonColor()
-                                        .getCurrent(context, "textColor"),
-                                fontSize: _selectTab == 5
-                                    ? OwonConstant.scheduleWeekFontsizeSelect
-                                    : OwonConstant
-                                        .scheduleWeekFontsizeNoSelect),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            S.of(context).global_sun,
-                            style: TextStyle(
-                                color: _selectTab == 6
-                                    ? Colors.white
-                                    : OwonColor()
-                                        .getCurrent(context, "textColor"),
-                                fontSize: _selectTab == 6
-                                    ? OwonConstant.scheduleWeekFontsizeSelect
-                                    : OwonConstant
-                                        .scheduleWeekFontsizeNoSelect),
-                          ),
-                        ),
-                      ]),
-                ),
-              ),
+              bottom: hadData
+                  ? PreferredSize(
+                      preferredSize: Size(200.0, 80.0),
+                      child: Container(
+                        color: OwonColor().getCurrent(context, "primaryColor"),
+                        width: double.infinity,
+                        height: 80,
+                        child: TabBar(
+                            isScrollable: false,
+                            unselectedLabelColor:
+                                OwonColor().getCurrent(context, "textColor"),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            indicator: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: OwonColor().getCurrent(context, "blue")),
+                            labelPadding: EdgeInsets.all(1),
+                            onTap: (v) {
+                              setState(() {
+                                _selectTab = v;
+                              });
+                            },
+                            tabs: [
+                              Tab(
+                                child: Text(
+                                  S.of(context).global_sun,
+                                  style: TextStyle(
+                                      color: _selectTab == 0
+                                          ? Colors.white
+                                          : OwonColor()
+                                          .getCurrent(context, "textColor"),
+                                      fontSize: _selectTab == 0
+                                          ? OwonConstant
+                                          .scheduleWeekFontsizeSelect
+                                          : OwonConstant
+                                          .scheduleWeekFontsizeNoSelect),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  S.of(context).global_mon,
+                                  style: TextStyle(
+                                      color: _selectTab == 1
+                                          ? Colors.white
+                                          : OwonColor()
+                                              .getCurrent(context, "textColor"),
+                                      fontSize: _selectTab == 1
+                                          ? OwonConstant
+                                              .scheduleWeekFontsizeSelect
+                                          : OwonConstant
+                                              .scheduleWeekFontsizeNoSelect),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  S.of(context).global_tues,
+                                  style: TextStyle(
+                                      color: _selectTab == 2
+                                          ? Colors.white
+                                          : OwonColor()
+                                              .getCurrent(context, "textColor"),
+                                      fontSize: _selectTab == 2
+                                          ? OwonConstant
+                                              .scheduleWeekFontsizeSelect
+                                          : OwonConstant
+                                              .scheduleWeekFontsizeNoSelect),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  S.of(context).global_wed,
+                                  style: TextStyle(
+                                      color: _selectTab == 3
+                                          ? Colors.white
+                                          : OwonColor()
+                                              .getCurrent(context, "textColor"),
+                                      fontSize: _selectTab == 3
+                                          ? OwonConstant
+                                              .scheduleWeekFontsizeSelect
+                                          : OwonConstant
+                                              .scheduleWeekFontsizeNoSelect),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  S.of(context).global_thur,
+                                  style: TextStyle(
+                                      color: _selectTab == 4
+                                          ? Colors.white
+                                          : OwonColor()
+                                              .getCurrent(context, "textColor"),
+                                      fontSize: _selectTab == 4
+                                          ? OwonConstant
+                                              .scheduleWeekFontsizeSelect
+                                          : OwonConstant
+                                              .scheduleWeekFontsizeNoSelect),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  S.of(context).global_fri,
+                                  style: TextStyle(
+                                      color: _selectTab == 5
+                                          ? Colors.white
+                                          : OwonColor()
+                                              .getCurrent(context, "textColor"),
+                                      fontSize: _selectTab == 5
+                                          ? OwonConstant
+                                              .scheduleWeekFontsizeSelect
+                                          : OwonConstant
+                                              .scheduleWeekFontsizeNoSelect),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  S.of(context).global_sat,
+                                  style: TextStyle(
+                                      color: _selectTab == 6
+                                          ? Colors.white
+                                          : OwonColor()
+                                              .getCurrent(context, "textColor"),
+                                      fontSize: _selectTab == 6
+                                          ? OwonConstant
+                                              .scheduleWeekFontsizeSelect
+                                          : OwonConstant
+                                              .scheduleWeekFontsizeNoSelect),
+                                ),
+                              ),
+                            ]),
+                      ),
+                    )
+                  : null,
             ),
             body: hadData
                 ? EasyRefresh(
@@ -211,9 +222,9 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                       toGetScheduleList();
                       OwonLog.e("refresh");
                     },
-                    onLoad: () async {
-                      OwonLog.e("load");
-                    },
+//                    onLoad: () async {
+//                      OwonLog.e("load");
+//                    },
                     child: Column(
                       children: <Widget>[
                         getCard(
@@ -222,27 +233,27 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                             "6:00 AM",
                             "21.0",
                             "21.0"),
-                        SizedBox(
-                          height: 15,
-                        ),
+//                        SizedBox(
+//                          height: 15,
+//                        ),
                         getCard(
                             OwonPic.scheduleModeAway,
                             S.of(context).schedule_mode_away,
                             "6:00 AM",
                             "21.0",
                             "21.0"),
-                        SizedBox(
-                          height: 15,
-                        ),
+//                        SizedBox(
+//                          height: 15,
+//                        ),
                         getCard(
                             OwonPic.scheduleModeHome,
                             S.of(context).schedule_mode_home,
                             "6:00 AM",
                             "21.0",
                             "21.0"),
-                        SizedBox(
-                          height: 15,
-                        ),
+//                        SizedBox(
+//                          height: 15,
+//                        ),
                         getCard(
                             OwonPic.scheduleModeSleep,
                             S.of(context).schedule_mode_sleep,
@@ -250,13 +261,12 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                             "21.0",
                             "21.0"),
                         SizedBox(
-                          height: 15,
+                          height: 10,
                         ),
                         Container(
                           width: double.infinity,
-                          height: 60.0,
-                          margin:
-                              EdgeInsets.only(left: 10.0, right: 10.0),
+                          height: OwonConstant.systemHeight,
+                          margin: EdgeInsets.only(left: 10.0, right: 10.0),
                           child: OwonTextIconButton.icon(
                               onPressed: () {},
                               shape: RoundedRectangleBorder(
@@ -337,10 +347,65 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   Widget getCard(String imageUrl, String modeStr, String heatStr,
       String timeStr, String coolStr) {
     return Container(
-        height: OwonConstant.listHeight,
+        height: OwonConstant.cHeight,
         padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            switch (modeStr) {
+              case "Wake":
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return ScheduleSettingPage();
+                    },
+                    settings: RouteSettings(
+                        arguments: ScheduleSettingValue(
+                            OwonPic.scheduleSettingModeWake,
+                            _selectTab,
+                            timeStr,
+                            heatStr,
+                            coolStr))));
+                break;
+              case "Away":
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return ScheduleSettingPage();
+                    },
+                    settings: RouteSettings(
+                        arguments: ScheduleSettingValue(
+                            OwonPic.scheduleSettingModeAway,
+                            _selectTab,
+                            timeStr,
+                            heatStr,
+                            coolStr))));
+                break;
+              case "Home":
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return ScheduleSettingPage();
+                    },
+                    settings: RouteSettings(
+                        arguments: ScheduleSettingValue(
+                            OwonPic.scheduleSettingModeHome,
+                            _selectTab,
+                            timeStr,
+                            heatStr,
+                            coolStr))));
+                break;
+              case "Sleep":
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return ScheduleSettingPage();
+                    },
+                    settings: RouteSettings(
+                        arguments: ScheduleSettingValue(
+                            OwonPic.scheduleSettingModeSleep,
+                            _selectTab,
+                            timeStr,
+                            heatStr,
+                            coolStr))));
+                break;
+            }
+          },
           child: Card(
               shape: RoundedRectangleBorder(
                   side: BorderSide(

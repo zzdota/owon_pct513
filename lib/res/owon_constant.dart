@@ -33,8 +33,8 @@ class OwonConstant {
   static const double systemHeight = 70.0; //控件界面模式的高度
   static const Color toastBg = Color(0xFF616161);
 
-  static const double scheduleWeekFontsizeSelect = 25;
-  static const double scheduleWeekFontsizeNoSelect = 16;
+  static const double scheduleWeekFontsizeSelect = 20;
+  static const double scheduleWeekFontsizeNoSelect = 15;
 
   static const int passwordLessLength = 6;
   static const String userNameRegexString =

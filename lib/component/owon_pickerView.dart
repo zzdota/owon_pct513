@@ -30,6 +30,7 @@ class OwonNumberPicker extends StatelessWidget {
     this.zeroPad = false,
     this.highlightSelectedValue = true,
     this.decoration,
+    this.selectItemFontColor,
   })  : assert(initialValue != null),
         assert(minValue != null),
         assert(maxValue != null),
@@ -64,6 +65,7 @@ class OwonNumberPicker extends StatelessWidget {
     this.zeroPad = false,
     this.highlightSelectedValue = true,
     this.decoration,
+    this.selectItemFontColor,
   })  : assert(initialValue != null),
         assert(minValue != null),
         assert(maxValue != null),
@@ -100,6 +102,7 @@ class OwonNumberPicker extends StatelessWidget {
     this.listViewWidth = kDefaultListViewCrossAxisSize,
     this.highlightSelectedValue = true,
     this.decoration,
+    this.selectItemFontColor,
   })  : assert(initialValue != null),
         assert(minValue != null),
         assert(maxValue != null),
@@ -186,6 +189,8 @@ class OwonNumberPicker extends StatelessWidget {
   ///Amount of items
   final int integerItemCount;
 
+  final Color selectItemFontColor;
+
   //
   //----------------------------- PUBLIC ------------------------------
   //
@@ -247,7 +252,7 @@ class OwonNumberPicker extends StatelessWidget {
     );
 //        themeData.textTheme.body1;
     TextStyle selectedStyle = TextStyle(
-        color: Colors.white,
+        color: selectItemFontColor,
         fontSize: 25
     );
 //        themeData.textTheme.headline.copyWith(color: themeData.accentColor);

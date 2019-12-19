@@ -604,7 +604,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Container(
                               width: double.infinity,
-                              height: 50.0,
+                              height: OwonConstant.systemHeight,
                               margin: EdgeInsets.only(
                                   left: 20.0, right: 20.0, top: 10),
                               child: OwonTextIconButton.icon(

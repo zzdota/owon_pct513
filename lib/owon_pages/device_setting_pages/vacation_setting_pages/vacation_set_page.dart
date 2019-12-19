@@ -228,6 +228,7 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                           initialValue: _heatValue,
                           minValue: 0,
                           maxValue: 100,
+                          selectItemFontColor: OwonColor().getCurrent(context, "textColor"),
                           decoration: BoxDecoration(
 //                        color: Colors.white,
                               border: Border(
@@ -261,6 +262,7 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                           initialValue: _coolValue,
                           minValue: 0,
                           maxValue: 100,
+                          selectItemFontColor: OwonColor().getCurrent(context, "textColor"),
                           decoration: BoxDecoration(
 //                        color: Colors.white,
                               border: Border(
