@@ -28,6 +28,13 @@ class S implements WidgetsLocalizations {
   String get app_title => "app title";
   String get appearance_dark => "Dark";
   String get appearance_light => "Light";
+  String get change_psw_change => "Change";
+  String get change_psw_enter_old_psw_null => "Please enter your old password";
+  String get change_psw_fail => "Change password failed";
+  String get change_psw_old_psw => "Old Password";
+  String get change_psw_old_psw_error => "Incorrect Current password";
+  String get change_psw_success => "Password changed successfully";
+  String get change_psw_title => "Change Password";
   String get dSet_device_info => "Device Info";
   String get dSet_device_setting => "Device Setting";
   String get dSet_fan_set => "风扇运行时间闸";
@@ -176,7 +183,11 @@ class $zh extends S {
   @override
   String get schedule_disabled_tip => "The schedule has been disabled.";
   @override
+  String get change_psw_enter_old_psw_null => "请输入您的旧密码";
+  @override
   String get global_get_verify_code_fail => "验证码发送失败";
+  @override
+  String get change_psw_old_psw => "旧密码";
   @override
   String get global_hint_password => "密码";
   @override
@@ -220,6 +231,8 @@ class $zh extends S {
   @override
   String get dSet_device_info => "设备信息";
   @override
+  String get change_psw_success => "修改密码成功";
+  @override
   String get global_not_account => "账号不存在";
   @override
   String get dSet_rename_tip => "请输入设备名称";
@@ -231,6 +244,8 @@ class $zh extends S {
   String get global_account_exist => "账号已注册";
   @override
   String get schedule_copy_sch => "拷贝到其他天";
+  @override
+  String get change_psw_change => "修改";
   @override
   String get login_password_less_six_digits => "密码不得小于6位";
   @override
@@ -288,6 +303,8 @@ class $zh extends S {
   @override
   String get reset_psw_confirm => "确认修改";
   @override
+  String get change_psw_old_psw_error => "请输入正确的原密码";
+  @override
   String get tab_set => "设置";
   @override
   String get global_tues => "周二";
@@ -303,6 +320,8 @@ class $zh extends S {
   String get app_listView => "ListView";
   @override
   String get dSet_temp => "温度单位选择";
+  @override
+  String get change_psw_fail => "修改密码失败";
   @override
   String get tab_list => "温控器列表";
   @override
@@ -323,6 +342,8 @@ class $zh extends S {
   String get set_about => "关于";
   @override
   String get login_fail => "登录失败";
+  @override
+  String get change_psw_title => "修改密码";
   @override
   String get global_thur => "周四";
   @override

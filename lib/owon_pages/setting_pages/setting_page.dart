@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_pages/login_pages/change_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +41,12 @@ class _SettingPageState extends State<SettingPage> {
                   onTap: () {
                     switch (index) {
                       case 0:
-                        {}
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return ChangePage();
+                          }));
+                        }
                         break;
                       case 1:
                         {

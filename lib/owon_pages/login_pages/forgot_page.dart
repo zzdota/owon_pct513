@@ -446,7 +446,7 @@ class _ForgotPageState extends State<ForgotPage> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: 60.0,
+                  height: OwonConstant.systemHeight,
                   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
                   child: OwonTextIconButton.icon(
                       onPressed: _confirm,

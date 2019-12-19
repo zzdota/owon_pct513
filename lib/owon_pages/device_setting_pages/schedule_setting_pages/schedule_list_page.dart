@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_arguments.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_copy_to_other_day.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_set_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -106,12 +107,12 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                                       color: _selectTab == 0
                                           ? Colors.white
                                           : OwonColor()
-                                          .getCurrent(context, "textColor"),
+                                              .getCurrent(context, "textColor"),
                                       fontSize: _selectTab == 0
                                           ? OwonConstant
-                                          .scheduleWeekFontsizeSelect
+                                              .scheduleWeekFontsizeSelect
                                           : OwonConstant
-                                          .scheduleWeekFontsizeNoSelect),
+                                              .scheduleWeekFontsizeNoSelect),
                                 ),
                               ),
                               Tab(
@@ -233,27 +234,18 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                             "6:00 AM",
                             "21.0",
                             "21.0"),
-//                        SizedBox(
-//                          height: 15,
-//                        ),
                         getCard(
                             OwonPic.scheduleModeAway,
                             S.of(context).schedule_mode_away,
                             "6:00 AM",
                             "21.0",
                             "21.0"),
-//                        SizedBox(
-//                          height: 15,
-//                        ),
                         getCard(
                             OwonPic.scheduleModeHome,
                             S.of(context).schedule_mode_home,
                             "6:00 AM",
                             "21.0",
                             "21.0"),
-//                        SizedBox(
-//                          height: 15,
-//                        ),
                         getCard(
                             OwonPic.scheduleModeSleep,
                             S.of(context).schedule_mode_sleep,
@@ -268,7 +260,20 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                           height: OwonConstant.systemHeight,
                           margin: EdgeInsets.only(left: 10.0, right: 10.0),
                           child: OwonTextIconButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return ScheduleCopySCH();
+                                  },
+//                                    settings: RouteSettings(
+//                                        arguments: ScheduleSettingValue(
+//                                            OwonPic.scheduleSettingModeWake,
+//                                            _selectTab,
+//                                            timeStr,
+//                                            heatStr,
+//                                            coolStr))
+                                ));
+                              },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
                                       OwonConstant.cRadius)),
@@ -306,7 +311,6 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
             height: 70,
           ),
           Container(
-//              color: Colors.purple,
               padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
               child: Row(
                 children: <Widget>[

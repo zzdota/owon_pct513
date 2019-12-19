@@ -62,6 +62,14 @@
   "reset_psw_confirm": "Confirm",
   "reset_psw_success": "Password reset succeeded",
   "reset_psw_fail": "Password reset failed",
+  "change_psw_change": "Change",
+  "change_psw_title": "Change Password",
+  "change_psw_old_psw": "Old Password",
+  "change_psw_enter_old_psw_null": "Please enter your old password",
+  "change_psw_success": "Password changed successfully",
+  "change_psw_fail": "Change password failed",
+  "change_psw_old_psw_error": "Incorrect Current password",
+
 
   "tab_list": "Thermostat List",
   "tab_set": "Setting",

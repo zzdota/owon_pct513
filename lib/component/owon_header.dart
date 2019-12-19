@@ -5,7 +5,7 @@ import '../res/owon_themeColor.dart';
 
 class OwonHeader {
   static Widget header(BuildContext context, String imageUrl, String title,
-      {String subTitle,
+      {String subTitle, String thirdTitle,
       double fontSize = 30.0,
         double width = 250.0,
 //        double height = 100.0,
@@ -53,7 +53,13 @@ class OwonHeader {
                       style: TextStyle(
                           color: OwonColor().getCurrent(context, "textColor"),
                           fontSize: fontSize),
-                    )
+                    ),
+                    thirdTitle != null ? Text(
+                      thirdTitle,
+                      style: TextStyle(
+                          color: OwonColor().getCurrent(context, "textColor"),
+                          fontSize: fontSize),
+                    ) : Container(),
                   ],
                 )
         ],
