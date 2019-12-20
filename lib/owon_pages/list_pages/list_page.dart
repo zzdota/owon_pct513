@@ -6,6 +6,7 @@ import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
+import 'package:owon_pct513/res/owon_sequence.dart';
 import '../../owon_utils/owon_log.dart';
 import '../../res/owon_themeColor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -33,7 +34,9 @@ class _ListPageState extends State<ListPage> {
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-      if(msg["type"] == "json"){
+          String topic = msg["topic"];
+
+          if(msg["type"] == "json"){
         Map<String, dynamic> payload = msg["payload"];
         OwonLoading(context).dismiss();
         setState(() {
@@ -47,6 +50,21 @@ class _ListPageState extends State<ListPage> {
             });
           });
         });
+      }else if (msg["type"] == "string"){
+
+        String payload = msg["payload"];
+        if(topic == ""){
+
+        }else if(topic == ""){
+
+        }else if(topic == ""){
+
+        }else if(topic == ""){
+
+        }
+
+        OwonLog.e("----list上报的payload=$payload");
+
       }
     });
     super.initState();
@@ -64,6 +82,7 @@ class _ListPageState extends State<ListPage> {
     String topic = "api/cloud/$clientID";
     Map p = Map();
     p["command"] = "addr.dev.list";
+    p["sequence"] = OwonSequence.addList;
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
@@ -138,7 +157,7 @@ class _ListPageState extends State<ListPage> {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ManagementPage()));
+                                  builder: (context) => ManagementPage(_addressModel.devlist[index])));
                             },
                             child: Card(
                                 shape: RoundedRectangleBorder(

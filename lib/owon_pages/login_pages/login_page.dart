@@ -279,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
     final String topic = data[0].topic;
     if (topic.contains("reply/cloud")) {
       final String pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       String desString = "topic is <$topic>, payload is <-- $pt -->";
       OwonLog.e("json =$desString");
       Map p = Map();
@@ -295,7 +295,7 @@ class _LoginPageState extends State<LoginPage> {
       p["topic"] = topic;
       p["type"] = "raw";
       p["payload"] = bu;
-      ListEventBus.getDefault().post(p);
+//      ListEventBus.getDefault().post(p);
     } else if (topic.contains("attribute")) {
       final String pt =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
