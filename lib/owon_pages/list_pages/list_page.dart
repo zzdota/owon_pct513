@@ -45,11 +45,10 @@ class _ListPageState extends State<ListPage> {
           _addrModels.addrs.forEach((item){
             item.devlist.forEach((deviceItem){
               String deviceId = deviceItem.deviceid;
-              String deviceTopic = "device/$deviceId/attribute/#";
-              String rawTopic = "device/$deviceId/raw/#";
+              String deviceTopic = "device/$deviceId/#";
 
               OwonMqtt.getInstance().subscribeMessage(deviceTopic);
-              OwonMqtt.getInstance().subscribeMessage(rawTopic);
+
 
             });
           });
@@ -83,12 +82,19 @@ class _ListPageState extends State<ListPage> {
   toGetList() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
+
+
+
+
     String topic = "api/cloud/$clientID";
     Map p = Map();
     p["command"] = "addr.dev.list";
     p["sequence"] = OwonSequence.addList;
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
+
+
+
   }
 
   @override

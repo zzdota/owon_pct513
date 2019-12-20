@@ -20,7 +20,6 @@ import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 
 class ManagementPage extends StatefulWidget {
-
   AddressModelAddrsDevlist devModel;
   ManagementPage(this.devModel);
 
@@ -29,7 +28,6 @@ class ManagementPage extends StatefulWidget {
 }
 
 class _ManagementPageState extends State<ManagementPage> {
-
   String _localTemp = "30";
   String _localHumi = "55";
   String _systemMode;
@@ -44,85 +42,140 @@ class _ManagementPageState extends State<ManagementPage> {
 
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-          String topic = msg["topic"];
+      String topic = msg["topic"];
 
-          if(msg["type"] == "json"){
-            Map<String, dynamic> payload = msg["payload"];
-            OwonLoading(context).dismiss();
-            OwonLog.e("----m=$payload");
-          }else if (msg["type"] == "string"){
-            String payload = msg["payload"];
-
-            OwonLog.e("----上报的payload=$payload");
-            if(topic.contains("LocalTemperature") ){
-              setState(() {
-                _localTemp = payload;
-
-              });
-            }else if(topic.contains("LocalRelativeHumidity")) {
-              setState(() {
-                _localHumi = payload;
-              });
-            }else if(topic == "SystemMode"){
-
-              setState(() {
-                _systemMode = payload;
-
-              });
-            }else if(topic == "FanMode"){
-              setState(() {
-                _fanMode = payload;
-
-              });
-            }else if(topic == "HomeMode"){
-              setState(() {
-                _homeMode = payload;
-
-              });
-            }else if(topic == "ThermostaRunningMode"){
-
-            }
+      if (msg["type"] == "json") {
+        Map<String, dynamic> payload = msg["payload"];
+        OwonLoading(context).dismiss();
+        OwonLog.e("----m=${payload["response"]}");
+        List tempList = payload["response"];
+        tempList.forEach((item) {
+          String attr = item["attrName"];
+          if (attr == "LocalTemperature") {
+            _localTemp = item["attrValue"];
+          } else if (attr == "LocalRelativeHumidity") {
+            _localHumi = item["attrValue"];
+          } else if (attr == "SystemMode") {
+            _systemMode = item["attrValue"];
+          } else if (attr == "FanMode") {
+            _fanMode = item["attrValue"];
+          } else if (attr == "HomeMode") {
+            _homeMode = item["attrValue"];
           }
         });
+      } else if (msg["type"] == "string") {
+        String payload = msg["payload"];
+
+        OwonLog.e("----上报的payload=$payload");
+        if (topic.contains("LocalTemperature")) {
+          setState(() {
+            _localTemp = payload;
+          });
+        } else if (topic.contains("LocalRelativeHumidity")) {
+          setState(() {
+            _localHumi = payload;
+          });
+        } else if (topic == "SystemMode") {
+          setState(() {
+            _systemMode = payload;
+          });
+        } else if (topic == "FanMode") {
+          setState(() {
+            _fanMode = payload;
+          });
+        } else if (topic == "HomeMode") {
+          setState(() {
+            _homeMode = payload;
+          });
+        } else if (topic == "ThermostaRunningMode") {}
+      }
+    });
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     _listEvenBusSubscription.cancel();
   }
 
+  getProperty() async {
+    List attrsList = [
+      "LocalTemperature",
+      "LocalRelativeHumidity",
+      "SystemMode",
+      "FanMode",
+      "HomeMode",
+      "ThermostatRunningMode",
+      "OccupiedCoolingSetpoint",
+      "OccupiedHeatingSetpoint",
+      "UnoccupiedCoolingSetpoint",
+      "SetpointHold",
+      "SetpointHoldDuration",
+      "TemperatureUnit"
+    ];
+    List paramList = [];
+    for (int i = 0; i < attrsList.length; i++) {
+      String p = attrsList[i];
+      Map paramMap = Map();
+      paramMap["attrName"] = p;
+      paramList.add(paramMap);
+    }
 
-  getProperty()async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic = "api/cloud/$clientID";
     Map p = Map();
-    p["command"] = "device.attr.str";
+    p["command"] = "device.attr.str.batch";
     p["sequence"] = OwonSequence.temp;
     p["deviceid"] = widget.devModel.deviceid;
-//    p["attributeName"] = "LocalTemperature";
-//    p["attributeName"] = "LocalRelativeHumidity";
-    p["attributeName"] = "SystemMode";
-
+    p["param"] = paramList;
 
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
-
   }
-
-
-  setProperty()async {
+  setProperty({String attribute,String value}) async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
-    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/SystemMode";
-
-//        "api/device/${widget.devModel.deviceid}/SystemMode";
-
-    var msg = "4";
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/$attribute";
+    var msg = value;
     OwonMqtt.getInstance().publishMessage(topic, msg);
-
   }
+
+//  setProperty() async {
+//    SharedPreferences pre = await SharedPreferences.getInstance();
+//    var clientID = pre.get(OwonConstant.clientID);
+//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/SystemMode";
+//    var msg = "3";
+
+//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/FanMode";
+//    var msg = "4";
+
+//        String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/HomeMode";
+//    var msg = "2";
+
+//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/OccupiedCoolingSetpoint";
+//    var msg = "2600";
+
+//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/OccupiedHeatingSetpoint";
+//    var msg = "2600";
+
+//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/UnoccupiedCoolingSetpoint";
+//    var msg = "2200";
+
+//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/SetpointHold";
+//    var msg = "1";
+
+//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/SetpointHoldDuration";
+////    var msg = "65535";
+//    var msg = "65530";
+
+//    String topic =
+//        "api/device/${widget.devModel.deviceid}/$clientID/attribute/TemperatureUnit";
+//    var msg = "0";
+//    OwonMqtt.getInstance().publishMessage(topic, msg);
+//  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +186,7 @@ class _ManagementPageState extends State<ManagementPage> {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              setProperty();
+              setProperty(attribute: "SystemMode",value: "4");
               return;
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return DeviceSettingPage();
@@ -170,7 +223,11 @@ class _ManagementPageState extends State<ManagementPage> {
                     },
                   ),
                 ),
-                Expanded(child: OwonTempHumi(localTemp:_localTemp,localHumi: _localHumi,)),
+                Expanded(
+                    child: OwonTempHumi(
+                  localTemp: _localTemp,
+                  localHumi: _localHumi,
+                )),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
                   child: OwonAdjustTemp(
@@ -235,11 +292,10 @@ class _ManagementPageState extends State<ManagementPage> {
       },
       rightBtnPressed: () {
         OwonLog.e("right");
-        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return ScheduleListPage();
         }));
       },
     );
   }
 }
-

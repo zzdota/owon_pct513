@@ -268,6 +268,9 @@ class _LoginPageState extends State<LoginPage> {
   toSubscribe(String clientID) {
     String topic = "reply/cloud/$clientID";
     OwonMqtt.getInstance().subscribeMessage(topic);
+
+    String replyTopic = "reply/device/+/$clientID/#";
+    OwonMqtt.getInstance().subscribeMessage(replyTopic);
   }
 
   startListen() {
@@ -290,7 +293,7 @@ class _LoginPageState extends State<LoginPage> {
     } else if (topic.contains("raw")) {
       List bu = recMess.payload.message.toList();
       String desString = "topic is <$topic>, payload is <-- $bu -->";
-      OwonLog.e("raw =$desString");
+//      OwonLog.e("raw =$desString");
       Map p = Map();
       p["topic"] = topic;
       p["type"] = "raw";
