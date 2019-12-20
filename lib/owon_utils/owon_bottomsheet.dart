@@ -9,6 +9,16 @@ class OwonBottomSheet {
       double itemHeight = OwonConstant.systemHeight,
       String key = "code",
       String key1 = "name"}) {
+    Widget getW(List dataList,String key,int index){
+      return key==null?Text(
+        ""
+      ):Text(
+        "+" + dataList[index][key].toString(),
+        style: TextStyle(
+            color: OwonColor().getCurrent(
+                context, "textColor")),
+      );
+    }
     return showModalBottomSheet(
       shape: RoundedRectangleBorder(
         side: BorderSide(
@@ -64,12 +74,7 @@ class OwonBottomSheet {
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    Text(
-                                      "+" + dataList[index][key].toString(),
-                                      style: TextStyle(
-                                          color: OwonColor().getCurrent(
-                                              context, "textColor")),
-                                    ),
+                                    getW(dataList, key, index),
                                     SizedBox(
                                       width: 10.0,
                                     ),

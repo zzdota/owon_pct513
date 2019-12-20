@@ -18,7 +18,7 @@ import '../../component/owon_mode.dart';
 import '../../res/owon_settingData.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
-
+import '../../owon_utils/owon_convert.dart';
 class ManagementPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
   ManagementPage(this.devModel);
@@ -28,10 +28,13 @@ class ManagementPage extends StatefulWidget {
 }
 
 class _ManagementPageState extends State<ManagementPage> {
-  String _localTemp = "30";
-  String _localHumi = "55";
-  String _systemMode;
-  String _fanMode;
+  String _localTemp = "3000";
+  String _localHumi = "5500";
+  String _systemMode = "3";
+  String _fanMode = "6";
+  String _setPointHold = "1";
+  String _setPointHoldDuration = "65535";
+
   String _homeMode;
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
 
@@ -52,15 +55,31 @@ class _ManagementPageState extends State<ManagementPage> {
         tempList.forEach((item) {
           String attr = item["attrName"];
           if (attr == "LocalTemperature") {
+            setState(() {
+
+            });
             _localTemp = item["attrValue"];
           } else if (attr == "LocalRelativeHumidity") {
             _localHumi = item["attrValue"];
           } else if (attr == "SystemMode") {
+            setState(() {
+
+            });
             _systemMode = item["attrValue"];
           } else if (attr == "FanMode") {
+            setState(() {
+
+            });
             _fanMode = item["attrValue"];
           } else if (attr == "HomeMode") {
             _homeMode = item["attrValue"];
+          }else if (attr == "SetpointHold") {
+            setState(() {
+
+            });
+            _setPointHold = item["attrValue"];
+          }else if (attr == "SetpointHoldDuration") {
+            _setPointHoldDuration = item["attrValue"];
           }
         });
       } else if (msg["type"] == "string") {
@@ -75,19 +94,23 @@ class _ManagementPageState extends State<ManagementPage> {
           setState(() {
             _localHumi = payload;
           });
-        } else if (topic == "SystemMode") {
+        } else if (topic.contains("SystemMode")) {
           setState(() {
             _systemMode = payload;
           });
-        } else if (topic == "FanMode") {
+        } else if (topic.contains("FanMode")) {
           setState(() {
             _fanMode = payload;
           });
-        } else if (topic == "HomeMode") {
+        } else if (topic.contains("HomeMode")) {
           setState(() {
             _homeMode = payload;
           });
-        } else if (topic == "ThermostaRunningMode") {}
+        }else if (topic.contains("SetpointHold")) {
+          _setPointHold = payload;
+        }else if (topic.contains("SetpointHoldDuration")) {
+          _setPointHoldDuration = payload;
+        }
       }
     });
   }
@@ -178,6 +201,138 @@ class _ManagementPageState extends State<ManagementPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget getBottomWidget() {
+      return OwonTwoBtn(
+        leftTitle: "Temp Hold",
+        rightTitle: "Schedule",
+        leftBtnPressed: () {
+          OwonLog.e("left");
+        },
+        rightBtnPressed: () {
+          OwonLog.e("right");
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ScheduleListPage();
+          }));
+        },
+      );
+    }
+
+    Widget getWidget() {
+      var systemList = loadSystemData;
+      var fanList = loadFanData;
+      var holdList = loadHoldData;
+
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+//          color: Colors.red,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
+                    child: OwonAdjustTemp(
+                      title: "Heat To",
+                      tempTitle: "30.0",
+                      upBtnPressed: () {
+                        OwonLog.e("up");
+                      },
+                      downBtnPressed: () {
+                        OwonLog.e("down");
+                      },
+                    ),
+                  ),
+                  Expanded(
+                      child: OwonTempHumi(
+                        localTemp: OwonConvert.reduce100(_localTemp),
+                        localHumi: OwonConvert.reduce100(_localHumi),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+                    child: OwonAdjustTemp(
+                      title: "Heat To",
+                      tempTitle: "30.0",
+                      upBtnPressed: () {
+                        OwonLog.e("up");
+                      },
+                      downBtnPressed: () {
+                        OwonLog.e("down");
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            flex: 5,
+          ),
+          Expanded(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  OwonMode(
+                    leftTitle: "System",
+                    rightTitle: OwonConvert.toSystemMode(_systemMode),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, systemList,key: null).then((val) {
+                        String desValue;
+                        if(val == 0){
+                          desValue = "0";
+                        }else if(val == 1){
+                          desValue = "1";
+
+                        }else if(val == 2){
+                          desValue = "3";
+
+                        }else if(val == 3){
+                          desValue = "4";
+
+                        }else if(val == 4){
+                          desValue = "5";
+
+                        }
+
+                        print("--消失后的回调-->$val");
+                        setProperty(attribute: "SystemMode",value: desValue);
+                      });
+
+                    },
+                  ),
+                  OwonMode(
+                    leftTitle: "Fan",
+                    rightTitle: OwonConvert.toFanMode(_fanMode),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, fanList,key: null).then((val) {
+                        print("--消失后的回调-->$val");
+                        setProperty(attribute: "FanMode",value: val.toString());
+                      });
+
+                    },
+                  ),
+                  OwonMode(
+                    leftTitle: "Hold",
+                    rightTitle: OwonConvert.toHoldMode(setPointHold: _setPointHold,setPointHoldDuration: _setPointHoldDuration),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, holdList,key: null).then((val) {
+                        print("--消失后的回调-->$val");
+                        setProperty(attribute: "FanMode",value: val.toString());
+                      });
+
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: getBottomWidget(),
+                  )
+                ],
+              ))
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -196,104 +351,11 @@ class _ManagementPageState extends State<ManagementPage> {
       ),
       body: Container(child: getWidget()),
     );
+
+
+
   }
 
-  Widget getWidget() {
-    var dataList = loadSystemData;
 
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Container(
-//          color: Colors.red,
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
-                  child: OwonAdjustTemp(
-                    title: "Heat To",
-                    tempTitle: "30.0",
-                    upBtnPressed: () {
-                      OwonLog.e("up");
-                    },
-                    downBtnPressed: () {
-                      OwonLog.e("down");
-                    },
-                  ),
-                ),
-                Expanded(
-                    child: OwonTempHumi(
-                  localTemp: _localTemp,
-                  localHumi: _localHumi,
-                )),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
-                  child: OwonAdjustTemp(
-                    title: "Heat To",
-                    tempTitle: "30.0",
-                    upBtnPressed: () {
-                      OwonLog.e("up");
-                    },
-                    downBtnPressed: () {
-                      OwonLog.e("down");
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          flex: 5,
-        ),
-        Expanded(
-            flex: 6,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                OwonMode(
-                  leftTitle: "系统模式",
-                  rightTitle: "Cool",
-                ),
-                OwonMode(
-                  leftTitle: "风扇",
-                  rightTitle: "Follow Schedule",
-                ),
-                OwonMode(
-                  leftTitle: "System",
-                  rightTitle: "Emergency Heat",
-                  onPressed: () {
-                    OwonLog.e("----");
-                    OwonBottomSheet.show(context, dataList).then((val) {
-                      print("--消失后的回调-->$val");
-                    });
 
-//                  .then((val) {
-//                    print("--消失后的回调-->$val");
-//                  });
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: getBottomWidget(),
-                )
-              ],
-            ))
-      ],
-    );
-  }
-
-  Widget getBottomWidget() {
-    return OwonTwoBtn(
-      leftTitle: "Temp Hold",
-      rightTitle: "Schedule",
-      leftBtnPressed: () {
-        OwonLog.e("left");
-      },
-      rightBtnPressed: () {
-        OwonLog.e("right");
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return ScheduleListPage();
-        }));
-      },
-    );
-  }
 }

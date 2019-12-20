@@ -50,7 +50,7 @@ class _OwonAdjustTempState extends State<OwonAdjustTemp> {
               ),),
             ],
           ),
-          IconButton(icon: Icon(Icons.keyboard_arrow_down,color: OwonColor().getCurrent(context, "textColor"),size: 35,), onPressed: widget.upBtnPressed),
+          IconButton(icon: Icon(Icons.keyboard_arrow_down,color: OwonColor().getCurrent(context, "textColor"),size: 35,), onPressed: widget.downBtnPressed),
 
 //          InkWell(
 //            onTap: widget.downBtnPressed,
