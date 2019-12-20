@@ -186,10 +186,8 @@ class _ManagementPageState extends State<ManagementPage> {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              setProperty(attribute: "SystemMode",value: "4");
-              return;
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return DeviceSettingPage();
+                return DeviceSettingPage(widget.devModel);
               }));
             },
             color: OwonColor().getCurrent(context, "textColor"),

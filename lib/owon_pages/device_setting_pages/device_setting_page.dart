@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/device_rename_page.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/vacation_setting_pages/vacation_list_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
@@ -9,6 +11,10 @@ import '../../res/owon_themeColor.dart';
 import '../../res/owon_settingData.dart';
 import '../../generated/i18n.dart';
 class DeviceSettingPage extends StatefulWidget {
+
+  AddressModelAddrsDevlist devModel;
+  DeviceSettingPage(this.devModel);
+
   @override
   _DeviceSettingPageState createState() => _DeviceSettingPageState();
 }
@@ -54,7 +60,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                       break;
                       case 3:{
                         Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return AboutPage();
+                          return SensorSettingPage(widget.devModel);
                         }));
                       }
                       break;

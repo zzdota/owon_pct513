@@ -298,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
       p["topic"] = topic;
       p["type"] = "raw";
       p["payload"] = bu;
-//      ListEventBus.getDefault().post(p);
+      ListEventBus.getDefault().post(p);
     } else if (topic.contains("attribute")) {
       final String pt =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
