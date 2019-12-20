@@ -45,8 +45,12 @@ class _ListPageState extends State<ListPage> {
           _addrModels.addrs.forEach((item){
             item.devlist.forEach((deviceItem){
               String deviceId = deviceItem.deviceid;
-              String deviceTopic = "device/$deviceId/attribute/+";
+              String deviceTopic = "device/$deviceId/attribute/#";
+              String rawTopic = "device/$deviceId/raw/#";
+
               OwonMqtt.getInstance().subscribeMessage(deviceTopic);
+              OwonMqtt.getInstance().subscribeMessage(rawTopic);
+
             });
           });
         });
