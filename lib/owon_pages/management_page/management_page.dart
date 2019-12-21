@@ -19,6 +19,7 @@ import '../../res/owon_settingData.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 import '../../owon_utils/owon_convert.dart';
+
 class ManagementPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
   ManagementPage(this.devModel);
@@ -34,14 +35,15 @@ class _ManagementPageState extends State<ManagementPage> {
   String _fanMode = "6";
   String _setPointHold = "1";
   String _setPointHoldDuration = "65535";
+  String _OccupiedCoolingSetpoint = "2000";
+  String _OccupiedHeatingSetpoint = "2600";
 
-
-  String _justSetValue ;
-  String _justSetPointHoldDurationValue ;
+  String _justSetValue;
+  String _justSetPointHoldDurationValue;
 
   String _homeMode;
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
-
+  Timer _timer;
   @override
   void initState() {
     getProperty();
@@ -59,31 +61,32 @@ class _ManagementPageState extends State<ManagementPage> {
         tempList.forEach((item) {
           String attr = item["attrName"];
           if (attr == "LocalTemperature") {
-            setState(() {
-
-            });
+            setState(() {});
             _localTemp = item["attrValue"];
           } else if (attr == "LocalRelativeHumidity") {
             _localHumi = item["attrValue"];
           } else if (attr == "SystemMode") {
-            setState(() {
-
-            });
+            setState(() {});
             _systemMode = item["attrValue"];
           } else if (attr == "FanMode") {
-            setState(() {
-
-            });
+            setState(() {});
             _fanMode = item["attrValue"];
           } else if (attr == "HomeMode") {
             _homeMode = item["attrValue"];
-          }else if (attr == "SetpointHold") {
-            setState(() {
-
-            });
+          } else if (attr == "SetpointHold") {
             _setPointHold = item["attrValue"];
-          }else if (attr == "SetpointHoldDuration") {
+            if (_setPointHold == "0") {
+              setState(() {});
+            }
+          } else if (attr == "SetpointHoldDuration") {
             _setPointHoldDuration = item["attrValue"];
+            setState(() {});
+          } else if (attr == "OccupiedCoolingSetpoint") {
+            _OccupiedCoolingSetpoint = item["attrValue"];
+            setState(() {});
+          } else if (attr == "OccupiedHeatingSetpoint") {
+            _OccupiedHeatingSetpoint = item["attrValue"];
+            setState(() {});
           }
         });
       } else if (msg["type"] == "string") {
@@ -99,7 +102,7 @@ class _ManagementPageState extends State<ManagementPage> {
             _localHumi = payload;
           });
         } else if (topic.contains("SystemMode")) {
-          if(topic.startsWith("reply")){
+          if (topic.startsWith("reply")) {
             setState(() {
               _systemMode = _justSetValue;
             });
@@ -109,7 +112,7 @@ class _ManagementPageState extends State<ManagementPage> {
             _systemMode = payload;
           });
         } else if (topic.contains("FanMode")) {
-          if(topic.startsWith("reply")){
+          if (topic.startsWith("reply")) {
             setState(() {
               _fanMode = _justSetValue;
             });
@@ -119,7 +122,7 @@ class _ManagementPageState extends State<ManagementPage> {
             _fanMode = payload;
           });
         } else if (topic.contains("HomeMode")) {
-          if(topic.startsWith("reply")){
+          if (topic.startsWith("reply")) {
             setState(() {
               _homeMode = _justSetValue;
             });
@@ -128,21 +131,22 @@ class _ManagementPageState extends State<ManagementPage> {
           setState(() {
             _homeMode = payload;
           });
-        }else if (topic.endsWith("SetpointHold")) {
-          if(topic.startsWith("reply")) {
+        } else if (topic.endsWith("SetpointHold")) {
+          if (topic.startsWith("reply")) {
             if (_justSetValue == "0") {
               setState(() {
                 _setPointHold = "0";
               });
             }
           }
-        }else if (topic.contains("SetpointHoldDuration")) {
-          if(topic.startsWith("reply")){
+        } else if (topic.contains("SetpointHoldDuration")) {
+          if (topic.startsWith("reply")) {
             setState(() {
               _setPointHold = _justSetValue;
               _setPointHoldDuration = _justSetPointHoldDurationValue;
 
-              OwonLog.e(('=========>setpoint=$_setPointHold  duration=$_setPointHoldDuration just=$_justSetValue, us=$_justSetPointHoldDurationValue'));
+              OwonLog.e(
+                  ('=========>setpoint=$_setPointHold  duration=$_setPointHoldDuration just=$_justSetValue, us=$_justSetPointHoldDurationValue'));
             });
             return;
           }
@@ -195,7 +199,8 @@ class _ManagementPageState extends State<ManagementPage> {
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
-  setProperty({String attribute,String value}) async {
+
+  setProperty({String attribute, String value}) async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic =
@@ -271,26 +276,56 @@ class _ManagementPageState extends State<ManagementPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8, 20, 0, 20),
                     child: OwonAdjustTemp(
-                      title: "Heat To",
-                      tempTitle: "30.0",
+                      title: "Cool To",
+                      tempTitle:
+                          OwonConvert.reduce100(_OccupiedCoolingSetpoint),
                       upBtnPressed: () {
+                        if (_timer != null) {
+                          _timer.cancel();
+                          _timer = null;
+                        }
+                        _timer = Timer(Duration(seconds: 2), () {
+                          setProperty(
+                              attribute: "OccupiedCoolingSetpoint",
+                              value: _OccupiedCoolingSetpoint);
+                        });
+
                         OwonLog.e("up");
+                        _OccupiedCoolingSetpoint =
+                            (int.parse(_OccupiedCoolingSetpoint) + 100)
+                                .toString();
+                        setState(() {});
                       },
                       downBtnPressed: () {
+                        if (_timer != null) {
+                          _timer.cancel();
+                          _timer = null;
+                        }
+                        _timer = Timer(Duration(seconds: 2), () {
+                          setProperty(
+                              attribute: "OccupiedCoolingSetpoint",
+                              value: _OccupiedCoolingSetpoint);
+                        });
+
                         OwonLog.e("down");
+                        _OccupiedCoolingSetpoint =
+                            (int.parse(_OccupiedCoolingSetpoint) - 100)
+                                .toString();
+                        setState(() {});
                       },
                     ),
                   ),
                   Expanded(
                       child: OwonTempHumi(
-                        localTemp: OwonConvert.reduce100(_localTemp),
-                        localHumi: OwonConvert.reduce100(_localHumi),
-                      )),
+                    localTemp: OwonConvert.reduce100(_localTemp),
+                    localHumi: OwonConvert.reduce100(_localHumi),
+                  )),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
                     child: OwonAdjustTemp(
                       title: "Heat To",
-                      tempTitle: "30.0",
+                      tempTitle:
+                          OwonConvert.reduce100(_OccupiedHeatingSetpoint),
                       upBtnPressed: () {
                         OwonLog.e("up");
                       },
@@ -315,28 +350,24 @@ class _ManagementPageState extends State<ManagementPage> {
                     rightTitle: OwonConvert.toSystemMode(_systemMode),
                     onPressed: () {
                       OwonLog.e("----");
-                      OwonBottomSheet.show(context, systemList,key: null).then((val) {
+                      OwonBottomSheet.show(context, systemList, key: null)
+                          .then((val) {
                         String desValue;
-                        if(val == 0){
+                        if (val == 0) {
                           desValue = "0";
-                        }else if(val == 1){
+                        } else if (val == 1) {
                           desValue = "1";
-
-                        }else if(val == 2){
+                        } else if (val == 2) {
                           desValue = "3";
-
-                        }else if(val == 3){
+                        } else if (val == 3) {
                           desValue = "4";
-
-                        }else if(val == 4){
+                        } else if (val == 4) {
                           desValue = "5";
-
                         }
                         _justSetValue = desValue;
                         print("--消失后的回调-->$val");
-                        setProperty(attribute: "SystemMode",value: desValue);
+                        setProperty(attribute: "SystemMode", value: desValue);
                       });
-
                     },
                   ),
                   OwonMode(
@@ -345,58 +376,62 @@ class _ManagementPageState extends State<ManagementPage> {
                     rightTitle: OwonConvert.toFanMode(_fanMode),
                     onPressed: () {
                       OwonLog.e("----");
-                      OwonBottomSheet.show(context, fanList,key: null).then((val) {
+                      OwonBottomSheet.show(context, fanList, key: null)
+                          .then((val) {
                         print("--消失后的回调-->$val");
                         String desValue;
-                        if(val == 0){
+                        if (val == 0) {
                           desValue = "4";
-                        }else if(val == 1){
+                        } else if (val == 1) {
                           desValue = "6";
-
-                        }else if(val == 2){
+                        } else if (val == 2) {
                           desValue = "5";
-
                         }
                         _justSetValue = desValue;
-                        setProperty(attribute: "FanMode",value: desValue);
+                        setProperty(attribute: "FanMode", value: desValue);
                       });
-
                     },
                   ),
                   OwonMode(
-                    rightIcon: OwonConvert.createHoldIcon(setPointHold: _setPointHold,setPointHoldDuration: _setPointHoldDuration),
+                    rightIcon: OwonConvert.createHoldIcon(
+                        setPointHold: _setPointHold,
+                        setPointHoldDuration: _setPointHoldDuration),
                     leftTitle: "Hold",
-                    rightTitle: OwonConvert.toHoldMode(setPointHold: _setPointHold,setPointHoldDuration: _setPointHoldDuration),
+                    rightTitle: OwonConvert.toHoldMode(
+                        setPointHold: _setPointHold,
+                        setPointHoldDuration: _setPointHoldDuration),
                     onPressed: () {
                       OwonLog.e("----");
-                      OwonBottomSheet.show(context, holdList,key: null).then((val) {
+                      OwonBottomSheet.show(context, holdList, key: null)
+                          .then((val) {
                         print("--消失后的回调-->$val");
                         String desValue;
-                        if(val == 0){
+                        if (val == 0) {
                           desValue = "0";
                           _justSetValue = desValue;
-                          setProperty(attribute: "SetpointHold",value: desValue);
-                        }else if(val == 1){
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                        } else if (val == 1) {
                           desValue = "1";
                           _justSetValue = desValue;
                           _justSetPointHoldDurationValue = "65535";
-                          setProperty(attribute: "SetpointHold",value: desValue);
-                          setProperty(attribute: "SetpointHoldDuration",value: "65535");
-
-
-                        }else if(val == 2){
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                          setProperty(
+                              attribute: "SetpointHoldDuration",
+                              value: "65535");
+                        } else if (val == 2) {
                           desValue = "1";
                           _justSetValue = desValue;
                           _justSetPointHoldDurationValue = "1";
-                          setProperty(attribute: "SetpointHold",value: desValue);
-                          Future.delayed(Duration(milliseconds: 100),(){
-                            setProperty(attribute: "SetpointHoldDuration",value: "1");
-
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            setProperty(
+                                attribute: "SetpointHoldDuration", value: "1");
                           });
                         }
-
                       });
-
                     },
                   ),
                   Padding(
@@ -427,11 +462,5 @@ class _ManagementPageState extends State<ManagementPage> {
       ),
       body: Container(child: getWidget()),
     );
-
-
-
   }
-
-
-
 }
