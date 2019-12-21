@@ -44,7 +44,7 @@ class DeviceRenamePage extends StatelessWidget {
             decoration: InputDecoration(
               labelText: S.of(context).dSet_rename_tip,
               labelStyle:  TextStyle(
-                  fontSize: 14,
+                  fontSize: 17,
                   color: OwonColor().getCurrent(context, "blue")),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),

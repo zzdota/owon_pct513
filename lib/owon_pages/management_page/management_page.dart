@@ -35,6 +35,10 @@ class _ManagementPageState extends State<ManagementPage> {
   String _setPointHold = "1";
   String _setPointHoldDuration = "65535";
 
+
+  String _justSetValue ;
+  String _justSetPointHoldDurationValue ;
+
   String _homeMode;
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
 
@@ -95,21 +99,60 @@ class _ManagementPageState extends State<ManagementPage> {
             _localHumi = payload;
           });
         } else if (topic.contains("SystemMode")) {
+          if(topic.startsWith("reply")){
+            setState(() {
+              _systemMode = _justSetValue;
+            });
+            return;
+          }
           setState(() {
             _systemMode = payload;
           });
         } else if (topic.contains("FanMode")) {
+          if(topic.startsWith("reply")){
+            setState(() {
+              _fanMode = _justSetValue;
+            });
+            return;
+          }
           setState(() {
             _fanMode = payload;
           });
         } else if (topic.contains("HomeMode")) {
+          if(topic.startsWith("reply")){
+            setState(() {
+              _homeMode = _justSetValue;
+            });
+            return;
+          }
           setState(() {
             _homeMode = payload;
           });
         }else if (topic.contains("SetpointHold")) {
-          _setPointHold = payload;
+          if(topic.startsWith("reply")) {
+            if (_justSetValue == "0") {
+              setState(() {
+                _setPointHold = "0";
+              });
+              return;
+            }else{
+              _setPointHold = "1";
+
+            }
+          }
+
         }else if (topic.contains("SetpointHoldDuration")) {
-          _setPointHoldDuration = payload;
+          if(topic.startsWith("reply")){
+            setState(() {
+              _setPointHoldDuration = _justSetPointHoldDurationValue;
+
+              OwonLog.e(('setpoint=$_setPointHold  duration=$_setPointHoldDuration just=$_justSetValue, us=$_justSetPointHoldDurationValue'));
+            });
+            return;
+          }
+          setState(() {
+            _setPointHoldDuration = payload;
+          });
         }
       }
     });
@@ -292,7 +335,7 @@ class _ManagementPageState extends State<ManagementPage> {
                           desValue = "5";
 
                         }
-
+                        _justSetValue = desValue;
                         print("--消失后的回调-->$val");
                         setProperty(attribute: "SystemMode",value: desValue);
                       });
@@ -306,7 +349,18 @@ class _ManagementPageState extends State<ManagementPage> {
                       OwonLog.e("----");
                       OwonBottomSheet.show(context, fanList,key: null).then((val) {
                         print("--消失后的回调-->$val");
-                        setProperty(attribute: "FanMode",value: val.toString());
+                        String desValue;
+                        if(val == 0){
+                          desValue = "4";
+                        }else if(val == 1){
+                          desValue = "6";
+
+                        }else if(val == 2){
+                          desValue = "5";
+
+                        }
+                        _justSetValue = desValue;
+                        setProperty(attribute: "FanMode",value: desValue);
                       });
 
                     },
@@ -318,7 +372,27 @@ class _ManagementPageState extends State<ManagementPage> {
                       OwonLog.e("----");
                       OwonBottomSheet.show(context, holdList,key: null).then((val) {
                         print("--消失后的回调-->$val");
-                        setProperty(attribute: "FanMode",value: val.toString());
+                        String desValue;
+                        if(val == 0){
+                          desValue = "0";
+                          _justSetValue = desValue;
+                          setProperty(attribute: "SetpointHold",value: desValue);
+                        }else if(val == 1){
+                          desValue = "1";
+                          _justSetValue = desValue;
+                          _justSetPointHoldDurationValue = "65535";
+                          setProperty(attribute: "SetpointHold",value: desValue);
+                          setProperty(attribute: "SetpointHoldDuration",value: "65535");
+
+
+                        }else if(val == 2){
+                          desValue = "1";
+                          _justSetValue = desValue;
+                          _justSetPointHoldDurationValue = "1";
+                          setProperty(attribute: "SetpointHold",value: desValue);
+                          setProperty(attribute: "SetpointHoldDuration",value: "1");
+                        }
+
                       });
 
                     },

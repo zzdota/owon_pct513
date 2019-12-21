@@ -67,10 +67,7 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Image.asset(
-                  OwonPic.dVacDepartB,
-                  width: 20,
-                ),
+                SvgPicture.asset(OwonPic.dVacDepart,width: 20,color: OwonColor().getCurrent(context, "textColor"),),
                 SizedBox(
                   width: 8,
                 ),
@@ -130,10 +127,8 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Image.asset(
-                  OwonPic.dVacReturnB,
-                  width: 20,
-                ),
+            SvgPicture.asset(OwonPic.dVacReturn,width: 20,color: OwonColor().getCurrent(context, "textColor"),),
+
                 SizedBox(
                   width: 8,
                 ),
@@ -193,10 +188,8 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Image.asset(
-                  OwonPic.dVacVacationSetB,
-                  width: 20,
-                ),
+            SvgPicture.asset(OwonPic.dVacVacationSetB,width: 20,color: OwonColor().getCurrent(context, "textColor"),),
+
                 SizedBox(
                   width: 8,
                 ),

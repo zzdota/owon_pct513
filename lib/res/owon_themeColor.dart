@@ -17,6 +17,9 @@ class OwonColor {
       "blue": Color(0xff009fe9), // 登录界面登录按钮色
       "orange": Color(0xfff7ad18), //用户名图标色
       "textfieldColor": Color(0xff5a5a5a),
+      "green": Color(0xff8cc63f),
+
+
     },
     1: {
       //white
@@ -30,6 +33,8 @@ class OwonColor {
       "blue": Color(0xff009fe9),
       "orange": Color(0xfff7ad18),
       "textfieldColor": Color(0xff5a5a5a),
+      "green": Color(0xff8cc63f),
+
     }
   };
 

@@ -101,74 +101,84 @@ List loadSystemData = [
   {
     "name": "Off",
     "description": "与傀儡和石像鬼类似，撼地者也曾经是大地的一部分，不过如今他自由行走于大地之",
-    "imageUrl": "assets/images/modifyPsw.svg",
-//    "color": Colors.red,
+    "imageUrl": "assets/images/management/m_sys_off.svg",
+    "color": Colors.white,
 
   },
   {
     "name": "Auto",
     "description": "斯温是一名守夜骑士的私生子，身怀苍白南海人的血统，在影承废墟长大。他父亲因",
-    "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "imageUrl": "assets/images/management/m_sys_auto.svg",
+//    "color": Colors.blue,
+
   },
   {
     "name": "Cool",
     "description":
     "多年来骑士达维安一直在追寻一条传说中的古龙，而他发现自己最终面对的敌人后感到失望：过去让人闻风丧胆的神龙斯莱瑞克已经变得苍老而脆弱，它的双翼已经残破",
-    "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "imageUrl": "assets/images/management/m_sys_cool.svg",
+    "color": Colors.blue,
   }
   ,
   {
     "name": "Heat",
     "description":
     "多年来骑士达维安一直在追寻一条传说中的古龙，而他发现自己最终面对的敌人后感到失望：过去让人闻风丧胆的神龙斯莱瑞克已经变得苍老而脆弱，它的双翼已经残破",
-    "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "imageUrl": "assets/images/management/m_sys_heat.svg",
+    "color": Colors.red,
   }
   ,
   {
     "name": "Emergyce Heat",
     "description":
     "多年来骑士达维安一直在追寻一条传说中的古龙，而他发现自己最终面对的敌人后感到失望：过去让人闻风丧胆的神龙斯莱瑞克已经变得苍老而脆弱，它的双翼已经残破",
-    "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "imageUrl": "assets/images/management/m_sys_eHeat.svg",
+    "color": Colors.red,
+
   }
 ];
 List loadFanData = [
   {
     "name": "On",
     "description": "与傀儡和石像鬼类似，撼地者也曾经是大地的一部分，不过如今他自由行走于大地之",
-//    "imageUrl": "assets/images/modifyPsw.svg",
-    "color": Colors.red,
+    "imageUrl": "assets/images/modifyPsw.svg",
+    "color": Colors.green,
 
   },
   {
     "name": "Auto",
     "description": "斯温是一名守夜骑士的私生子，身怀苍白南海人的血统，在影承废墟长大。他父亲因",
-    "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "imageUrl": "assets/images/management/m_fan_auto.svg",
   },
   {
     "name": "Cycle",
     "description":
     "多年来骑士达维安一直在追寻一条传说中的古龙，而他发现自己最终面对的敌人后感到失望：过去让人闻风丧胆的神龙斯莱瑞克已经变得苍老而脆弱，它的双翼已经残破",
-    "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "imageUrl": "assets/images/management/m_fan_circle.svg",
   }
 ];
 List loadHoldData = [
   {
     "name": "Follow Schedule",
     "description": "与傀儡和石像鬼类似，撼地者也曾经是大地的一部分，不过如今他自由行走于大地之",
-//    "imageUrl": "assets/images/modifyPsw.svg",
-    "color": Colors.red,
+    "imageUrl": "assets/images/management/m_hold_schedule.svg",
+    "color": Colors.green,
 
   },
   {
     "name": "Per Hold",
     "description": "斯温是一名守夜骑士的私生子，身怀苍白南海人的血统，在影承废墟长大。他父亲因",
-    "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "imageUrl": "assets/images/management/m_hold_permHold.svg",
+    "color": Colors.white,
+
   },
   {
     "name": "Hold Until",
     "description":
     "多年来骑士达维安一直在追寻一条传说中的古龙，而他发现自己最终面对的敌人后感到失望：过去让人闻风丧胆的神龙斯莱瑞克已经变得苍老而脆弱，它的双翼已经残破",
     "imageUrl": "assets/images/login/login_forgot_psw_icon.svg",
+    "color": Colors.white,
+
   }
 ];
 

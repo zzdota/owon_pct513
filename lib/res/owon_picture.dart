@@ -77,12 +77,9 @@ class OwonPic {
   static String dSetTempSetW = "assets/images/device_set/dset_temSetting_w.png";
   static String dSetVacSetB = "assets/images/device_set/dset_vacSetting_b.png";
   static String dSetVacSetW = "assets/images/device_set/dset_vacSetting_w.png";
-  static String dVacDepartB = "assets/images/device_set/vac_depart_b.png";
-  static String dVacDepartW = "assets/images/device_set/vac_depart_w.png";
-  static String dVacReturnB = "assets/images/device_set/vac_return_b.png";
-  static String dVacReturnW = "assets/images/device_set/vac_return_w.png";
-  static String dVacVacationSetB = "assets/images/device_set/vac_vacationSetting_b.png";
-  static String dVacVacationSetW = "assets/images/device_set/vac_vacationSetting_w.png";
+  static String dVacDepart = "assets/images/device_set/vac_depart.svg";
+  static String dVacReturn = "assets/images/device_set/vac_return.svg";
+  static String dVacVacationSetB = "assets/images/device_set/vac_set.svg";
   static String dVacNoSetB = "assets/images/device_set/vac_noSetting_b.png";
 
   static String scheduleCopy = "assets/images/device_set/schedule/schedule_copy.svg";
@@ -101,28 +98,3 @@ class OwonPic {
   static String scheduleTimeIcon = "assets/images/device_set/schedule/schedule_time_icon.svg";
 }
 
-/*
-    - assets/images/device_set/dset_cirSetting_b.png
-    - assets/images/device_set/dset_cirSetting_w.png
-    - assets/images/device_set/dset_devInfo_b.png
-    - assets/images/device_set/dset_devInfo_w.png
-    - assets/images/device_set/dset_rename_b.png
-    - assets/images/device_set/dset_rename_w.png
-
-    - assets/images/device_set/dset_sensorSetting_b.png
-    - assets/images/device_set/dset_sensorSetting_w.png
-    - assets/images/device_set/dset_temSetting_b.png
-    - assets/images/device_set/dset_temSetting_w.png
-    - assets/images/device_set/dset_vacSetting_b.png
-    - assets/images/device_set/dset_vacSetting_w.png
-    - assets/images/device_set/vac_depart_b.png
-    - assets/images/device_set/vac_depart_w.png
-    - assets/images/device_set/vac_return_b.png
-    - assets/images/device_set/vac_return_w.png
-    - assets/images/device_set/vac_vacationSetting_b.png
-    - assets/images/device_set/vac_vacationSetting_w.png
-    - assets/images/device_set/vac_noSetting_b.png
-
-
-
- */

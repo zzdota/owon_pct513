@@ -155,6 +155,9 @@ flutter:
     - assets/images/device_set/vac_vacationSetting_b.png
     - assets/images/device_set/vac_vacationSetting_w.png
     - assets/images/device_set/vac_noSetting_b.png
+    - assets/images/device_set/vac_return.svg
+    - assets/images/device_set/vac_depart.svg
+    - assets/images/device_set/vac_set.svg
 
     - assets/images/device_set/schedule/schedule_copy.svg
     - assets/images/device_set/schedule/schedule_copy_no_select.svg
