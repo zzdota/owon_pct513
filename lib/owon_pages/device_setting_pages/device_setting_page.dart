@@ -46,7 +46,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                     switch(index){
                       case 0:{
                         Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return DeviceRenamePage();
+                          return DeviceRenamePage(widget.devModel);
                         }));
                       }
                       break;

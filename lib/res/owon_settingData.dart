@@ -141,8 +141,8 @@ List loadFanData = [
   {
     "name": "On",
     "description": "与傀儡和石像鬼类似，撼地者也曾经是大地的一部分，不过如今他自由行走于大地之",
-    "imageUrl": "assets/images/modifyPsw.svg",
-    "color": Colors.green,
+    "imageUrl": "assets/images/management/m_fan_show.svg",
+    "color": Colors.white,
 
   },
   {

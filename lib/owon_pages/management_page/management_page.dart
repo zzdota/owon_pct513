@@ -128,25 +128,21 @@ class _ManagementPageState extends State<ManagementPage> {
           setState(() {
             _homeMode = payload;
           });
-        }else if (topic.contains("SetpointHold")) {
+        }else if (topic.endsWith("SetpointHold")) {
           if(topic.startsWith("reply")) {
             if (_justSetValue == "0") {
               setState(() {
                 _setPointHold = "0";
               });
-              return;
-            }else{
-              _setPointHold = "1";
-
             }
           }
-
         }else if (topic.contains("SetpointHoldDuration")) {
           if(topic.startsWith("reply")){
             setState(() {
+              _setPointHold = _justSetValue;
               _setPointHoldDuration = _justSetPointHoldDurationValue;
 
-              OwonLog.e(('setpoint=$_setPointHold  duration=$_setPointHoldDuration just=$_justSetValue, us=$_justSetPointHoldDurationValue'));
+              OwonLog.e(('=========>setpoint=$_setPointHold  duration=$_setPointHoldDuration just=$_justSetValue, us=$_justSetPointHoldDurationValue'));
             });
             return;
           }
@@ -314,6 +310,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   OwonMode(
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode),
                     leftTitle: "System",
                     rightTitle: OwonConvert.toSystemMode(_systemMode),
                     onPressed: () {
@@ -344,6 +341,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   OwonMode(
                     leftTitle: "Fan",
+                    rightIcon: OwonConvert.createFanIcon(_fanMode),
                     rightTitle: OwonConvert.toFanMode(_fanMode),
                     onPressed: () {
                       OwonLog.e("----");
@@ -366,6 +364,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     },
                   ),
                   OwonMode(
+                    rightIcon: OwonConvert.createHoldIcon(setPointHold: _setPointHold,setPointHoldDuration: _setPointHoldDuration),
                     leftTitle: "Hold",
                     rightTitle: OwonConvert.toHoldMode(setPointHold: _setPointHold,setPointHoldDuration: _setPointHoldDuration),
                     onPressed: () {
@@ -390,7 +389,10 @@ class _ManagementPageState extends State<ManagementPage> {
                           _justSetValue = desValue;
                           _justSetPointHoldDurationValue = "1";
                           setProperty(attribute: "SetpointHold",value: desValue);
-                          setProperty(attribute: "SetpointHoldDuration",value: "1");
+                          Future.delayed(Duration(milliseconds: 100),(){
+                            setProperty(attribute: "SetpointHoldDuration",value: "1");
+
+                          });
                         }
 
                       });

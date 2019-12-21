@@ -1,3 +1,8 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/res/owon_picture.dart';
+import 'package:owon_pct513/res/owon_themeColor.dart';
+import 'package:flutter/material.dart';
 class OwonConvert {
   static String reduce100(String str) {
     String desString;
@@ -65,5 +70,59 @@ class OwonConvert {
    }
 
     return desString;
+  }
+
+
+
+  static Widget createSystemIcon(String str) {
+    Widget desWidget;
+    if(str == "0"){
+      desWidget = SvgPicture.asset(OwonPic.mSysOff,color:Colors.white,width: 20,);
+    }else if(str == "1"){
+      desWidget = SvgPicture.asset(OwonPic.mSysAuto,color:Colors.white,width: 20,);
+    }else if(str == "3"){
+      desWidget = SvgPicture.asset(OwonPic.mSysCool,color:Colors.blue,width: 20,);
+    }else if(str == "4"){
+      desWidget = SvgPicture.asset(OwonPic.mSysHeat,color:Colors.red,width: 20,);
+    }else if(str == "5"){
+      desWidget = SvgPicture.asset(OwonPic.mSysEHeat,color:Colors.red,width: 20,);
+    }
+//    else {
+//      desString = "未知模式";
+//    }
+    return desWidget;
+  }
+
+  static Widget createFanIcon(String str) {
+
+    Widget desWidget;
+    if(str == "4"){
+      desWidget = SvgPicture.asset(OwonPic.mFanShow,color:Colors.white,width: 20,);
+    }else if(str == "6"){
+      desWidget = SvgPicture.asset(OwonPic.mFanAuto,color:Colors.grey,width: 20,);
+    }else if(str == "5"){
+      desWidget = SvgPicture.asset(OwonPic.mFanCircle,color:Colors.grey,width: 20,);
+    }
+    return desWidget;
+
+  }
+
+
+  static Widget createHoldIcon({String setPointHold,String setPointHoldDuration}) {
+
+    Widget desWidget;
+    if(setPointHold == "0"){
+      desWidget = SvgPicture.asset(OwonPic.mHoldSchedule,color:Colors.green,width: 20,);
+    }else {
+      if(setPointHoldDuration == "65535") {
+        desWidget = SvgPicture.asset(OwonPic.mHoldPermHold,color:Colors.white,width: 20,);
+
+      }else{
+        desWidget = SvgPicture.asset(OwonPic.mHoldTempHold,color:Colors.white,width: 20,);
+
+      }
+    }
+    return desWidget;
+
   }
 }

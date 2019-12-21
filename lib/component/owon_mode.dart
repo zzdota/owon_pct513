@@ -5,11 +5,13 @@ import 'package:owon_pct513/res/owon_themeColor.dart';
 class OwonMode extends StatefulWidget {
   String leftTitle;
   String rightTitle;
+ @required Widget rightIcon;
   double height;
   VoidCallback onPressed;
   OwonMode(
       {this.leftTitle,
       this.rightTitle,
+        this.rightIcon,
       this.height = OwonConstant.systemHeight,
       this.onPressed});
   @override
@@ -93,10 +95,8 @@ class _OwonModeState extends State<OwonMode> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Icon(
-                    Icons.add,
-                    color: OwonColor().getCurrent(context, "textColor"),
-                  ),
+                  widget.rightIcon,
+                  SizedBox(width: 5,),
                   Text(
                     widget.rightTitle,
                     style: TextStyle(
