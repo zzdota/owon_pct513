@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/component/owon_header.dart';
-import 'package:owon_pct513/component/owon_pickerView.dart';
-import 'package:owon_pct513/component/owon_timeTextfield.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
-import 'package:owon_pct513/res/owon_picture.dart';
+import '../../../component/owon_header.dart';
+import '../../../component/owon_pickerView.dart';
+import '../../../component/owon_timeTextfield.dart';
+import '../../../owon_api/model/address_model_entity.dart';
+import '../../../owon_utils/owon_log.dart';
+import '../../../res/owon_picture.dart';
 import '../../../generated/i18n.dart';
 import '../../../res/owon_themeColor.dart';
-import 'schedule_arguments.dart';
 
 class ScheduleSettingPage extends StatefulWidget {
+  AddressModelAddrsDevlist devModel;
+  Map<String, dynamic> mScheduleListModel;
+  String mImageUrl;
+  int mMode;
+  int mWeek;
+
+  ScheduleSettingPage(this.devModel,this.mScheduleListModel,this.mImageUrl,this.mMode,this.mWeek);
+
   @override
   _ScheduleSettingPageState createState() => _ScheduleSettingPageState();
 }
@@ -21,9 +28,6 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScheduleSettingValue arguments = ModalRoute.of(context).settings.arguments;
-    OwonLog.e(
-        "${arguments.imageUrl}=====${arguments.weekStr}====${arguments.timeStr}====${arguments.heatStr}====${arguments.coolStr}");
 
     return Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -61,8 +65,8 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    OwonHeader.header(context, arguments.imageUrl,
-                        getTitleStr(arguments.weekStr),
+                    OwonHeader.header(context, widget.mImageUrl,
+                        getTitleStr(widget.mWeek),
                         width: 200),
                     Expanded(
                       child: Padding(

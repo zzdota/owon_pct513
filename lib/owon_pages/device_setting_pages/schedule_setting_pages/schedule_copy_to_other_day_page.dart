@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/generated/i18n.dart';
+import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 
 class ScheduleCopySCH extends StatefulWidget {
+  AddressModelAddrsDevlist devModel;
+  Map<String, dynamic> mScheduleListModel;
+  int mWeek;
+
+  ScheduleCopySCH(this.devModel,this.mScheduleListModel,this.mWeek);
+
   @override
   _ScheduleCopySCHState createState() => _ScheduleCopySCHState();
 }

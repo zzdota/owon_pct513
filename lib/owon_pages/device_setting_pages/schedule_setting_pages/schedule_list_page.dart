@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_arguments.dart';
-import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_copy_to_other_day.dart';
-import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pages/schedule_set_page.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import '../../../owon_utils/owon_temperature.dart';
+import '../../../owon_api/model/address_model_entity.dart';
+import '../../../owon_pages/device_setting_pages/schedule_setting_pages/schedule_copy_to_other_day_page.dart';
+import '../../../owon_pages/device_setting_pages/schedule_setting_pages/schedule_set_page.dart';
+import '../../../owon_utils/owon_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../owon_utils/owon_text_icon_button.dart';
 import '../../../res/owon_constant.dart';
@@ -18,6 +19,9 @@ import '../../../generated/i18n.dart';
 import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
 
 class ScheduleListPage extends StatefulWidget {
+  AddressModelAddrsDevlist devModel;
+  ScheduleListPage(this.devModel);
+
   @override
   _ScheduleListPageState createState() => _ScheduleListPageState();
 }
@@ -26,20 +30,58 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   EasyRefreshController refreshController = EasyRefreshController();
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   bool hadData = true;
+  Map<String, dynamic> mScheduleListModel = Map();
 
   bool _switchValue = false;
   int _selectTab = 0;
+  bool tempUnit = true;
 
   @override
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-      OwonLog.e("======>>>>>>>${msg["type"]}");
-//      OwonLog.e("canvas =>>>>topic=${msg["topic"]}");
-//      OwonLog.e("canvas =>>>>payload=${msg["payload"]}");
-//      Map<String, dynamic> payload = msg["payload"];
-//      OwonLog.e("canvas =>>>>cmd=${payload["command"]}");
-//      OwonLog.e("canvas =>>>>addrs=${payload["addrs"]}");
+      String topic = msg["topic"];
+
+      if (msg["type"] == "json") {
+        Map<String, dynamic> payload = msg["payload"];
+        OwonLog.e("----m=$payload");
+      } else if (msg["type"] == "string") {
+        String payload = msg["payload"];
+        OwonLog.e("----上报的payload=$payload");
+
+        if (topic.contains("TemperatureUnit")) {
+          setState(() {
+            if (payload == "0") {
+              tempUnit = false;
+            } else {
+              tempUnit = true;
+            }
+          });
+        }
+      } else if (msg["type"] == "raw") {
+        if (!topic.contains("WeeklySchedule")) {
+          return;
+        }
+        List payload = msg["payload"];
+        OwonLog.e("======>payload$payload");
+        Map<String, dynamic> scheduleMode = Map();
+        for (int i = 0; i < 7; i++) {
+          List buf = payload.sublist(i * 35, 35 * i + 35);
+          for (int m = 0; m < 5; m++) {
+            List mode = buf.sublist(m * 7, 7 * m + 7);
+            scheduleMode["week${i}timeId$m"] = mode[0];
+            scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
+            scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
+            scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
+          }
+        }
+        setState(() {
+          if (mScheduleListModel != null) {
+            mScheduleListModel.clear();
+            mScheduleListModel = scheduleMode;
+          }
+        });
+      }
     });
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
@@ -231,27 +273,27 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                         getCard(
                             OwonPic.scheduleModeWake,
                             S.of(context).schedule_mode_wake,
-                            "6:00 AM",
-                            "21.0",
-                            "21.0"),
+                            getStartTime(0),
+                            getHeatTemp(0),
+                            getCoolTemp(0)),
                         getCard(
                             OwonPic.scheduleModeAway,
                             S.of(context).schedule_mode_away,
-                            "6:00 AM",
-                            "21.0",
-                            "21.0"),
+                            getStartTime(1),
+                            getHeatTemp(1),
+                            getCoolTemp(1)),
                         getCard(
                             OwonPic.scheduleModeHome,
                             S.of(context).schedule_mode_home,
-                            "6:00 AM",
-                            "21.0",
-                            "21.0"),
+                            getStartTime(2),
+                            getHeatTemp(2),
+                            getCoolTemp(2)),
                         getCard(
                             OwonPic.scheduleModeSleep,
                             S.of(context).schedule_mode_sleep,
-                            "6:00 AM",
-                            "21.0",
-                            "21.0"),
+                            getStartTime(3),
+                            getHeatTemp(3),
+                            getCoolTemp(3)),
                         SizedBox(
                           height: 10,
                         ),
@@ -261,18 +303,13 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                           margin: EdgeInsets.only(left: 10.0, right: 10.0),
                           child: OwonTextIconButton.icon(
                               onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) {
-                                    return ScheduleCopySCH();
-                                  },
-//                                    settings: RouteSettings(
-//                                        arguments: ScheduleSettingValue(
-//                                            OwonPic.scheduleSettingModeWake,
-//                                            _selectTab,
-//                                            timeStr,
-//                                            heatStr,
-//                                            coolStr))
-                                ));
+                                if (mScheduleListModel.length != 0) {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                    return ScheduleCopySCH(widget.devModel,
+                                        mScheduleListModel, _selectTab);
+                                  }));
+                                }
                               },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
@@ -348,8 +385,8 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     );
   }
 
-  Widget getCard(String imageUrl, String modeStr, String heatStr,
-      String timeStr, String coolStr) {
+  Widget getCard(String imageUrl, String modeStr, String timeStr,
+      String heatStr, String coolStr) {
     return Container(
         height: OwonConstant.cHeight,
         padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -357,56 +394,56 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
           onTap: () {
             switch (modeStr) {
               case "Wake":
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return ScheduleSettingPage();
-                    },
-                    settings: RouteSettings(
-                        arguments: ScheduleSettingValue(
-                            OwonPic.scheduleSettingModeWake,
-                            _selectTab,
-                            timeStr,
-                            heatStr,
-                            coolStr))));
+                if (mScheduleListModel.length != 0) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ScheduleSettingPage(
+                        widget.devModel,
+                        mScheduleListModel,
+                        OwonPic.scheduleSettingModeWake,
+                        0,
+                        _selectTab);
+                  }));
+                }
                 break;
               case "Away":
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return ScheduleSettingPage();
-                    },
-                    settings: RouteSettings(
-                        arguments: ScheduleSettingValue(
-                            OwonPic.scheduleSettingModeAway,
-                            _selectTab,
-                            timeStr,
-                            heatStr,
-                            coolStr))));
+                if (mScheduleListModel.length != 0) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ScheduleSettingPage(
+                        widget.devModel,
+                        mScheduleListModel,
+                        OwonPic.scheduleSettingModeAway,
+                        1,
+                        _selectTab);
+                  }));
+                }
                 break;
               case "Home":
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return ScheduleSettingPage();
-                    },
-                    settings: RouteSettings(
-                        arguments: ScheduleSettingValue(
-                            OwonPic.scheduleSettingModeHome,
-                            _selectTab,
-                            timeStr,
-                            heatStr,
-                            coolStr))));
+                if (mScheduleListModel.length != 0) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ScheduleSettingPage(
+                        widget.devModel,
+                        mScheduleListModel,
+                        OwonPic.scheduleSettingModeHome,
+                        2,
+                        _selectTab);
+                  }));
+                }
                 break;
               case "Sleep":
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return ScheduleSettingPage();
-                    },
-                    settings: RouteSettings(
-                        arguments: ScheduleSettingValue(
-                            OwonPic.scheduleSettingModeSleep,
-                            _selectTab,
-                            timeStr,
-                            heatStr,
-                            coolStr))));
+                if (mScheduleListModel.length != 0) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ScheduleSettingPage(
+                        widget.devModel,
+                        mScheduleListModel,
+                        OwonPic.scheduleSettingModeSleep,
+                        3,
+                        _selectTab);
+                  }));
+                }
                 break;
             }
           },
@@ -521,5 +558,36 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                 ),
               )),
         ));
+  }
+
+  String getStartTime(int mode) {
+    if (mScheduleListModel.length == 0) {
+      return "-- : --";
+    } else {
+      int hour =
+          (mScheduleListModel["week${_selectTab}startTime$mode"] / 60).toInt();
+      int min = mScheduleListModel["week${_selectTab}startTime$mode"] % 60;
+      return "${hour.toString().padLeft(2, '0')} : ${min.toString().padLeft(2, '0')}";
+    }
+  }
+
+  String getHeatTemp(int mode) {
+    if (mScheduleListModel.length == 0) {
+      return "-.-";
+    } else {
+      return tempUnit == false
+          ? "${mScheduleListModel["week${_selectTab}heatTemp$mode"] / 100} ℃"
+          : "${OwonTemperature().cToF(mScheduleListModel["week${_selectTab}heatTemp$mode"] / 100)} ℉";
+    }
+  }
+
+  String getCoolTemp(int mode) {
+    if (mScheduleListModel.length == 0) {
+      return "-.-";
+    } else {
+      return tempUnit == false
+          ? "${mScheduleListModel["week${_selectTab}coolTemp$mode"] / 100} ℃"
+          : "${OwonTemperature().cToF(mScheduleListModel["week${_selectTab}coolTemp$mode"] / 100)} ℉";
+    }
   }
 }

@@ -255,7 +255,7 @@ class _ManagementPageState extends State<ManagementPage> {
         rightBtnPressed: () {
           OwonLog.e("right");
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return ScheduleListPage();
+            return ScheduleListPage(widget.devModel);
           }));
         },
       );
