@@ -34,7 +34,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
 
   bool _switchValue = false;
   int _selectTab = 0;
-  bool tempUnit = true;
+  bool tempUnit = false;
 
   @override
   void initState() {
@@ -85,16 +85,17 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     });
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-//      toGetScheduleList();
+      toGetScheduleList();
     });
   }
 
   toGetScheduleList() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
-    String topic = "api/cloud/$clientID";
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/raw";
     Map p = Map();
-    p["command"] = "addr.dev.list";
+    p["command"] = "WeeklySchedule";
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
@@ -402,7 +403,8 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                         mScheduleListModel,
                         OwonPic.scheduleSettingModeWake,
                         0,
-                        _selectTab);
+                        _selectTab,
+                        tempUnit);
                   }));
                 }
                 break;
@@ -415,7 +417,8 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                         mScheduleListModel,
                         OwonPic.scheduleSettingModeAway,
                         1,
-                        _selectTab);
+                        _selectTab,
+                        tempUnit);
                   }));
                 }
                 break;
@@ -428,7 +431,8 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                         mScheduleListModel,
                         OwonPic.scheduleSettingModeHome,
                         2,
-                        _selectTab);
+                        _selectTab,
+                        tempUnit);
                   }));
                 }
                 break;
@@ -441,7 +445,8 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                         mScheduleListModel,
                         OwonPic.scheduleSettingModeSleep,
                         3,
-                        _selectTab);
+                        _selectTab,
+                        tempUnit);
                   }));
                 }
                 break;

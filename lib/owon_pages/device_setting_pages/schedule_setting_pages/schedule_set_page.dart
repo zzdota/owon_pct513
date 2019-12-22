@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_temperature.dart';
 import '../../../component/owon_header.dart';
 import '../../../component/owon_pickerView.dart';
 import '../../../component/owon_timeTextfield.dart';
@@ -15,20 +19,82 @@ class ScheduleSettingPage extends StatefulWidget {
   String mImageUrl;
   int mMode;
   int mWeek;
+  bool mTempUnit;
 
-  ScheduleSettingPage(this.devModel,this.mScheduleListModel,this.mImageUrl,this.mMode,this.mWeek);
+  ScheduleSettingPage(this.devModel, this.mScheduleListModel, this.mImageUrl,
+      this.mMode, this.mWeek, this.mTempUnit);
 
   @override
   _ScheduleSettingPageState createState() => _ScheduleSettingPageState();
 }
 
 class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
-  TextEditingController vc = TextEditingController(text: "hehe");
-  int _heatValue = 26, _coolValue = 26;
+  StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
+  TextEditingController vc = TextEditingController();
+  int _heatFValue = 26, _coolFValue = 26;
+  double _heatCValue = 26.0, _coolCValue = 26.0;
+
+  @override
+  void initState() {
+    vc.text = getStartTime();
+    _heatCValue =
+        widget.mScheduleListModel["week${widget.mWeek}heatTemp${widget.mMode}"] /100.0;
+    _coolCValue =
+        widget.mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] /100.0;
+    _heatFValue = OwonTemperature().cToF(widget
+        .mScheduleListModel["week${widget.mWeek}heatTemp${widget.mMode}"] /100.0);
+    _coolFValue = OwonTemperature().cToF(widget
+        .mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] /100.0);
+    _listEvenBusSubscription =
+        ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
+      String topic = msg["topic"];
+
+      if (msg["type"] == "json") {
+        Map<String, dynamic> payload = msg["payload"];
+        OwonLog.e("----m=$payload");
+      } else if (msg["type"] == "string") {
+        String payload = msg["payload"];
+        OwonLog.e("----上报的payload=$payload");
+
+        if (topic.contains("TemperatureUnit")) {
+          setState(() {
+            if (payload == "0") {
+              widget.mTempUnit = false;
+            } else {
+              widget.mTempUnit = true;
+            }
+          });
+        }
+      } else if (msg["type"] == "raw") {
+        if (!topic.contains("WeeklySchedule")) {
+          return;
+        }
+        List payload = msg["payload"];
+        OwonLog.e("======>payload$payload");
+        Map<String, dynamic> scheduleMode = Map();
+        for (int i = 0; i < 7; i++) {
+          List buf = payload.sublist(i * 35, 35 * i + 35);
+          for (int m = 0; m < 5; m++) {
+            List mode = buf.sublist(m * 7, 7 * m + 7);
+            scheduleMode["week${i}timeId$m"] = mode[0];
+            scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
+            scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
+            scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
+          }
+        }
+        setState(() {
+//              if (mScheduleListModel != null) {
+//                mScheduleListModel.clear();
+//                mScheduleListModel = scheduleMode;
+//              }
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
@@ -38,10 +104,10 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
             FlatButton(
               onPressed: () {
                 OwonLog.e("save is tap text=${vc.text}");
-                OwonLog.e("heat:====>$_heatValue====cool:=====>$_coolValue");
-                setState(() {
-                  _coolValue = 30;
-                });
+//                OwonLog.e("heat:====>$_heatValue====cool:=====>$_coolValue");
+//                setState(() {
+//                  _coolValue = 30;
+//                });
               },
               child: Text(
                 S.of(context).global_save,
@@ -65,8 +131,8 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    OwonHeader.header(context, widget.mImageUrl,
-                        getTitleStr(widget.mWeek),
+                    OwonHeader.header(
+                        context, widget.mImageUrl, getTitleStr(widget.mWeek),
                         width: 200),
                     Expanded(
                       child: Padding(
@@ -76,7 +142,8 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                             SvgPicture.asset(
                               OwonPic.scheduleTimeIcon,
                               width: 25,
-                              color: OwonColor().getCurrent(context, "textColor"),
+                              color:
+                                  OwonColor().getCurrent(context, "textColor"),
                             ),
                             SizedBox(
                               width: 20,
@@ -87,7 +154,8 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                                     context: context,
                                     initialTime: TimeOfDay.now());
                                 setState(() {
-                                  vc.text = "${picker.hour.toString()} : ${picker.minute.toString()}";
+                                  vc.text =
+                                      "${picker.hour.toString().padLeft(2, '0')} : ${picker.minute.toString().padLeft(2, '0')}";
                                   OwonLog.e(vc.text);
                                 });
                               }),
@@ -123,28 +191,46 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                             ),
                             Container(
                               margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                              width: 60,
-                              child: OwonNumberPicker.integer(
-                                  initialValue: _heatValue,
-                                  minValue: 0,
-                                  maxValue: 100,
-                                  selectItemFontColor: OwonColor()
-                                      .getCurrent(context, "textColor"),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              width: 1,
-                                              color: OwonColor()
-                                                  .getCurrent(context, "blue")),
-                                          top: BorderSide(
-                                              width: 1,
-                                              color: OwonColor().getCurrent(
-                                                  context, "blue")))),
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _heatValue = newValue;
-                                    });
-                                  }),
+                              width: 100,
+                              child: widget.mTempUnit
+                                  ? OwonNumberPicker.integer(
+                                      initialValue: _heatFValue,
+                                      minValue: 41,
+                                      maxValue: 86,
+                                      selectItemFontColor: OwonColor()
+                                          .getCurrent(context, "textColor"),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 1,
+                                                  color: OwonColor().getCurrent(
+                                                      context, "blue")),
+                                              top: BorderSide(
+                                                  width: 1,
+                                                  color: OwonColor().getCurrent(
+                                                      context, "blue")))),
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _heatFValue = newValue;
+                                        });
+                                      })
+                                  : OwonNumberPicker.decimal(
+                                      initialValue: _heatCValue,
+                                      minValue: 5,
+                                      maxValue: 30,
+                                      selectItemFontColor: OwonColor()
+                                          .getCurrent(context, "textColor"),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 1,
+                                                  color: OwonColor().getCurrent(context, "blue")),
+                                              top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _heatCValue = newValue;
+                                        });
+                                      }),
                             ),
                           ],
                         ),
@@ -157,28 +243,46 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                             ),
                             Container(
                               margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                              width: 60,
-                              child: OwonNumberPicker.integer(
-                                  initialValue: _coolValue,
-                                  minValue: 0,
-                                  maxValue: 100,
-                                  selectItemFontColor: OwonColor()
-                                      .getCurrent(context, "textColor"),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              width: 1,
-                                              color: OwonColor()
-                                                  .getCurrent(context, "blue")),
-                                          top: BorderSide(
-                                              width: 1,
-                                              color: OwonColor().getCurrent(
-                                                  context, "blue")))),
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _coolValue = newValue;
-                                    });
-                                  }),
+                              width: 100,
+                              child: widget.mTempUnit
+                                  ? OwonNumberPicker.integer(
+                                      initialValue: _coolFValue,
+                                      minValue: 45,
+                                      maxValue: 88,
+                                      selectItemFontColor: OwonColor()
+                                          .getCurrent(context, "textColor"),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 1,
+                                                  color: OwonColor().getCurrent(
+                                                      context, "blue")),
+                                              top: BorderSide(
+                                                  width: 1,
+                                                  color: OwonColor().getCurrent(
+                                                      context, "blue")))),
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _coolFValue = newValue;
+                                        });
+                                      })
+                                  : OwonNumberPicker.decimal(
+                                      initialValue: _coolCValue,
+                                      minValue: 7,
+                                      maxValue: 32,
+                                      selectItemFontColor: OwonColor()
+                                          .getCurrent(context, "textColor"),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 1,
+                                                  color: OwonColor().getCurrent(context, "blue")),
+                                              top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _coolFValue = newValue;
+                                        });
+                                      }),
                             ),
                           ],
                         ),
@@ -218,5 +322,18 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
         break;
     }
     return value;
+  }
+
+  String getStartTime() {
+    int mode = widget.mMode;
+    if (widget.mScheduleListModel.length == 0) {
+      return "-- : --";
+    } else {
+      int hour =
+          (widget.mScheduleListModel["week${widget.mWeek}startTime$mode"] / 60).toInt();
+      int min =
+          widget.mScheduleListModel["week${widget.mWeek}startTime$mode"] % 60;
+      return "${hour.toString().padLeft(2, '0')} : ${min.toString().padLeft(2, '0')}";
+    }
   }
 }
