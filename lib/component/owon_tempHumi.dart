@@ -22,7 +22,8 @@ class _OwonTempHumiState extends State<OwonTempHumi> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.invert_colors_off,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
+              SvgPicture.asset(OwonPic.mFanShow,width: 13,color: OwonColor().getCurrent(context, "textColor"),),
+//              Icon(Icons.invert_colors_off,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
               SizedBox(width: 8,),
               Container(
                 color: OwonColor().getCurrent(context, "textColor"),
