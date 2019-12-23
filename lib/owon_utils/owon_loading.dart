@@ -1,6 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../generated/i18n.dart';
 
 enum OwonLoadingType { Normal, Download }
 
@@ -22,22 +28,30 @@ Color _backgroundColor = Color.fromRGBO(220, 220, 220, 1.0);
 Curve _insetAnimCurve = Curves.easeInOut;
 
 Widget _progressWidget = CircularProgressIndicator(
-  strokeWidth: 4.0,
-    valueColor:  AlwaysStoppedAnimation<Color>(OwonColor().getCurrent(_context, "blue"))
+    strokeWidth: 4.0,
+    valueColor:
+        AlwaysStoppedAnimation<Color>(OwonColor().getCurrent(_context, "blue"))
 //  backgroundColor: ,
-);
+    );
 //Image.asset(
 //  'assets/up_blue.gif'
 //);
 //SpinKitFadingCircle(
 //  color: Colors.blue,
 //);
+typedef VoidCallback = void Function();
 
 class OwonLoading {
+  Timer _timer;
   _Body _dialog;
-
+  VoidCallback timeOutHandler;
+  int timeOut;
   OwonLoading(BuildContext context,
-      {OwonLoadingType type, bool isDismissible, bool showLogs}) {
+      {OwonLoadingType type,
+      bool isDismissible,
+      bool showLogs,
+      this.timeOutHandler,
+      this.timeOut = 30}) {
     _context = context;
     _OwonLoadingType = type ?? OwonLoadingType.Normal;
     _barrierDismissible = isDismissible ?? true;
@@ -96,6 +110,7 @@ class OwonLoading {
   }
 
   void dismiss() {
+    endTimer();
     if (_isShowing) {
       try {
         _isShowing = false;
@@ -112,6 +127,7 @@ class OwonLoading {
   }
 
   Future<bool> hide() {
+    endTimer();
     if (_isShowing) {
       try {
         _isShowing = false;
@@ -133,7 +149,7 @@ class OwonLoading {
       _isShowing = true;
 
       if (_showLogs) debugPrint('OwonLoading shown');
-
+      startTimer();
       showDialog<dynamic>(
         context: _context,
         barrierDismissible: false,
@@ -158,6 +174,28 @@ class OwonLoading {
     } else {
       if (_showLogs) debugPrint("OwonLoading already shown/showing");
     }
+  }
+
+  void startTimer() {
+    if (_timer != null) {
+      _timer.cancel();
+      _timer = null;
+    }
+    _timer = Timer(Duration(seconds: this.timeOut), () {
+      if (this.timeOutHandler == null) {
+        hide().then((e) {
+          OwonToast.show(S.of(_context).global_timeout);
+        });
+      } else {
+        hide();
+        this.timeOutHandler();
+      }
+    });
+  }
+
+  void endTimer() {
+    _timer.cancel();
+    _timer = null;
   }
 }
 

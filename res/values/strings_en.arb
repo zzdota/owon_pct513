@@ -9,6 +9,7 @@
   "global_thermostat": "Thermostat",
   "global_delete": "Remove",
   "global_save": "Save",
+  "global_timeout": "Time out",
 
   "global_hint_user": "E-Mail / Phone",
   "global_hint_password": "Password",

@@ -9,6 +9,7 @@
   "global_thermostat": "温控器",
   "global_delete": "删除",
   "global_save": "保存",
+  "global_timeout": "请求超时",
 
   "global_hint_user": "电子邮件/手机号码",
   "global_hint_password": "密码",

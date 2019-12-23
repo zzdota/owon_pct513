@@ -80,6 +80,7 @@ class S implements WidgetsLocalizations {
   String get global_sun => "Sun";
   String get global_thermostat => "Thermostat";
   String get global_thur => "Thur";
+  String get global_timeout => "Time out";
   String get global_tues => "Tues";
   String get global_unknown => "Unknow";
   String get global_user_name_regex_string => "The name can only contain (0-9,a-z,A-Z,\"_\",\"@\",\" \"),and can only start with letters or numbers,the length range is from 4 to 15 characteristics.";
@@ -303,6 +304,8 @@ class $zh extends S {
   String get login_privacy1 => "登录或注册即代表阅读并同意";
   @override
   String get vacation_return => "回家";
+  @override
+  String get global_timeout => "请求超时";
   @override
   String get login_no_network => "当前没有网络";
   @override
