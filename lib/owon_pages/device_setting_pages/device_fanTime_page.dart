@@ -77,7 +77,7 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
                     style: TextStyle(
                         color: OwonColor().getCurrent(context, "textColor"))),
                 SizedBox(
-                  height: 60,
+                  height: 150,
                 ),
                 Container(
 //                    color: Colors.purple,
