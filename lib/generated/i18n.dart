@@ -77,6 +77,8 @@ class S implements WidgetsLocalizations {
   String get global_register_account_success => "Registration successful";
   String get global_sat => "Sat";
   String get global_save => "Save";
+  String get global_save_fail => "Save failed";
+  String get global_save_success => "Save successfully";
   String get global_sun => "Sun";
   String get global_thermostat => "Thermostat";
   String get global_thur => "Thur";
@@ -168,6 +170,8 @@ class $zh extends S {
   String get appearance_dark => "深色";
   @override
   String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
+  @override
+  String get global_save_success => "保存成功";
   @override
   String get global_enter_verify_null => "请输入验证码";
   @override
@@ -268,6 +272,8 @@ class $zh extends S {
   String get login_retry_time => "分钟后才能重试";
   @override
   String get global_register_account_fail => "账号注册失败";
+  @override
+  String get global_save_fail => "保存失败";
   @override
   String get global_verify_code_error => "验证码错误";
   @override

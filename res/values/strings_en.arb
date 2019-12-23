@@ -71,7 +71,6 @@
   "change_psw_fail": "Change password failed",
   "change_psw_old_psw_error": "Incorrect Current password",
 
-
   "tab_list": "Thermostat List",
   "tab_set": "Setting",
   "list_disconnect": "Disconnected",
@@ -117,10 +116,12 @@
   "schedule_copy_sch": "Copy to other day",
   "schedule_disabled_tip": "The schedule has been disabled.",
 
-
   "device_fan_time": "需要运行的风扇最小运行时间:(min/h)",
   "device_min": "0 min/h",
   "device_max": "100 min/h",
-  "device_unit": "min/h"
+  "device_unit": "min/h",
+
+  "global_save_success": "Save successfully",
+  "global_save_fail": "Save failed"
 
 }

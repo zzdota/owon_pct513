@@ -119,6 +119,9 @@
   "device_fan_time": "需要运行的风扇最小运行时间:(min/h)",
   "device_min": "0 min/h",
   "device_max": "100 min/h",
-  "device_unit": "min/h"
+  "device_unit": "min/h",
+
+  "global_save_success": "保存成功",
+  "global_save_fail": "保存失败"
 
 }

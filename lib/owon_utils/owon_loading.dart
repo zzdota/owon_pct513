@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../owon_utils/owon_toast.dart';
+import '../res/owon_themeColor.dart';
 import '../generated/i18n.dart';
 
 enum OwonLoadingType { Normal, Download }

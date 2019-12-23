@@ -1,12 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/generated/i18n.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
+import 'package:owon_pct513/res/owon_picture.dart';
+import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DeviceSettingTempUtilPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
@@ -19,7 +27,7 @@ class DeviceSettingTempUtilPage extends StatefulWidget {
 
 class _DeviceSettingTempUtilPageState extends State<DeviceSettingTempUtilPage> {
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
-  String _newValue = '℃';
+  bool mSelectValue = false;
 
   @override
   void initState() {
@@ -30,21 +38,62 @@ class _DeviceSettingTempUtilPageState extends State<DeviceSettingTempUtilPage> {
       String topic = msg["topic"];
 
       if (msg["type"] == "json") {
-//        Map<String, dynamic> payload = msg["payload"];
-//        OwonLog.e("----m=${payload["response"]}");
-//        List tempList = payload["response"];
-//        tempList.forEach((item) {
-//          String attr = item["attrName"];
-//        });
+        Map<String, dynamic> payload = msg["payload"];
+        OwonLoading(context).dismiss();
+        if (payload["attributeName"].contains("TemperatureUnit")) {
+          String value = payload["attributeValue"];
+          OwonLog.e("=====>>>>value$value");
+          setState(() {
+            if (value == "0") {
+              mSelectValue = true;
+            } else if (value == "1") {
+              mSelectValue = false;
+            }
+          });
+        }
       } else if (msg["type"] == "string") {
-//        String payload = msg["payload"];
-//
-//        OwonLog.e("----上报的payload=$payload");
-//        if (topic.contains("LocalTemperature")) {
-//
-//        }
+        String payload = msg["payload"];
+        if (topic.contains("TemperatureUnit")) {
+          if (topic.startsWith("reply")) {
+            OwonLoading(context).dismiss();
+            OwonToast.show(S.of(context).global_save_success);
+            Navigator.pop(context);
+          }
+        }
       }
     });
+    Future.delayed(Duration(seconds: 0), () {
+      toGetTempUnit();
+    });
+  }
+
+  void toGetTempUnit() async {
+    OwonLoading(context).show();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "device.attr.str";
+    p["sequence"] = OwonSequence.settingTempUnit;
+    p["deviceid"] = widget.devModel.deviceid;
+    p["attributeName"] = "TemperatureUnit";
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
+
+  void _save() async {
+    OwonLoading(context).show();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/TemperatureUnit";
+    var msg;
+    if (mSelectValue) {
+      msg = "0";
+    } else {
+      msg = "1";
+    }
+    OwonMqtt.getInstance().publishMessage(topic, msg);
   }
 
   @override
@@ -67,12 +116,26 @@ class _DeviceSettingTempUtilPageState extends State<DeviceSettingTempUtilPage> {
             Expanded(
               child: Container(
                 alignment: Alignment.topCenter,
-                margin: EdgeInsets.only(top:150.0),
+                margin: EdgeInsets.only(top: 150.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    _radioBox('℉'),
-                    _radioBox('℃'),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          mSelectValue = false;
+                        });
+                      },
+                      child: checkBox(!mSelectValue, "℉"),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          mSelectValue = true;
+                        });
+                      },
+                      child: checkBox(mSelectValue, "℃"),
+                    ),
                   ],
                 ),
               ),
@@ -88,7 +151,9 @@ class _DeviceSettingTempUtilPageState extends State<DeviceSettingTempUtilPage> {
                         borderRadius:
                             BorderRadius.circular(OwonConstant.cRadius),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        _save();
+                      },
                       icon: Icon(
                         Icons.save_alt,
                         color: Colors.white,
@@ -105,26 +170,31 @@ class _DeviceSettingTempUtilPageState extends State<DeviceSettingTempUtilPage> {
     );
   }
 
-  _radioBox(String title) {
+  Widget checkBox(bool value, String week) {
     return Container(
-      height: 60,
-      width: 150,
-      child: RadioListTile<String>(
-        value: title,
-        title: Text(
-          title,
-          style:
-          TextStyle(color: OwonColor().getCurrent(context, "textColor"),
-              fontSize: 30),
-        ),
-        activeColor: OwonColor().getCurrent(context, "blue") ?? OwonColor().getCurrent(context, "blue"),
-        selected: false,
-        groupValue: _newValue,
-        onChanged: (value) {
-          setState(() {
-            _newValue = value;
-          });
-        },
+      child: Row(
+        children: <Widget>[
+          value
+              ? Icon(
+                  Icons.radio_button_checked,
+                  color: OwonColor().getCurrent(context, "blue"),
+                  size: 35,
+                )
+              : Icon(
+                  Icons.radio_button_unchecked,
+                  color: OwonColor().getCurrent(context, "blue"),
+                  size: 35,
+                ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            week == null ? "" : week,
+            style: TextStyle(
+                color: OwonColor().getCurrent(context, "textColor"),
+                fontSize: 30),
+          ),
+        ],
       ),
     );
   }
