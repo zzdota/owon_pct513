@@ -79,12 +79,13 @@ class OwonConvert {
     if(str == "0"){
       desWidget = SvgPicture.asset(OwonPic.mSysOff,color:Colors.white,width: 20,);
     }else if(str == "1"){
+      double width = 30;
       desWidget = Container(
-        width: 20,
+        width: width,
         child: Row(
           children: <Widget>[
-            SvgPicture.asset(OwonPic.mSysCool,color:Colors.blue,),
-            SvgPicture.asset(OwonPic.mSysHeat,color:Colors.red,),
+            SvgPicture.asset(OwonPic.mSysCool,color:Colors.blue,width: width*0.5,),
+            SvgPicture.asset(OwonPic.mSysHeat,color:Colors.red,width: width*0.5,),
           ],
         ),
       );

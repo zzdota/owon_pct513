@@ -108,7 +108,7 @@ List loadSystemData = [
   {
     "name": "Auto",
     "description": "斯温是一名守夜骑士的私生子，身怀苍白南海人的血统，在影承废墟长大。他父亲因",
-    "imageUrl": "assets/images/management/m_sys_auto.svg",
+    "imageUrl": "auto",
 //    "color": Colors.blue,
 
   },

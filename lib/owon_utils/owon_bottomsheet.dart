@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../res/owon_constant.dart';
 import '../res/owon_themeColor.dart';
-
+import '../res/owon_picture.dart';
 class OwonBottomSheet {
   static Future show(context, List dataList,
       {int maxCount = 5,
@@ -29,6 +29,7 @@ class OwonBottomSheet {
       ),
       context: context,
       builder: (BuildContext context) {
+        double myWidth= 30;
         return new Container(
             height: maxCount * itemHeight > 400
                 ? 400
@@ -61,14 +62,22 @@ class OwonBottomSheet {
                                 ),
                                 dataList[index]["imageUrl"] == null
                                     ? Text("")
-                                    : SvgPicture.asset(
-                                        dataList[index]["imageUrl"],
-                                        width: 15,
-                                        color: dataList[index]["color"] == null
-                                            ? OwonColor().getCurrent(
-                                                context, "textColor")
-                                            : dataList[index]["color"],
-                                      ),
+                                    : dataList[index]["imageUrl"] == "auto"?Container(
+                                  width: myWidth,
+                                  child: Row(
+                                    children: <Widget>[
+                                      SvgPicture.asset(OwonPic.mSysCool,color:Colors.blue,width: myWidth*0.5,),
+                                      SvgPicture.asset(OwonPic.mSysHeat,color:Colors.red,width: myWidth*0.5,),
+                                    ],
+                                  ),
+                                ):SvgPicture.asset(
+                                  dataList[index]["imageUrl"],
+                                  width: 15,
+                                  color: dataList[index]["color"] == null
+                                      ? OwonColor().getCurrent(
+                                      context, "textColor")
+                                      : dataList[index]["color"],
+                                ),
                                 SizedBox(
                                   width: 10,
                                 ),
