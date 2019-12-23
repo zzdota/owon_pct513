@@ -43,6 +43,10 @@ class S implements WidgetsLocalizations {
   String get dSet_sensor => "Sensor Setting";
   String get dSet_temp => "温度单位选择";
   String get dSet_vacation => "Vacation Setting";
+  String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
+  String get device_max => "100 min/h";
+  String get device_min => "0 min/h";
+  String get device_unit => "min/h";
   String get global_account_exist => "Account has been registered";
   String get global_cancel => "Cancel";
   String get global_delete => "Remove";
@@ -161,6 +165,8 @@ class $zh extends S {
   @override
   String get appearance_dark => "深色";
   @override
+  String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
+  @override
   String get global_enter_verify_null => "请输入验证码";
   @override
   String get dSet_sensor => "传感器设置";
@@ -223,6 +229,8 @@ class $zh extends S {
   @override
   String get global_wed => "周三";
   @override
+  String get device_max => "100 min/h";
+  @override
   String get set_dig => "电子围栏";
   @override
   String get app_name => "OWON";
@@ -234,6 +242,8 @@ class $zh extends S {
   String get change_psw_success => "修改密码成功";
   @override
   String get global_not_account => "账号不存在";
+  @override
+  String get device_min => "0 min/h";
   @override
   String get dSet_rename_tip => "请输入设备名称";
   @override
@@ -294,6 +304,8 @@ class $zh extends S {
   String get vacation_return => "回家";
   @override
   String get login_no_network => "当前没有网络";
+  @override
+  String get device_unit => "min/h";
   @override
   String get dSet_fan_set => "风扇运行时间闸";
   @override

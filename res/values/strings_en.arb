@@ -113,6 +113,12 @@
   "schedule_mode_wake": "Wake",
   "schedule_mode_sleep": "Sleep",
   "schedule_copy_sch": "Copy to other day",
-  "schedule_disabled_tip": "The schedule has been disabled."
+  "schedule_disabled_tip": "The schedule has been disabled.",
+
+
+  "device_fan_time": "需要运行的风扇最小运行时间:(min/h)",
+  "device_min": "0 min/h",
+  "device_max": "100 min/h",
+  "device_unit": "min/h"
 
 }
