@@ -98,5 +98,11 @@ class OwonPic {
   static String scheduleSettingModeSleep="assets/images/device_set/schedule/schedule_setting_mode_sleep.png";
   static String scheduleSettingModeWake="assets/images/device_set/schedule/schedule_setting_mode_wake.png";
   static String scheduleTimeIcon = "assets/images/device_set/schedule/schedule_time_icon.svg";
+
+  static String deviceFan = "assets/images/device_fan.svg";
+  static String deviceRename = "assets/images/device_rename.svg";
+  static String deviceRenamePng = "assets/images/device_rename.png";
+
+
 }
 

@@ -79,7 +79,15 @@ class OwonConvert {
     if(str == "0"){
       desWidget = SvgPicture.asset(OwonPic.mSysOff,color:Colors.white,width: 20,);
     }else if(str == "1"){
-      desWidget = SvgPicture.asset(OwonPic.mSysAuto,color:Colors.white,width: 20,);
+      desWidget = Container(
+        width: 20,
+        child: Row(
+          children: <Widget>[
+            SvgPicture.asset(OwonPic.mSysCool,color:Colors.blue,),
+            SvgPicture.asset(OwonPic.mSysHeat,color:Colors.red,),
+          ],
+        ),
+      );
     }else if(str == "3"){
       desWidget = SvgPicture.asset(OwonPic.mSysCool,color:Colors.blue,width: 20,);
     }else if(str == "4"){
