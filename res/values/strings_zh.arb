@@ -97,6 +97,7 @@
   "dSet_rename_tip": "请输入设备名称",
   "vacation_depart": "离家",
   "vacation_return": "回家",
+  "dSet_temp_unit": "温度单位",
 
   "global_mon": "周一",
   "global_tues": "周二",

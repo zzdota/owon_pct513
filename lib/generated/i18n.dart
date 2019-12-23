@@ -42,6 +42,7 @@ class S implements WidgetsLocalizations {
   String get dSet_rename_tip => "Please enter device name";
   String get dSet_sensor => "Sensor Setting";
   String get dSet_temp => "温度单位选择";
+  String get dSet_temp_unit => "温度单位";
   String get dSet_vacation => "Vacation Setting";
   String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
   String get device_max => "100 min/h";
@@ -338,6 +339,8 @@ class $zh extends S {
   String get tab_list => "温控器列表";
   @override
   String get global_ok => "确认";
+  @override
+  String get dSet_temp_unit => "温度单位";
   @override
   String get reset_psw_title => "重置密码";
   @override

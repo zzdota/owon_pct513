@@ -98,6 +98,7 @@
   "dSet_rename_tip": "Please enter device name",
   "vacation_depart": "Depart",
   "vacation_return": "Return",
+  "dSet_temp_unit": "温度单位",
 
   "global_mon": "Mon",
   "global_tues": "Tues",

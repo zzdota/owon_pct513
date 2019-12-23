@@ -94,6 +94,12 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _listEvenBusSubscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomPadding: false,

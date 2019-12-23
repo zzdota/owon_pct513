@@ -11,8 +11,9 @@ import '../../owon_providers/theme_provider.dart';
 import '../../res/owon_themeColor.dart';
 import '../../res/owon_settingData.dart';
 import '../../generated/i18n.dart';
-class DeviceSettingPage extends StatefulWidget {
+import '../device_temp_util_page.dart';
 
+class DeviceSettingPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
   DeviceSettingPage(this.devModel);
 
@@ -43,47 +44,64 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                 height: 90,
                 padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                 child: InkWell(
-                  onTap: (){
-                    switch(index){
-                      case 0:{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return DeviceRenamePage(widget.devModel);
-                        }));
-                      }
-                      break;
-                      case 1:{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return VacationListPage();
-                        }));
-                      }
-                      break;
-                      case 2:{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return DeviceFanTimePage(widget.devModel);
-                        }));
-                      }
-                      break;
-                      case 3:{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return SensorSettingPage(widget.devModel);
-                        }));
-                      }
-                      break;
-                      case 4:{}
-                      break;
+                  onTap: () {
+                    switch (index) {
+                      case 0:
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return DeviceRenamePage(widget.devModel);
+                          }));
+                        }
+                        break;
+                      case 1:
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return VacationListPage();
+                          }));
+                        }
+                        break;
+                      case 2:
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return DeviceFanTimePage(widget.devModel);
+                          }));
+                        }
+                        break;
+                      case 3:
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return SensorSettingPage(widget.devModel);
+                          }));
+                        }
+                        break;
+                      case 4:
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return DeviceSettingTempUtilPage(widget.devModel);
+                          }));
+                        }
+                        break;
+                      case 5:
+                        {}
+                        break;
                       default:
                         break;
                     }
                   },
                   child: Card(
-                      shape:  RoundedRectangleBorder(
+                      shape: RoundedRectangleBorder(
                           side: BorderSide(
                             color:
-                            OwonColor().getCurrent(context, "borderNormal"),
+                                OwonColor().getCurrent(context, "borderNormal"),
                             width: 1.0,
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(16.0))
-                      ),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(16.0))),
                       child: createWidget(index)),
                 ),
               );
@@ -94,13 +112,15 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
     int myIndex = Provider.of<ThemeProvider>(context).themeIndex;
 
     var name = dataList[index]["name"];
-    var imageUrl = myIndex==0?dataList[index]["imageUrl"]:dataList[index]["imageUrlW"];
+    var imageUrl = myIndex == 0
+        ? dataList[index]["imageUrl"]
+        : dataList[index]["imageUrlW"];
     return GestureDetector(
 //      onTap: (){
 //        OwonMqtt.getInstance().disconnect();
 //        Navigator.of(context).pop();
 //      },
-      child:  Container(
+      child: Container(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,7 +138,8 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                 Text(
                   name,
                   style: TextStyle(
-                      color: OwonColor().getCurrent(context, "textColor"),fontSize: 16.0),
+                      color: OwonColor().getCurrent(context, "textColor"),
+                      fontSize: 16.0),
                 ),
               ],
             ),

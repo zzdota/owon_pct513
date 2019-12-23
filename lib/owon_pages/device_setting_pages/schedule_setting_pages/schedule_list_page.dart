@@ -33,7 +33,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   bool hadData = true;
   Map<String, dynamic> mScheduleListModel = Map();
 
-  bool _switchValue = false;
+  bool _switchValue = true;
   int _selectTab = 0;
   bool tempUnit = false;
 
@@ -104,6 +104,12 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _listEvenBusSubscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 7,
@@ -120,7 +126,11 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                       ///点击切换开关的状态
                       setState(() {
                         _switchValue = value;
-                        OwonLog.e(_switchValue);
+                        if(_switchValue){
+                          hadData = true;
+                        } else {
+                          hadData = false;
+                        }
                       });
                     })
               ],

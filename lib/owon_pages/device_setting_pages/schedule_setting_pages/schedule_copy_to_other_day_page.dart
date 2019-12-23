@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/generated/i18n.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
+import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
@@ -19,6 +22,7 @@ class ScheduleCopySCH extends StatefulWidget {
 }
 
 class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
+  StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   bool firstCheckBoxState = false,
       secondCheckBoxState = false,
       thirdCheckBoxState = false;
@@ -31,6 +35,41 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
 
   @override
   void initState() {
+    _listEvenBusSubscription =
+        ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
+          String topic = msg["topic"];
+
+          if (msg["type"] == "json") {
+            Map<String, dynamic> payload = msg["payload"];
+            OwonLog.e("----m=$payload");
+          } else if (msg["type"] == "string") {
+            String payload = msg["payload"];
+            OwonLog.e("----上报的payload=$payload");
+          } else if (msg["type"] == "raw") {
+            if (!topic.contains("WeeklySchedule")) {
+              return;
+            }
+            List payload = msg["payload"];
+            OwonLog.e("======>payload$payload");
+            Map<String, dynamic> scheduleMode = Map();
+            for (int i = 0; i < 7; i++) {
+              List buf = payload.sublist(i * 35, 35 * i + 35);
+              for (int m = 0; m < 5; m++) {
+                List mode = buf.sublist(m * 7, 7 * m + 7);
+                scheduleMode["week${i}timeId$m"] = mode[0];
+                scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
+                scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
+                scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
+              }
+            }
+            setState(() {
+//              if (mScheduleListModel != null) {
+//                mScheduleListModel.clear();
+//                mScheduleListModel = scheduleMode;
+//              }
+            });
+          }
+        });
     Future.delayed(Duration(seconds: 0), () {
       setState(() {
         mWeekStr = [
@@ -48,8 +87,13 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
         OwonLog.e("======>>>>$mWeekStr");
       });
     });
-
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _listEvenBusSubscription.cancel();
   }
 
   @override
