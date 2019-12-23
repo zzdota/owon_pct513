@@ -81,6 +81,8 @@ class OwonPic {
   static String dVacReturn = "assets/images/device_set/vac_return.svg";
   static String dVacVacationSetB = "assets/images/device_set/vac_set.svg";
   static String dVacNoSetB = "assets/images/device_set/vac_noSetting_b.png";
+  static String dSettingSave = "assets/images/device_set/setting_save.svg";
+  static String dSettingUpgrade = "assets/images/device_set/setting_upgrade.svg";
 
   static String scheduleCopy = "assets/images/device_set/schedule/schedule_copy.svg";
   static String scheduleCopyNoSelect = "assets/images/device_set/schedule/schedule_copy_no_select.svg";

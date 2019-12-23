@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/res/owon_sequence.dart';
 import '../../../owon_utils/owon_temperature.dart';
 import '../../../owon_api/model/address_model_entity.dart';
 import '../../../owon_pages/device_setting_pages/schedule_setting_pages/schedule_copy_to_other_day_page.dart';
@@ -92,10 +93,12 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   toGetScheduleList() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
-    String topic =
-        "api/device/${widget.devModel.deviceid}/$clientID/raw";
+    String topic = "api/cloud/$clientID";
     Map p = Map();
-    p["command"] = "WeeklySchedule";
+    p["command"] = "device.attr.raw";
+    p["sequence"] = OwonSequence.schedule;
+    p["deviceid"] = widget.devModel.deviceid;
+    p["attributeName"] = "WeeklySchedule";
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }

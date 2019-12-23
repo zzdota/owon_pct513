@@ -173,6 +173,8 @@ flutter:
     - assets/images/device_set/schedule/schedule_setting_mode_sleep.png
     - assets/images/device_set/schedule/schedule_setting_mode_wake.png
     - assets/images/device_set/schedule/schedule_time_icon.svg
+    - assets/images/device_set/setting_save.svg
+    - assets/images/device_set/setting_upgrade.svg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
