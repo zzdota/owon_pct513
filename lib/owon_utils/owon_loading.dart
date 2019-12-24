@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../owon_utils/owon_toast.dart';
@@ -13,7 +12,7 @@ double _progress = 0.0, _maxProgress = 100.0;
 
 bool _isShowing = false;
 BuildContext _context, _dismissingContext;
-OwonLoadingType _OwonLoadingType;
+OwonLoadingType _owonLoadingType;
 bool _barrierDismissible = true, _showLogs = true;
 
 TextStyle _progressTextStyle = TextStyle(
@@ -47,28 +46,29 @@ class OwonLoading {
 
   OwonLoading(BuildContext context,
       {OwonLoadingType type,
-        bool isDismissible,
-        bool showLogs,
-        this.timeOutHandler,
-        this.timeOut = 30}) {
+      bool isDismissible,
+      bool showLogs,
+      this.timeOutHandler,
+      this.timeOut = 30}) {
     _context = context;
-    _OwonLoadingType = type ?? OwonLoadingType.Normal;
+    _owonLoadingType = type ?? OwonLoadingType.Normal;
     _barrierDismissible = isDismissible ?? true;
     _showLogs = showLogs ?? true;
   }
 
-  void style({double progress,
-    double maxProgress,
-    String message,
-    Widget progressWidget,
-    Color backgroundColor,
-    TextStyle progressTextStyle,
-    TextStyle messageTextStyle,
-    double elevation,
-    double borderRadius,
-    Curve insetAnimCurve}) {
+  void style(
+      {double progress,
+      double maxProgress,
+      String message,
+      Widget progressWidget,
+      Color backgroundColor,
+      TextStyle progressTextStyle,
+      TextStyle messageTextStyle,
+      double elevation,
+      double borderRadius,
+      Curve insetAnimCurve}) {
     if (_isShowing) return;
-    if (_OwonLoadingType == OwonLoadingType.Download) {
+    if (_owonLoadingType == OwonLoadingType.Download) {
       _progress = progress ?? _progress;
     }
 
@@ -83,13 +83,14 @@ class OwonLoading {
     _insetAnimCurve = insetAnimCurve ?? _insetAnimCurve;
   }
 
-  void update({double progress,
-    double maxProgress,
-    String message,
-    Widget progressWidget,
-    TextStyle progressTextStyle,
-    TextStyle messageTextStyle}) {
-    if (_OwonLoadingType == OwonLoadingType.Download) {
+  void update(
+      {double progress,
+      double maxProgress,
+      String message,
+      Widget progressWidget,
+      TextStyle progressTextStyle,
+      TextStyle messageTextStyle}) {
+    if (_owonLoadingType == OwonLoadingType.Download) {
       _progress = progress ?? _progress;
     }
 
@@ -163,7 +164,7 @@ class OwonLoading {
                 elevation: _dialogElevation,
                 shape: RoundedRectangleBorder(
                     borderRadius:
-                    BorderRadius.all(Radius.circular(_borderRadius))),
+                        BorderRadius.all(Radius.circular(_borderRadius))),
                 child: _dialog),
           );
         },
@@ -181,9 +182,9 @@ class OwonLoading {
     _timer = Timer(Duration(seconds: this.timeOut), () {
       if (this.timeOutHandler == null) {
         hide().then((e) {
-          OwonToast.show(S
-              .of(_context)
-              .global_timeout);
+          if (e) {
+            OwonToast.show(S.of(_context).global_timeout);
+          }
         });
       } else {
         hide();
@@ -240,7 +241,7 @@ class _BodyState extends State<_Body> {
         ),
         const SizedBox(width: 25.0),
         Expanded(
-          child: _OwonLoadingType == OwonLoadingType.Normal
+          child: _owonLoadingType == OwonLoadingType.Normal
               ? Text(_dialogMessage,
                   textAlign: TextAlign.justify, style: _messageStyle)
               : Stack(
