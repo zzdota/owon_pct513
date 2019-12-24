@@ -8,6 +8,7 @@ import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
@@ -52,12 +53,14 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
 
         OwonLog.e("----上报的payload=$payload");
         if (topic.contains("FanCycleTime")) {
-          OwonLoading(context).dismiss();
+          OwonLoading(context).hide().then((e){
+            OwonToast.show(S.of(context).global_save_success);
+          });
 
         }
       }
     });
-    Future.delayed(Duration(seconds: 1),(){
+    Future.delayed(Duration(milliseconds: 100),(){
       getProperty(attribute: "FanCycleTime");
     });
   }

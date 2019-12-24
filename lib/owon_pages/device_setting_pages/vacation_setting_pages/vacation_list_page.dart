@@ -168,13 +168,13 @@ class _VacationListPageState extends State<VacationListPage> {
   }
 
  List<int> createList(){
-    List<int> fisrt = [1,19,12,24,14,32,19,12,25,23,59,10,40,10,0];
-    List<int> tem =  List.generate(141-fisrt.length, (index){
+    List<int> first = [1,19,12,24,14,32,19,12,25,23,59,10,40,10,0];
+    List<int> tem =  List.generate(141-first.length, (index){
       return 255;
     });
 
      List<int> desList =[];
-    desList.addAll(fisrt);
+    desList.addAll(first);
     desList.addAll(tem);
     return desList;
   }

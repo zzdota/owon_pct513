@@ -7,6 +7,7 @@ import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +47,11 @@ class _DeviceRenamePageState extends State<DeviceRenamePage> {
 
         OwonLog.e("----上报的payload=$payload");
         if (topic.contains("DeviceName")) {
-          OwonLoading(context).dismiss();
+
+//          OwonLoading(context).dismiss();
+          OwonLoading(context).hide().then((e){
+            OwonToast.show(S.of(context).global_save_success);
+          });
         }
       }
     });
