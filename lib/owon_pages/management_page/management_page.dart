@@ -60,6 +60,9 @@ class _ManagementPageState extends State<ManagementPage> {
       if (msg["type"] == "json") {
         Map<String, dynamic> payload = msg["payload"];
         OwonLoading(context).dismiss();
+        if(!payload.containsValue("device.attr.str.batch")) {
+            return;
+          }
         OwonLog.e("----m=${payload["response"]}");
         List tempList = payload["response"];
         tempList.forEach((item) {

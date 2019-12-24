@@ -1,12 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
+import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../generated/i18n.dart';
 import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
@@ -20,7 +25,7 @@ class DeviceFanTimePage extends StatefulWidget {
 
 class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
   var _tfVC = TextEditingController();
-  double progress = 0.5;
+  double progress = 5.0;
 
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
 
@@ -33,20 +38,27 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
       String topic = msg["topic"];
 
       if (msg["type"] == "json") {
-//        Map<String, dynamic> payload = msg["payload"];
-//        OwonLog.e("----m=${payload["response"]}");
-//        List tempList = payload["response"];
-//        tempList.forEach((item) {
-//          String attr = item["attrName"];
-//        });
+        Map<String, dynamic> payload = msg["payload"];
+       if( payload["attributeName"] == "FanCycleTime") {
+         progress = double.parse(payload["attributeValue"]);
+         OwonLog.e("pro=$progress");
+         setState(() {
+
+         });
+       }
+
       } else if (msg["type"] == "string") {
-//        String payload = msg["payload"];
-//
-//        OwonLog.e("----上报的payload=$payload");
-//        if (topic.contains("LocalTemperature")) {
-//
-//        }
+        String payload = msg["payload"];
+
+        OwonLog.e("----上报的payload=$payload");
+        if (topic.contains("FanCycleTime")) {
+          OwonLoading(context).dismiss();
+
+        }
       }
+    });
+    Future.delayed(Duration(seconds: 1),(){
+      getProperty(attribute: "FanCycleTime");
     });
   }
 
@@ -55,7 +67,28 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
     super.dispose();
     _listEvenBusSubscription.cancel();
   }
+  setProperty({String attribute, String value}) async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/$attribute";
+    var msg = value;
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
 
+  getProperty({String attribute}) async {
+    OwonLoading(context).show();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "device.attr.str";
+    p["sequence"] = OwonSequence.settingTempUnit;
+    p["deviceid"] = widget.devModel.deviceid;
+    p["attributeName"] = attribute;
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,11 +157,12 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
                                 },
                                 onChangeEnd: (data) {
                                   print('end:$data');
+                                  progress = data;
                                 },
-                                min: 0.0,
-                                max: 100.0,
-                                divisions: 100,
-                                label: '$progress\n${S.of(context).device_unit}',
+                                min: 0,
+                                max: 55,
+                                divisions: 55,
+                                label: '${progress.toInt()}\n${S.of(context).device_unit}',
                                 semanticFormatterCallback: (double newValue) {
                                   return '${newValue.round()} dollars}';
                                 },
@@ -170,7 +204,10 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
                         borderRadius:
                             BorderRadius.circular(OwonConstant.cRadius),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        OwonLoading(context).show();
+                        setProperty(attribute: "FanCycleTime",value: progress.toInt().toString());
+                      },
                       icon: Icon(
                         Icons.save_alt,
                         color: Colors.white,

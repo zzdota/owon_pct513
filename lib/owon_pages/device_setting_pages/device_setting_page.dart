@@ -58,7 +58,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                         {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
-                            return VacationListPage();
+                            return VacationListPage(widget.devModel);
                           }));
                         }
                         break;

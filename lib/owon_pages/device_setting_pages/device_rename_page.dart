@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../generated/i18n.dart';
 import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
@@ -39,12 +42,12 @@ class _DeviceRenamePageState extends State<DeviceRenamePage> {
 //          String attr = item["attrName"];
 //        });
       } else if (msg["type"] == "string") {
-//        String payload = msg["payload"];
-//
-//        OwonLog.e("----上报的payload=$payload");
-//        if (topic.contains("LocalTemperature")) {
-//
-//        }
+        String payload = msg["payload"];
+
+        OwonLog.e("----上报的payload=$payload");
+        if (topic.contains("DeviceName")) {
+          OwonLoading(context).dismiss();
+        }
       }
     });
   }
@@ -55,6 +58,14 @@ class _DeviceRenamePageState extends State<DeviceRenamePage> {
     _listEvenBusSubscription.cancel();
   }
 
+  setProperty({String attribute, String value}) async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/$attribute";
+    var msg = value;
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +127,10 @@ class _DeviceRenamePageState extends State<DeviceRenamePage> {
                         borderRadius:
                             BorderRadius.circular(OwonConstant.cRadius),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        OwonLoading(context).show();
+                        setProperty(attribute: "DeviceName",value:_tfVC.text);
+                      },
                       icon: Icon(
                         Icons.save_alt,
                         color: Colors.white,

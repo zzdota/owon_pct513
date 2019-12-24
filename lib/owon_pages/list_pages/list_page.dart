@@ -38,21 +38,28 @@ class _ListPageState extends State<ListPage> {
 
           if(msg["type"] == "json"){
         Map<String, dynamic> payload = msg["payload"];
-        OwonLoading(context).dismiss();
-        setState(() {
-          _addrModels = AddressModelEntity.fromJson(payload);
-          _addressModel = _addrModels.addrs.first;
-          _addrModels.addrs.forEach((item){
-            item.devlist.forEach((deviceItem){
-              String deviceId = deviceItem.deviceid;
-              String deviceTopic = "device/$deviceId/#";
+        if( payload.containsKey("addrs")) {
+          OwonLog.e("++++++++");
+          OwonLoading(context).dismiss();
+          setState(() {
+            _addrModels = AddressModelEntity.fromJson(payload);
+            _addressModel = _addrModels.addrs.first;
+            _addrModels.addrs.forEach((item){
+              item.devlist.forEach((deviceItem){
+                String deviceId = deviceItem.deviceid;
+                String deviceTopic = "device/$deviceId/#";
 
-              OwonMqtt.getInstance().subscribeMessage(deviceTopic);
+                OwonMqtt.getInstance().subscribeMessage(deviceTopic);
 
 
+              });
             });
           });
-        });
+
+
+        }
+
+
       }else if (msg["type"] == "string"){
 
         String payload = msg["payload"];
