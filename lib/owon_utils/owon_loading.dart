@@ -44,29 +44,29 @@ class OwonLoading {
   _Body _dialog;
   VoidCallback timeOutHandler;
   int timeOut;
+
   OwonLoading(BuildContext context,
       {OwonLoadingType type,
-      bool isDismissible,
-      bool showLogs,
-      this.timeOutHandler,
-      this.timeOut = 30}) {
+        bool isDismissible,
+        bool showLogs,
+        this.timeOutHandler,
+        this.timeOut = 30}) {
     _context = context;
     _OwonLoadingType = type ?? OwonLoadingType.Normal;
     _barrierDismissible = isDismissible ?? true;
     _showLogs = showLogs ?? true;
   }
 
-  void style(
-      {double progress,
-      double maxProgress,
-      String message,
-      Widget progressWidget,
-      Color backgroundColor,
-      TextStyle progressTextStyle,
-      TextStyle messageTextStyle,
-      double elevation,
-      double borderRadius,
-      Curve insetAnimCurve}) {
+  void style({double progress,
+    double maxProgress,
+    String message,
+    Widget progressWidget,
+    Color backgroundColor,
+    TextStyle progressTextStyle,
+    TextStyle messageTextStyle,
+    double elevation,
+    double borderRadius,
+    Curve insetAnimCurve}) {
     if (_isShowing) return;
     if (_OwonLoadingType == OwonLoadingType.Download) {
       _progress = progress ?? _progress;
@@ -83,13 +83,12 @@ class OwonLoading {
     _insetAnimCurve = insetAnimCurve ?? _insetAnimCurve;
   }
 
-  void update(
-      {double progress,
-      double maxProgress,
-      String message,
-      Widget progressWidget,
-      TextStyle progressTextStyle,
-      TextStyle messageTextStyle}) {
+  void update({double progress,
+    double maxProgress,
+    String message,
+    Widget progressWidget,
+    TextStyle progressTextStyle,
+    TextStyle messageTextStyle}) {
     if (_OwonLoadingType == OwonLoadingType.Download) {
       _progress = progress ?? _progress;
     }
@@ -164,7 +163,7 @@ class OwonLoading {
                 elevation: _dialogElevation,
                 shape: RoundedRectangleBorder(
                     borderRadius:
-                        BorderRadius.all(Radius.circular(_borderRadius))),
+                    BorderRadius.all(Radius.circular(_borderRadius))),
                 child: _dialog),
           );
         },
@@ -182,7 +181,9 @@ class OwonLoading {
     _timer = Timer(Duration(seconds: this.timeOut), () {
       if (this.timeOutHandler == null) {
         hide().then((e) {
-          OwonToast.show(S.of(_context).global_timeout);
+          OwonToast.show(S
+              .of(_context)
+              .global_timeout);
         });
       } else {
         hide();
@@ -192,8 +193,10 @@ class OwonLoading {
   }
 
   void endTimer() {
-    _timer.cancel();
-    _timer = null;
+    if (_timer != null) {
+      _timer.cancel();
+      _timer = null;
+    }
   }
 }
 
