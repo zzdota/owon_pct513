@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
@@ -29,47 +29,49 @@ class _VacationListPageState extends State<VacationListPage> {
   EasyRefreshController refreshController = EasyRefreshController();
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   bool hadData = true;
-  @override
+
   @override
   void initState() {
     super.initState();
 
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-          String topic = msg["topic"];
+      String topic = msg["topic"];
 
-          if (msg["type"] == "json") {
-            Map<String, dynamic> payload = msg["payload"];
-            OwonLog.e("----m=$payload");
-          } else if (msg["type"] == "string") {
-            String payload = msg["payload"];
-            OwonLog.e("----上报的payload=$payload");
-          } else if (msg["type"] == "raw") {
-            if (!topic.contains("SensorList")) {
-              return;
-            }
-            List payload = msg["payload"];
-            int count = payload[0];
-            payload = payload.sublist(1, payload.length);
-            List sensor = List();
-            Map<String, dynamic> sensorMode = Map();
-            for (int i = 0; i < count; i++) {
-              sensor.add(payload.sublist(i * 51, 51 * i + 51));
-            }
-            List buf = List();
-            for (int e = 0; e < sensor.length; e++) {
-              Map<String, dynamic> sensorPara = Map();
-              sensorPara["id"] = byteToInt(sensor[e].sublist(0, 4));
-              sensorPara["name"] = String.fromCharCodes(sensor[e].sublist(4, 34));
-              sensorPara["enable"] = sensor[e][34];
-              sensorPara["occupy"] = sensor[e][35];
-              sensorPara["temp"] = byteToInt(sensor[e].sublist(36, 38));
-              sensorPara["connect"] = sensor[e][38];
-              sensorPara["scheduleId"] = sensor[e][39];
-              sensorPara["batteryStatus"] = sensor[e][40];
-              sensorPara["reserve"] =
-                  String.fromCharCodes(sensor[e].sublist(41, 51));
-              buf.add(sensorPara);
+      if (msg["type"] == "json") {
+        Map<String, dynamic> payload = msg["payload"];
+        if (payload["attributeName"] == "VactionSchedule") {
+          OwonLog.e("======");
+          String value = payload["attributeValue"];
+          List listPayload = convert.base64Decode(value).toList();
+          OwonLog.e("des=$listPayload");
+
+          int count = listPayload[0];
+          listPayload = listPayload.sublist(1, listPayload.length);
+          List sensor = List();
+          Map<String, dynamic> sensorMode = Map();
+          for (int i = 0; i < count; i++) {
+            sensor.add(listPayload.sublist(i * 14, 14 * i + 14));
+          }
+          List buf = List();
+          for (int e = 0; e < sensor.length; e++) {
+            Map<String, dynamic> sensorPara = Map();
+            sensorPara["sYear"] = sensor[e][0];
+            sensorPara["sMonth"] = sensor[e][1];
+            sensorPara["sDay"] = sensor[e][2];
+            sensorPara["sHour"] = sensor[e][3];
+            sensorPara["sMin"] = sensor[e][4];
+
+            sensorPara["eYear"] = sensor[e][5];
+            sensorPara["eMonth"] = sensor[e][6];
+            sensorPara["eDay"] = sensor[e][7];
+            sensorPara["eHour"] = sensor[e][8];
+            sensorPara["eMin"] = sensor[e][9];
+
+            sensorPara["heat"] = byteToInt(sensor[e].sublist(10, 12));
+
+            sensorPara["cool"] = byteToInt(sensor[e].sublist(12, 14));
+            buf.add(sensorPara);
 //              OwonLog.e("sensorParaToJson====>> ${buf.toString()}");
 //              OwonLog.e("bufsensorToJson====>> ${buf.toString()}");
 //
@@ -82,20 +84,68 @@ class _VacationListPageState extends State<VacationListPage> {
 //              OwonLog.e("第${e+1}个sensor schedule======> ${sensor[e][39]}");
 //              OwonLog.e("第${e+1}个sensor power======> ${sensor[e][40]}");
 //              OwonLog.e("第${e+1}个sensor reserve======> ${String.fromCharCodes(sensor[e].sublist(41,51))}");
-            }
-            sensorMode["para"] = buf;
+          }
+          sensorMode["para"] = buf;
 //            OwonLog.e("sensorToJson====>> ${sensorMode.toString()}");
-            SensorListModelEntity sensorListModelEntity =
+          SensorListModelEntity sensorListModelEntity =
+          SensorListModelEntity.fromJson(sensorMode);
+
+
+        }
+      } else if (msg["type"] == "string") {
+        String payload = msg["payload"];
+        OwonLog.e("----上报的payload=$payload");
+      } else if (msg["type"] == "raw") {
+        if (!topic.contains("SensorList")) {
+          return;
+        }
+        List payload = msg["payload"];
+        int count = payload[0];
+        payload = payload.sublist(1, payload.length);
+        List sensor = List();
+        Map<String, dynamic> sensorMode = Map();
+        for (int i = 0; i < count; i++) {
+          sensor.add(payload.sublist(i * 51, 51 * i + 51));
+        }
+        List buf = List();
+        for (int e = 0; e < sensor.length; e++) {
+          Map<String, dynamic> sensorPara = Map();
+          sensorPara["id"] = byteToInt(sensor[e].sublist(0, 4));
+          sensorPara["name"] = String.fromCharCodes(sensor[e].sublist(4, 34));
+          sensorPara["enable"] = sensor[e][34];
+          sensorPara["occupy"] = sensor[e][35];
+          sensorPara["temp"] = byteToInt(sensor[e].sublist(36, 38));
+          sensorPara["connect"] = sensor[e][38];
+          sensorPara["scheduleId"] = sensor[e][39];
+          sensorPara["batteryStatus"] = sensor[e][40];
+          sensorPara["reserve"] =
+              String.fromCharCodes(sensor[e].sublist(41, 51));
+          buf.add(sensorPara);
+//              OwonLog.e("sensorParaToJson====>> ${buf.toString()}");
+//              OwonLog.e("bufsensorToJson====>> ${buf.toString()}");
+//
+//              OwonLog.e("第${e+1}个sensor ID======> ${byteToInt(sensor[e].sublist(0,4))}");
+//              OwonLog.e("第${e+1}个sensor name======> ${String.fromCharCodes(sensor[e].sublist(4,34))}");
+//              OwonLog.e("第${e+1}个sensor enable/disable======> ${sensor[e][34]}");
+//              OwonLog.e("第${e+1}个sensor occupy/unoccupy======> ${sensor[e][35]}");
+//              OwonLog.e("第${e+1}个sensor Temperature======> ${byteToInt(sensor[e].sublist(36,38))}");
+//              OwonLog.e("第${e+1}个sensor connect/disconnect======> ${sensor[e][38]}");
+//              OwonLog.e("第${e+1}个sensor schedule======> ${sensor[e][39]}");
+//              OwonLog.e("第${e+1}个sensor power======> ${sensor[e][40]}");
+//              OwonLog.e("第${e+1}个sensor reserve======> ${String.fromCharCodes(sensor[e].sublist(41,51))}");
+        }
+        sensorMode["para"] = buf;
+//            OwonLog.e("sensorToJson====>> ${sensorMode.toString()}");
+        SensorListModelEntity sensorListModelEntity =
             SensorListModelEntity.fromJson(sensorMode);
 //            OwonLog.e(sensorListModelEntity);
-          }
-        });
+      }
+    });
 
-    Future.delayed(Duration(seconds: 1),(){
+    Future.delayed(Duration(seconds: 1), () {
       toGetList();
     });
   }
-
 
   int byteToInt(List list) {
     int value = 0;
@@ -104,6 +154,31 @@ class _VacationListPageState extends State<VacationListPage> {
     }
     return value;
   }
+
+  setProperty({String attribute, List<int> value}) async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/$attribute";
+//    var msg = value;
+
+    OwonLog.e("value========>$value");
+//    OwonMqtt.getInstance().publishMessage(topic, msg);
+  OwonMqtt.getInstance().publishRawMessage(topic, value);
+  }
+
+ List<int> createList(){
+    List<int> fisrt = [1,19,12,24,14,32,19,12,25,23,59,10,40,10,0];
+    List<int> tem =  List.generate(141-fisrt.length, (index){
+      return 255;
+    });
+
+     List<int> desList =[];
+    desList.addAll(fisrt);
+    desList.addAll(tem);
+    return desList;
+  }
+
   toGetList() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
@@ -113,7 +188,7 @@ class _VacationListPageState extends State<VacationListPage> {
     p["sequence"] = OwonSequence.temp;
     p["deviceid"] = widget.devModel.deviceid;
     p["attributeName"] = "VactionSchedule";
-    var msg = JsonEncoder.withIndent("  ").convert(p);
+    var msg = convert.JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
 
@@ -125,7 +200,9 @@ class _VacationListPageState extends State<VacationListPage> {
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  setProperty(attribute: "VactionSchedule",value: createList());
+                },
                 icon: Icon(
                   Icons.add,
                   color: OwonColor().getCurrent(context, "textColor"),

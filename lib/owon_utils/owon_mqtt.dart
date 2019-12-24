@@ -58,6 +58,15 @@ class OwonMqtt {
     return mqttClient.publishMessage(pTopic, qos, uint8buffer, retain: false);
   }
 
+
+  int publishRawMessage(String pTopic, List<int> list) {
+    _log("_发送数据-topic:$pTopic,playLoad:$list");
+    Uint8Buffer uint8buffer = Uint8Buffer();
+//    var codeUnits = msg.codeUnits;
+    uint8buffer.addAll(list);
+    return mqttClient.publishMessage(pTopic, qos, uint8buffer, retain: false);
+  }
+
   Subscription subscribeMessage(String subtopic) {
     return mqttClient.subscribe(subtopic, qos);
   }

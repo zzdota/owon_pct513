@@ -69,7 +69,7 @@ class _ManagementPageState extends State<ManagementPage> {
           String attr = item["attrName"];
           if (attr == "LocalTemperature") {
             setState(() {});
-            _localTemp = item["attrValue"];
+            _localTemp = item["attrValue"]==null?"3000":item["attrValue"];
           } else if (attr == "LocalRelativeHumidity") {
             _localHumi = item["attrValue"];
           } else if (attr == "SystemMode") {
@@ -81,7 +81,7 @@ class _ManagementPageState extends State<ManagementPage> {
           } else if (attr == "HomeMode") {
             _homeMode = item["attrValue"];
           } else if (attr == "SetpointHold") {
-            _setPointHold = item["attrValue"];
+            _setPointHold = item["attrValue"]==null?"3":item["attrValue"];
             if (_setPointHold == "0") {
               setState(() {});
             }
