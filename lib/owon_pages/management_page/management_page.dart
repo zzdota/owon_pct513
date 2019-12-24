@@ -7,6 +7,7 @@ import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pag
 import 'package:owon_pct513/owon_utils/owon_bottomsheet.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,6 +42,7 @@ class _ManagementPageState extends State<ManagementPage> {
   String _setPointHoldDuration = "65535";
   String _OccupiedCoolingSetpoint = "2000";
   String _OccupiedHeatingSetpoint = "2600";
+  bool _tempUnit = false;
 
   String _justSetValue;
   String _justSetPointHoldDurationValue;
@@ -94,6 +96,16 @@ class _ManagementPageState extends State<ManagementPage> {
           } else if (attr == "OccupiedHeatingSetpoint") {
             _OccupiedHeatingSetpoint = item["attrValue"];
             setState(() {});
+          } else if (attr == "TemperatureUnit") {
+            setState(() {
+              if(item["attrValue"] == "0"){
+                _tempUnit = false;
+              } else {
+                _tempUnit = true;
+              }
+              widget.devModel.tempUnit = _tempUnit;
+              OwonToast.show("$widget.devModel.tempUnit");
+            });
           }
         });
       } else if (msg["type"] == "string") {
@@ -160,6 +172,16 @@ class _ManagementPageState extends State<ManagementPage> {
           setState(() {
             _setPointHoldDuration = payload;
           });
+        } else if (topic.contains("TemperatureUnit")) {
+            OwonToast.show(payload);
+            setState(() {
+              if(payload == "0"){
+                _tempUnit = false;
+              } else {
+                _tempUnit = true;
+              }
+              widget.devModel.tempUnit = _tempUnit;
+            });
         }
       }
     });

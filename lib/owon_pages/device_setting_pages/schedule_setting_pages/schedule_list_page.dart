@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_sequence.dart';
 import '../../../owon_utils/owon_temperature.dart';
 import '../../../owon_api/model/address_model_entity.dart';
@@ -32,13 +34,13 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   bool hadData = true;
   Map<String, dynamic> mScheduleListModel = Map();
-
+  bool tempUnit = false;
   bool _switchValue = true;
   int _selectTab = 0;
-  bool tempUnit = false;
 
   @override
   void initState() {
+    tempUnit = widget.devModel.tempUnit;
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
       String topic = msg["topic"];
@@ -46,10 +48,45 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
       if (msg["type"] == "json") {
         Map<String, dynamic> payload = msg["payload"];
         OwonLog.e("----m=$payload");
+        if (payload["attributeName"].contains("WeeklySchedule")) {
+          OwonLoading(context).dismiss();
+          List value = base64Decode(payload["attributeValue"]).toList();
+          OwonLog.e("=====>>>>value$value");
+          Map<String, dynamic> scheduleMode = Map();
+          for (int i = 0; i < 7; i++) {
+            List buf = value.sublist(i * 35, 35 * i + 35);
+            for (int m = 0; m < 5; m++) {
+              List mode = buf.sublist(m * 7, 7 * m + 7);
+              scheduleMode["week${i}timeId$m"] = mode[0];
+              scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
+              scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
+              scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
+            }
+          }
+          setState(() {
+            if (mScheduleListModel != null) {
+              mScheduleListModel.clear();
+              mScheduleListModel = scheduleMode;
+            }
+          });
+        } else if (payload["attributeName"].contains("ProgramOperationMode")) {
+          String value = payload["attributeValue"];
+          OwonLog.e("=====>>>>value$value");
+          setState(() {
+            if(value == "0"){
+              _switchValue = false;
+              hadData = false;
+              OwonLoading(context).dismiss();
+            } else {
+              _switchValue = true;
+              hadData = true;
+              toGetScheduleList();
+            }
+          });
+        }
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
         OwonLog.e("----上报的payload=$payload");
-
         if (topic.contains("TemperatureUnit")) {
           setState(() {
             if (payload == "0") {
@@ -58,6 +95,21 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
               tempUnit = true;
             }
           });
+        } else if(topic.contains("ProgramOperationMode")) {
+          if (topic.startsWith("reply")) {
+            OwonLoading(context).dismiss();
+            OwonToast.show(S.of(context).global_save_success);
+            setState(() {
+              if(payload == "0"){
+                _switchValue = false;
+                hadData = false;
+              } else {
+                _switchValue = true;
+                hadData = true;
+                toGetScheduleList();
+              }
+            });
+          }
         }
       } else if (msg["type"] == "raw") {
         if (!topic.contains("WeeklySchedule")) {
@@ -85,8 +137,9 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
       }
     });
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      toGetScheduleList();
+    Future.delayed(Duration(seconds: 0), () {
+      toGetScheduleEnable();
+//    toGetScheduleList();
     });
   }
 
@@ -100,6 +153,35 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     p["deviceid"] = widget.devModel.deviceid;
     p["attributeName"] = "WeeklySchedule";
     var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
+
+  toGetScheduleEnable() async {
+    OwonLoading(context).show();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "device.attr.str";
+    p["sequence"] = OwonSequence.getScheduleEnable;
+    p["deviceid"] = widget.devModel.deviceid;
+    p["attributeName"] = "ProgramOperationMode";
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
+
+  void setScheduleEnable() async {
+    OwonLoading(context).show();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/ProgramOperationMode";
+    var msg;
+    if (_switchValue) {
+      msg = "1";
+    } else {
+      msg = "0";
+    }
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
 
@@ -126,11 +208,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                       ///点击切换开关的状态
                       setState(() {
                         _switchValue = value;
-                        if(_switchValue){
-                          hadData = true;
-                        } else {
-                          hadData = false;
-                        }
+                        setScheduleEnable();
                       });
                     })
               ],

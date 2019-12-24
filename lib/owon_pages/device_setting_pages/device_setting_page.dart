@@ -11,7 +11,7 @@ import '../../owon_providers/theme_provider.dart';
 import '../../res/owon_themeColor.dart';
 import '../../res/owon_settingData.dart';
 import '../../generated/i18n.dart';
-import '../device_temp_util_page.dart';
+import 'device_temp_util_page.dart';
 
 class DeviceSettingPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
