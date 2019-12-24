@@ -37,39 +37,39 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-          String topic = msg["topic"];
+      String topic = msg["topic"];
 
-          if (msg["type"] == "json") {
-            Map<String, dynamic> payload = msg["payload"];
-            OwonLog.e("----m=$payload");
-          } else if (msg["type"] == "string") {
-            String payload = msg["payload"];
-            OwonLog.e("----上报的payload=$payload");
-          } else if (msg["type"] == "raw") {
-            if (!topic.contains("WeeklySchedule")) {
-              return;
-            }
-            List payload = msg["payload"];
-            OwonLog.e("======>payload$payload");
-            Map<String, dynamic> scheduleMode = Map();
-            for (int i = 0; i < 7; i++) {
-              List buf = payload.sublist(i * 35, 35 * i + 35);
-              for (int m = 0; m < 5; m++) {
-                List mode = buf.sublist(m * 7, 7 * m + 7);
-                scheduleMode["week${i}timeId$m"] = mode[0];
-                scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
-                scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
-                scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
-              }
-            }
-            setState(() {
+      if (msg["type"] == "json") {
+        Map<String, dynamic> payload = msg["payload"];
+        OwonLog.e("----m=$payload");
+      } else if (msg["type"] == "string") {
+        String payload = msg["payload"];
+        OwonLog.e("----上报的payload=$payload");
+      } else if (msg["type"] == "raw") {
+        if (!topic.contains("WeeklySchedule")) {
+          return;
+        }
+        List payload = msg["payload"];
+        OwonLog.e("======>payload$payload");
+        Map<String, dynamic> scheduleMode = Map();
+        for (int i = 0; i < 7; i++) {
+          List buf = payload.sublist(i * 35, 35 * i + 35);
+          for (int m = 0; m < 5; m++) {
+            List mode = buf.sublist(m * 7, 7 * m + 7);
+            scheduleMode["week${i}timeId$m"] = mode[0];
+            scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
+            scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
+            scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
+          }
+        }
+        setState(() {
 //              if (mScheduleListModel != null) {
 //                mScheduleListModel.clear();
 //                mScheduleListModel = scheduleMode;
 //              }
-            });
-          }
         });
+      }
+    });
     Future.delayed(Duration(seconds: 0), () {
       setState(() {
         mWeekStr = [
@@ -96,6 +96,68 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
     _listEvenBusSubscription.cancel();
   }
 
+  void copyScheduleValue(int des, int res) {
+    for (int i = 0; i < 5; i++) {
+      widget.mScheduleListModel["week${des}timeId$i"] =
+          widget.mScheduleListModel["week${res}timeId$i"];
+
+      widget.mScheduleListModel["week${des}startTime$i"] =
+          widget.mScheduleListModel["week${res}startTime$i"];
+
+      widget.mScheduleListModel["week${des}heatTemp$i"] =
+          widget.mScheduleListModel["week${res}heatTemp$i"];
+
+      widget.mScheduleListModel["week${des}coolTemp$i"] =
+          widget.mScheduleListModel["week${res}coolTemp$i"];
+    }
+  }
+
+  void _save() {
+    if (firstCheckBoxState) {
+      if (widget.mWeek == 0) {
+        copyScheduleValue(1, widget.mWeek);
+      } else {
+        copyScheduleValue(0, widget.mWeek);
+      }
+    }
+    if (secondCheckBoxState) {
+      if (widget.mWeek == 1) {
+        copyScheduleValue(2, widget.mWeek);
+      } else {
+        copyScheduleValue(1, widget.mWeek);
+      }
+    }
+    if (thirdCheckBoxState) {
+      if (widget.mWeek == 2) {
+        copyScheduleValue(3, widget.mWeek);
+      } else {
+        copyScheduleValue(2, widget.mWeek);
+      }
+    }
+    if (fourthCheckBoxState) {
+      if (widget.mWeek == 3) {
+        copyScheduleValue(4, widget.mWeek);
+      } else {
+        copyScheduleValue(3, widget.mWeek);
+      }
+    }
+    if (fifthCheckBoxState) {
+      if (widget.mWeek == 4) {
+        copyScheduleValue(5, widget.mWeek);
+      } else {
+        copyScheduleValue(4, widget.mWeek);
+      }
+    }
+    if (sixCheckBoxState) {
+      if (widget.mWeek == 5) {
+        copyScheduleValue(6, widget.mWeek);
+      } else {
+        copyScheduleValue(5, widget.mWeek);
+      }
+    }
+    OwonLog.e("=====>schedule${widget.mScheduleListModel}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,9 +166,7 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
         centerTitle: true,
         actions: <Widget>[
           FlatButton(
-            onPressed: () {
-              setState(() {});
-            },
+            onPressed: _save,
             child: Text(
               S.of(context).global_save,
               style: TextStyle(
@@ -148,8 +208,7 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
                               firstCheckBoxState = !firstCheckBoxState;
                             });
                           },
-                          child: checkBox(
-                              firstCheckBoxState, mWeekStr[0]),
+                          child: checkBox(firstCheckBoxState, mWeekStr[0]),
                         ),
                         SizedBox(
                           height: 50,
@@ -157,11 +216,36 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
                         InkWell(
                           onTap: () {
                             setState(() {
+                              fourthCheckBoxState = !fourthCheckBoxState;
+                            });
+                          },
+                          child: checkBox(fourthCheckBoxState, mWeekStr[3]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            setState(() {
                               secondCheckBoxState = !secondCheckBoxState;
                             });
                           },
-                          child: checkBox(
-                              secondCheckBoxState, mWeekStr[3]),
+                          child: checkBox(secondCheckBoxState, mWeekStr[1]),
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              fifthCheckBoxState = !fifthCheckBoxState;
+                            });
+                          },
+                          child: checkBox(fifthCheckBoxState, mWeekStr[4]),
                         ),
                       ],
                     ),
@@ -176,36 +260,7 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
                               thirdCheckBoxState = !thirdCheckBoxState;
                             });
                           },
-                          child: checkBox(
-                              thirdCheckBoxState, mWeekStr[1]),
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              fourthCheckBoxState = !fourthCheckBoxState;
-                            });
-                          },
-                          child: checkBox(
-                              fourthCheckBoxState, mWeekStr[4]),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              fifthCheckBoxState = !fifthCheckBoxState;
-                            });
-                          },
-                          child: checkBox(
-                              fifthCheckBoxState, mWeekStr[2]),
+                          child: checkBox(thirdCheckBoxState, mWeekStr[2]),
                         ),
                         SizedBox(
                           height: 50,
@@ -216,8 +271,7 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
                               sixCheckBoxState = !sixCheckBoxState;
                             });
                           },
-                          child: checkBox(
-                              sixCheckBoxState, mWeekStr[5]),
+                          child: checkBox(sixCheckBoxState, mWeekStr[5]),
                         ),
                       ],
                     ),
@@ -252,7 +306,7 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
             width: 10,
           ),
           Text(
-            week == null ?"" : week,
+            week == null ? "" : week,
             style: TextStyle(
                 color: OwonColor().getCurrent(context, "textColor"),
                 fontSize: 16),

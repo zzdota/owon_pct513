@@ -37,14 +37,18 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
   @override
   void initState() {
     vc.text = getStartTime();
-    _heatCValue =
-        widget.mScheduleListModel["week${widget.mWeek}heatTemp${widget.mMode}"] /100.0;
-    _coolCValue =
-        widget.mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] /100.0;
+    _heatCValue = widget
+            .mScheduleListModel["week${widget.mWeek}heatTemp${widget.mMode}"] /
+        100.0;
+    _coolCValue = widget
+            .mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] /
+        100.0;
     _heatFValue = OwonTemperature().cToF(widget
-        .mScheduleListModel["week${widget.mWeek}heatTemp${widget.mMode}"] /100.0);
+            .mScheduleListModel["week${widget.mWeek}heatTemp${widget.mMode}"] /
+        100.0);
     _coolFValue = OwonTemperature().cToF(widget
-        .mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] /100.0);
+            .mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] /
+        100.0);
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
       String topic = msg["topic"];
@@ -99,6 +103,26 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
     _listEvenBusSubscription.cancel();
   }
 
+  void _save() {
+    List timeStr = vc.text.split(" : ");
+    int time = int.parse(timeStr[0]) * 60 + int.parse(timeStr[1]);
+    double heatTemp, coolTemp;
+    if (widget.mTempUnit) {
+      heatTemp = OwonTemperature().fToC(_heatFValue) * 1000;
+      coolTemp = OwonTemperature().fToC(_coolFValue) * 1000;
+    } else {
+      heatTemp = _heatCValue * 1000;
+      coolTemp = _coolCValue * 1000;
+    }
+    widget.mScheduleListModel["week${widget.mWeek}startTime${widget.mMode}"] =
+        time;
+    widget.mScheduleListModel["week${widget.mWeek}heatTemp${widget.mMode}"] =
+        heatTemp.toInt();
+    widget.mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] =
+        coolTemp.toInt();
+    OwonLog.e("------>>>>schedule${widget.mScheduleListModel}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,13 +132,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
           centerTitle: true,
           actions: <Widget>[
             FlatButton(
-              onPressed: () {
-                OwonLog.e("save is tap text=${vc.text}");
-//                OwonLog.e("heat:====>$_heatValue====cool:=====>$_coolValue");
-//                setState(() {
-//                  _coolValue = 30;
-//                });
-              },
+              onPressed: _save,
               child: Text(
                 S.of(context).global_save,
                 style: TextStyle(
@@ -224,6 +242,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                                       initialValue: _heatCValue,
                                       minValue: 5,
                                       maxValue: 30,
+                                      listViewWidth: 50,
                                       selectItemFontColor: OwonColor()
                                           .getCurrent(context, "textColor"),
                                       decoration: BoxDecoration(
@@ -276,6 +295,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                                       initialValue: _coolCValue,
                                       minValue: 7,
                                       maxValue: 32,
+                                      listViewWidth: 50,
                                       selectItemFontColor: OwonColor()
                                           .getCurrent(context, "textColor"),
                                       decoration: BoxDecoration(
@@ -336,7 +356,8 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
       return "-- : --";
     } else {
       int hour =
-          (widget.mScheduleListModel["week${widget.mWeek}startTime$mode"] / 60).toInt();
+          (widget.mScheduleListModel["week${widget.mWeek}startTime$mode"] / 60)
+              .toInt();
       int min =
           widget.mScheduleListModel["week${widget.mWeek}startTime$mode"] % 60;
       return "${hour.toString().padLeft(2, '0')} : ${min.toString().padLeft(2, '0')}";
