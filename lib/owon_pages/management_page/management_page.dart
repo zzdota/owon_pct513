@@ -7,6 +7,7 @@ import 'package:owon_pct513/owon_pages/device_setting_pages/schedule_setting_pag
 import 'package:owon_pct513/owon_utils/owon_bottomsheet.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_temperature.dart';
 import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_sequence.dart';
@@ -42,7 +43,7 @@ class _ManagementPageState extends State<ManagementPage> {
   String _setPointHoldDuration = "65535";
   String _OccupiedCoolingSetpoint = "2000";
   String _OccupiedHeatingSetpoint = "2600";
-  bool _tempUnit = false;
+  bool _tempUnit = true;
 
   String _justSetValue;
   String _justSetPointHoldDurationValue;
@@ -99,7 +100,7 @@ class _ManagementPageState extends State<ManagementPage> {
           } else if (attr == "TemperatureUnit") {
             setState(() {
               if(item["attrValue"] == "0"){
-                _tempUnit = false;
+//                _tempUnit = false;
               } else {
                 _tempUnit = true;
               }
@@ -300,7 +301,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: OwonConvert.reduce100(_localTemp),
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100(_localHumi),
                   )),
                 ],
@@ -391,7 +392,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Cool To",
                       tempTitle:
-                          OwonConvert.reduce100(_OccupiedCoolingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -430,7 +431,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: OwonConvert.reduce100(_localTemp),
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100(_localHumi),
                   )),
                   Padding(
@@ -438,7 +439,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                          OwonConvert.reduce100(_OccupiedHeatingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint) :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -595,7 +596,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: OwonConvert.reduce100(_localTemp),
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100(_localHumi),
                   )),
                   Padding(
@@ -603,7 +604,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Cool To",
                       tempTitle:
-                          OwonConvert.reduce100(_OccupiedCoolingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -760,7 +761,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: OwonConvert.reduce100(_localTemp),
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100(_localHumi),
                   )),
                   Padding(
@@ -768,7 +769,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                          OwonConvert.reduce100(_OccupiedHeatingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint) :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -925,7 +926,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: OwonConvert.reduce100(_localTemp),
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100(_localHumi),
                   )),
                   Padding(
@@ -933,7 +934,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                          OwonConvert.reduce100(_OccupiedHeatingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint) :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();

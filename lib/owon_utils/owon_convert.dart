@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 import 'package:flutter/material.dart';
+
+import 'owon_temperature.dart';
 class OwonConvert {
   static String reduce100(String str) {
     String desString;
@@ -19,8 +21,15 @@ class OwonConvert {
     desString = desNum.toString();
     return desString;
   }
+  //  c:2700 ==> f:86
+  static String reduce100CToF(String c) {
+   return OwonTemperature().cToF(double.parse(OwonConvert.reduce100(c))).toString();
+  }
 
-
+  //  f:86 ==> c:2700
+  static String zoom100FToC(String f) {
+    return (OwonTemperature().fToC(int.parse(f))*100).toString();
+  }
 
   static String toSystemMode(String str) {
     String desString;
