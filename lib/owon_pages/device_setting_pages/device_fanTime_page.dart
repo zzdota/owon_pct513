@@ -41,7 +41,7 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
       if (msg["type"] == "json") {
         Map<String, dynamic> payload = msg["payload"];
        if( payload["attributeName"] == "FanCycleTime") {
-         progress = double.parse(payload["attributeValue"]);
+         progress = double.parse(payload["attributeValue"])>55?55:double.parse(payload["attributeValue"]);
          OwonLog.e("pro=$progress");
          setState(() {
 

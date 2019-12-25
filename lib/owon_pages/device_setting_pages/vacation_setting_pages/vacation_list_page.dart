@@ -16,7 +16,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../../../generated/i18n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
-
+import '../../../owon_api/model/vaction_model_entity.dart';
 class VacationListPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
   VacationListPage(this.devModel);
@@ -28,8 +28,9 @@ class _VacationListPageState extends State<VacationListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
-  bool hadData = true;
-
+  int hadData=0;
+  List originalList;
+  VactionModelEntity sensorListModelEntity;
   @override
   void initState() {
     super.initState();
@@ -44,6 +45,9 @@ class _VacationListPageState extends State<VacationListPage> {
           OwonLog.e("======");
           String value = payload["attributeValue"];
           List listPayload = convert.base64Decode(value).toList();
+//          createList();
+//          convert.base64Decode(value).toList();
+          originalList = listPayload;
           OwonLog.e("des=$listPayload");
 
           int count = listPayload[0];
@@ -86,59 +90,22 @@ class _VacationListPageState extends State<VacationListPage> {
 //              OwonLog.e("第${e+1}个sensor reserve======> ${String.fromCharCodes(sensor[e].sublist(41,51))}");
           }
           sensorMode["para"] = buf;
-//            OwonLog.e("sensorToJson====>> ${sensorMode.toString()}");
-          SensorListModelEntity sensorListModelEntity =
-          SensorListModelEntity.fromJson(sensorMode);
+           sensorListModelEntity =
+          VactionModelEntity.fromJson(sensorMode);
+          hadData = sensorListModelEntity.para.length;
+            OwonLog.e("sensorToJson====>> $sensorListModelEntity");
+setState(() {
 
-
+});
         }
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
         OwonLog.e("----上报的payload=$payload");
       } else if (msg["type"] == "raw") {
-        if (!topic.contains("SensorList")) {
-          return;
-        }
         List payload = msg["payload"];
-        int count = payload[0];
-        payload = payload.sublist(1, payload.length);
-        List sensor = List();
-        Map<String, dynamic> sensorMode = Map();
-        for (int i = 0; i < count; i++) {
-          sensor.add(payload.sublist(i * 51, 51 * i + 51));
-        }
-        List buf = List();
-        for (int e = 0; e < sensor.length; e++) {
-          Map<String, dynamic> sensorPara = Map();
-          sensorPara["id"] = byteToInt(sensor[e].sublist(0, 4));
-          sensorPara["name"] = String.fromCharCodes(sensor[e].sublist(4, 34));
-          sensorPara["enable"] = sensor[e][34];
-          sensorPara["occupy"] = sensor[e][35];
-          sensorPara["temp"] = byteToInt(sensor[e].sublist(36, 38));
-          sensorPara["connect"] = sensor[e][38];
-          sensorPara["scheduleId"] = sensor[e][39];
-          sensorPara["batteryStatus"] = sensor[e][40];
-          sensorPara["reserve"] =
-              String.fromCharCodes(sensor[e].sublist(41, 51));
-          buf.add(sensorPara);
-//              OwonLog.e("sensorParaToJson====>> ${buf.toString()}");
-//              OwonLog.e("bufsensorToJson====>> ${buf.toString()}");
-//
-//              OwonLog.e("第${e+1}个sensor ID======> ${byteToInt(sensor[e].sublist(0,4))}");
-//              OwonLog.e("第${e+1}个sensor name======> ${String.fromCharCodes(sensor[e].sublist(4,34))}");
-//              OwonLog.e("第${e+1}个sensor enable/disable======> ${sensor[e][34]}");
-//              OwonLog.e("第${e+1}个sensor occupy/unoccupy======> ${sensor[e][35]}");
-//              OwonLog.e("第${e+1}个sensor Temperature======> ${byteToInt(sensor[e].sublist(36,38))}");
-//              OwonLog.e("第${e+1}个sensor connect/disconnect======> ${sensor[e][38]}");
-//              OwonLog.e("第${e+1}个sensor schedule======> ${sensor[e][39]}");
-//              OwonLog.e("第${e+1}个sensor power======> ${sensor[e][40]}");
-//              OwonLog.e("第${e+1}个sensor reserve======> ${String.fromCharCodes(sensor[e].sublist(41,51))}");
-        }
-        sensorMode["para"] = buf;
-//            OwonLog.e("sensorToJson====>> ${sensorMode.toString()}");
-        SensorListModelEntity sensorListModelEntity =
-            SensorListModelEntity.fromJson(sensorMode);
-//            OwonLog.e(sensorListModelEntity);
+
+        OwonLog.e("----raw上报的payload=$payload");
+
       }
     });
 
@@ -168,7 +135,7 @@ class _VacationListPageState extends State<VacationListPage> {
   }
 
  List<int> createList(){
-    List<int> first = [1,19,12,24,14,32,19,12,25,23,59,10,40,10,0];
+    List<int> first = [2,19,12,24,14,2,19,12,25,23,59,10,40,10,0,18,12,24,14,2,18,12,25,23,59,10,40,10,0];
     List<int> tem =  List.generate(141-first.length, (index){
       return 255;
     });
@@ -201,7 +168,7 @@ class _VacationListPageState extends State<VacationListPage> {
           actions: <Widget>[
             IconButton(
                 onPressed: () {
-                  setProperty(attribute: "VactionSchedule",value: createList());
+
                 },
                 icon: Icon(
                   Icons.add,
@@ -210,7 +177,7 @@ class _VacationListPageState extends State<VacationListPage> {
                 ))
           ],
         ),
-        body: hadData
+        body: hadData>0
             ? EasyRefresh(
                 controller: refreshController,
                 header: ClassicalHeader(
@@ -227,7 +194,7 @@ class _VacationListPageState extends State<VacationListPage> {
                   OwonLog.e("load");
                 },
                 child: ListView.builder(
-                    itemCount: 5,
+                    itemCount: sensorListModelEntity.para.length,
                     itemBuilder: (context, index) {
                       return Slidable(
                         key: Key(index.toString()),
@@ -251,7 +218,7 @@ class _VacationListPageState extends State<VacationListPage> {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => VacationSettingPage()));
+                                  builder: (context) => VacationSettingPage(devModel: widget.devModel,sensorListModelEntity: sensorListModelEntity,index: index,originList: originalList,)));
                             },
                             child: Card(
                                 shape: RoundedRectangleBorder(
@@ -269,14 +236,14 @@ class _VacationListPageState extends State<VacationListPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                        "PCT513",
+                                        createYearTimeString(sensorListModelEntity.para[index]),
                                         style: TextStyle(
                                             fontSize: 13,
                                             color: OwonColor().getCurrent(
                                                 context, "textColor")),
                                       ),
                                       Text(
-                                        "PCT513",
+                                        createTimeString(sensorListModelEntity.para[index]),
                                         style: TextStyle(
                                             fontSize: 13,
                                             color: OwonColor().getCurrent(
@@ -304,6 +271,63 @@ class _VacationListPageState extends State<VacationListPage> {
                       );
                     }))
             : getNoDataWidget());
+  }
+
+  String createYearTimeString(VactionModelPara paraModel) {
+    String  desString = "Oct 17 2019";
+    int sYear = paraModel.sYear;
+    int sMonth = paraModel.sMonth;
+    int sDay = paraModel.sDay;
+
+
+    String month = convertMonth(sMonth);
+    String day = sDay.toString();
+    String year = (sYear +2000).toString();
+
+
+    desString = "$month $day $year";
+    return desString;
+  }
+  String createTimeString(VactionModelPara paraModel) {
+    String  desString = "7: 00";
+
+    int sHour = paraModel.sHour;
+    int sMin = paraModel.sMin;
+
+
+    String hour = sHour.toString().padLeft(2, '0');
+    String min = sMin.toString().padLeft(2, '0');
+
+    desString = "$hour: $min";
+    return desString;
+  }
+
+  String convertMonth(int sMonth) {
+   if(sMonth == 1){
+     return "Jan";
+   }else if(sMonth == 2){
+     return "Feb";
+   }else if(sMonth == 3){
+     return "Mar";
+   }else if(sMonth == 4){
+     return "Apr";
+   }else if(sMonth == 5){
+     return "May";
+   }else if(sMonth == 6){
+     return "Jun";
+   }else if(sMonth == 7){
+     return "Jul";
+   }else if(sMonth == 8){
+     return "Aug";
+   }else if(sMonth == 9){
+     return "Sep";
+   }else if(sMonth == 10){
+     return "Oct";
+   }else if(sMonth == 11){
+     return "Nov";
+   }else{
+     return "Dec";
+   }
   }
 
   Widget getNoDataWidget() {

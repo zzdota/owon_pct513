@@ -43,7 +43,7 @@ class _ManagementPageState extends State<ManagementPage> {
   String _setPointHoldDuration = "65535";
   String _OccupiedCoolingSetpoint = "2000";
   String _OccupiedHeatingSetpoint = "2600";
-  bool _tempUnit = true;
+  bool _tempUnit = false;
 
   String _justSetValue;
   String _justSetPointHoldDurationValue;
@@ -207,7 +207,8 @@ class _ManagementPageState extends State<ManagementPage> {
       "UnoccupiedCoolingSetpoint",
       "SetpointHold",
       "SetpointHoldDuration",
-      "TemperatureUnit"
+      "TemperatureUnit",
+      "RelayState"
     ];
     List paramList = [];
     for (int i = 0; i < attrsList.length; i++) {

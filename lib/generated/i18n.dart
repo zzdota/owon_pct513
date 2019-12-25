@@ -51,7 +51,7 @@ class S implements WidgetsLocalizations {
   String get device_info_title => "Device About";
   String get device_info_upgrade => "Upgrade";
   String get device_info_upgrade_version => "· Device Upgradeable Version: ";
-  String get device_max => "100 min/h";
+  String get device_max => "55 min/h";
   String get device_min => "0 min/h";
   String get device_unit => "min/h";
   String get global_account_exist => "Account has been registered";
@@ -273,7 +273,7 @@ class $zh extends S {
   @override
   String get global_wed => "周三";
   @override
-  String get device_max => "100 min/h";
+  String get device_max => "55 min/h";
   @override
   String get set_dig => "电子围栏";
   @override

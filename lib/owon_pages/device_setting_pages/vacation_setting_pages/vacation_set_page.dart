@@ -2,23 +2,119 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/component/owon_pickerView.dart';
 import 'package:owon_pct513/component/owon_timeTextfield.dart';
+import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
+import 'package:owon_pct513/owon_api/model/vaction_model_entity.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../generated/i18n.dart';
 import '../../../res/owon_themeColor.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-
+import '../../../owon_utils/owon_convert.dart';
 class VacationSettingPage extends StatefulWidget {
+  VactionModelEntity sensorListModelEntity;
+  VactionModelPara paraModel;
+  AddressModelAddrsDevlist devModel;
+  List originList;
+  int index;
+
+  VacationSettingPage({this.devModel,this.sensorListModelEntity,this.index,this.originList});
   @override
   _VacationSettingPageState createState() => _VacationSettingPageState();
 }
 
 class _VacationSettingPageState extends State<VacationSettingPage> {
-  TextEditingController vc = TextEditingController(text: "hehe");
-  int _heatValue = 23, _coolValue = 20;
+  TextEditingController _departYearVc = TextEditingController(text: "hehe");
+  TextEditingController _departDayVc = TextEditingController(text: "hehe");
+  TextEditingController _returnYearVc = TextEditingController(text: "hehe");
+  TextEditingController _returnDayVc = TextEditingController(text: "hehe");
 
+  int _heatValue, _coolValue;
+@override
+  void initState() {
+     widget.paraModel = widget.sensorListModelEntity.para[widget.index];
+    _departYearVc.text = createYearTimeString(widget.paraModel.sYear,widget.paraModel.sMonth,widget.paraModel.sDay);
+    _departDayVc.text = createTimeString(widget.paraModel.sHour,widget.paraModel.sMin);
+    _returnYearVc.text = createYearTimeString(widget.paraModel.eYear,widget.paraModel.eMonth,widget.paraModel.eDay);
+    _returnDayVc.text = createTimeString(widget.paraModel.eHour,widget.paraModel.eMin);
+    _heatValue = (widget.devModel.tempUnit)?double.parse(OwonConvert.reduce100CToF(widget.paraModel.heat.toString())).floor() :double.parse(OwonConvert.reduce100(widget.paraModel.heat.toString())).floor();
+    _coolValue = (widget.devModel.tempUnit)?double.parse(OwonConvert.reduce100CToF(widget.paraModel.cool.toString())).floor() :double.parse(OwonConvert.reduce100(widget.paraModel.cool.toString())).floor();
+
+
+
+    super.initState();
+  }
+
+
+  setProperty({String attribute, List<int> value}) async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/$attribute";
+//    var msg = value;
+
+    OwonLog.e("value========>$value");
+//    OwonMqtt.getInstance().publishMessage(topic, msg);
+    OwonMqtt.getInstance().publishRawMessage(topic, value);
+  }
+
+  List<int> createYearList(String year){
+    List tem = year.split(" ");
+    var monthString = tem.first ;
+    var dayString = tem[1];
+    var yearString = tem.last;
+    int y = int.parse(yearString)-2000;
+    int m = createMonth(monthString);
+    int d = int.parse(dayString);
+    return [y,m,d];
+  }
+  List<int> createTimeList(String time){
+    List tem = time.split(": ");
+    var hString = tem.first ;
+    var mString = tem.last;
+    int h = int.parse(hString);
+    int m = int.parse(mString);
+    return [h,m];
+  }
+
+
+
+  List<int> createParameter(){
+    List<int> totalList = [];
+    List<int> syearList = createYearList(_departYearVc.text);
+    List<int> sdayList = createTimeList(_departDayVc.text);
+    List<int> eyearList = createYearList(_returnYearVc.text);
+    List<int> edayList = createTimeList(_returnDayVc.text);
+    int heat1 = (_heatValue *100)>>8;
+    int heat2 = _heatValue*100 - (heat1<<8);
+    int cool1 = (_coolValue *100)>>8;
+    int cool2 = _coolValue*100 -(cool1<<8);
+    totalList.addAll(syearList);
+    totalList.addAll(sdayList);
+    totalList.addAll(eyearList);
+    totalList.addAll(edayList);
+    totalList.add(heat1);
+    totalList.add(heat2);
+    totalList.add(cool1);
+    totalList.add(cool2);
+
+    return totalList;
+  }
+
+  List<int> createList(){
+    List<int> first = [1,19,12,24,14,2,19,12,25,23,59,10,40,10,10];
+    List<int> tem =  List.generate(141-first.length, (index){
+      return 255;
+    });
+
+    List<int> desList =[];
+    desList.addAll(first);
+    desList.addAll(tem);
+    return desList;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,21 +125,13 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
           FlatButton(
 //            splashColor: Colors.red,
             onPressed: () {
-              OwonLog.e("save is tap text=${vc.text}");
-              OwonLog.e("heat:====>$_heatValue====cool:=====>$_coolValue");
-              setState(() {
-                _coolValue = 30;
-              });
-//              var picker = await showDatePicker(
-//                  context: context,
-//                  initialDate: new DateTime.now(),
-//                  firstDate:
-//                      new DateTime.now().subtract(new Duration(days: 30)),
-//                  lastDate: new DateTime.now().add(new Duration(days: 30)),
-//                  locale: Locale('zh'));
-//              setState(() {
-//                vc.text = picker.toString();
-//              });
+             List<int> newList = createParameter();
+             int start = 1 + 14*widget.index;
+             int end = start + 14;
+             widget.originList.replaceRange(start, end, newList);
+
+             print("${widget.originList}");
+              setProperty(attribute: "VactionSchedule",value: widget.originList);
             },
             child: Text(
               S.of(context).global_save,
@@ -84,17 +172,20 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: OwonTimeTextField(context, vc, () async {
+                  child: OwonTimeTextField(context, _departYearVc, () async {
                     var picker = await showDatePicker(
                         context: context,
                         initialDate: new DateTime.now(),
                         firstDate:
-                            new DateTime.now().subtract(new Duration(days: 30)),
+                            new DateTime.now().subtract(new Duration(days: 365)),
                         lastDate:
-                            new DateTime.now().add(new Duration(days: 30)),
-                        locale: Locale('zh'));
+                            new DateTime.now().add(new Duration(days: 365)),
+                        locale: Locale('zh')
+                    );
                     setState(() {
-                      vc.text = picker.toString();
+                      _departYearVc.text = createYearTimeString(picker.year, picker.month, picker.day,addYear: false);
+
+
                     });
                   }),
                 ),
@@ -102,17 +193,14 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                   width: 20,
                 ),
                 Expanded(
-                  child: OwonTimeTextField(context, vc, () async {
-                    var picker = await showDatePicker(
+                  child: OwonTimeTextField(context, _departDayVc, () async {
+                    var picker = await showTimePicker(
                         context: context,
-                        initialDate: new DateTime.now(),
-                        firstDate:
-                            new DateTime.now().subtract(new Duration(days: 30)),
-                        lastDate:
-                            new DateTime.now().add(new Duration(days: 30)),
-                        locale: Locale('zh'));
+                        initialTime: TimeOfDay.now(),
+
+                    );
                     setState(() {
-                      vc.text = picker.toString();
+                      _departDayVc.text = createTimeString(picker.hour, picker.minute);
                     });
                   }),
                 ),
@@ -145,17 +233,18 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: OwonTimeTextField(context, vc, () async {
+                  child: OwonTimeTextField(context, _returnYearVc, () async {
                     var picker = await showDatePicker(
                         context: context,
                         initialDate: new DateTime.now(),
                         firstDate:
-                            new DateTime.now().subtract(new Duration(days: 30)),
+                            new DateTime.now().subtract(new Duration(days: 365)),
                         lastDate:
-                            new DateTime.now().add(new Duration(days: 30)),
+                            new DateTime.now().add(new Duration(days: 365)),
                         locale: Locale('zh'));
                     setState(() {
-                      vc.text = picker.toString();
+                      _returnYearVc.text = createYearTimeString(picker.year, picker.month, picker.day,addYear: false);
+
                     });
                   }),
                 ),
@@ -163,17 +252,14 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                   width: 20,
                 ),
                 Expanded(
-                  child: OwonTimeTextField(context, vc, () async {
-                    var picker = await showDatePicker(
-                        context: context,
-                        initialDate: new DateTime.now(),
-                        firstDate:
-                            new DateTime.now().subtract(new Duration(days: 30)),
-                        lastDate:
-                            new DateTime.now().add(new Duration(days: 30)),
-                        locale: Locale('zh'));
+                  child: OwonTimeTextField(context, _returnDayVc, () async {
+                    var picker = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+
+                    );
                     setState(() {
-                      vc.text = picker.toString();
+                      _returnDayVc.text = createTimeString(picker.hour, picker.minute);
                     });
                   }),
                 ),
@@ -304,5 +390,97 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
         ],
       ),
     );
+  }
+
+  String createTimeString(int hourNum, int minNum) {
+    String  desString = "7: 00";
+
+    int sHour = hourNum;
+    int sMin = minNum;
+
+    String hour = sHour.toString().padLeft(2, '0');
+    String min = sMin.toString().padLeft(2, '0');
+
+    desString = "$hour: $min";
+    return desString;
+  }
+
+  String createYearTimeString(int yearNum , int monthNum, int dayNum,{bool addYear = true }) {
+    String  desString = "Oct 17 2019";
+    int sYear = yearNum;
+    int sMonth = monthNum;
+    int sDay = dayNum;
+
+
+    String month = convertMonth(sMonth);
+    String day = sDay.toString();
+    String year = sYear.toString();
+
+    if(addYear){
+       year = (sYear +2000).toString();
+    }
+
+
+    desString = "$month $day $year";
+    return desString;
+  }
+
+
+
+  String convertMonth(int sMonth) {
+    if(sMonth == 1){
+      return "Jan";
+    }else if(sMonth == 2){
+      return "Feb";
+    }else if(sMonth == 3){
+      return "Mar";
+    }else if(sMonth == 4){
+      return "Apr";
+    }else if(sMonth == 5){
+      return "May";
+    }else if(sMonth == 6){
+      return "Jun";
+    }else if(sMonth == 7){
+      return "Jul";
+    }else if(sMonth == 8){
+      return "Aug";
+    }else if(sMonth == 9){
+      return "Sep";
+    }else if(sMonth == 10){
+      return "Oct";
+    }else if(sMonth == 11){
+      return "Nov";
+    }else{
+      return "Dec";
+    }
+  }
+
+
+  int createMonth(String mon){
+    if(mon == "Jan"){
+      return 1;
+    }else if(mon == "Feb"){
+      return 2;
+    }else if(mon == "Mar"){
+      return 3;
+    }else if(mon == "Apr"){
+      return 4;
+    }else if(mon == "May"){
+      return 5;
+    }else if(mon == "Jun"){
+      return 6;
+    }else if(mon == "Jul"){
+      return 7;
+    }else if(mon == "Aug"){
+      return 8;
+    }else if(mon == "Sep"){
+      return 9;
+    }else if(mon == "Oct"){
+      return 10;
+    }else if(mon == "Nov"){
+      return 11;
+    }else if(mon == "Dec"){
+      return 12;
+    }
   }
 }
