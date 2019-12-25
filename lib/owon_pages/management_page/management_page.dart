@@ -104,7 +104,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 _tempUnit = true;
               }
               widget.devModel.tempUnit = _tempUnit;
-              OwonToast.show("$widget.devModel.tempUnit");
+              OwonLog.e("======>>>tempUnit====${widget.devModel.tempUnit}");
             });
           }
         });
@@ -173,7 +173,6 @@ class _ManagementPageState extends State<ManagementPage> {
             _setPointHoldDuration = payload;
           });
         } else if (topic.contains("TemperatureUnit")) {
-            OwonToast.show(payload);
             setState(() {
               if(payload == "0"){
                 _tempUnit = false;
@@ -181,6 +180,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 _tempUnit = true;
               }
               widget.devModel.tempUnit = _tempUnit;
+              OwonLog.e("======>>>tempUnit====${widget.devModel.tempUnit}");
             });
         }
       }

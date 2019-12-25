@@ -139,7 +139,13 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     super.initState();
     Future.delayed(Duration(seconds: 0), () {
       toGetScheduleEnable();
-//    toGetScheduleList();
+      toGetCurrentWeek();
+    });
+  }
+
+  toGetCurrentWeek(){
+    setState(() {
+      _selectTab = DateTime.now().weekday;
     });
   }
 
@@ -195,6 +201,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 7,
+        initialIndex: DateTime.now().weekday,
         child: Scaffold(
             appBar: AppBar(
               title: Text(S.of(context).schedule_title),

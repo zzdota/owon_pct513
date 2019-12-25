@@ -6,9 +6,13 @@ import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/generated/i18n.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScheduleCopySCH extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
@@ -63,10 +67,10 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
           }
         }
         setState(() {
-//              if (mScheduleListModel != null) {
-//                mScheduleListModel.clear();
-//                mScheduleListModel = scheduleMode;
-//              }
+          if (scheduleMode != null) {
+            widget.mScheduleListModel.clear();
+            widget.mScheduleListModel = scheduleMode;
+          }
         });
       }
     });
@@ -83,8 +87,6 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
         ];
         selectWeekStr = mWeekStr[widget.mWeek];
         mWeekStr.removeAt(widget.mWeek);
-        OwonLog.e("======>>>>$selectWeekStr");
-        OwonLog.e("======>>>>$mWeekStr");
       });
     });
     super.initState();
@@ -112,7 +114,23 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
     }
   }
 
-  void _save() {
+  List<int> mapScheduleToList() {
+    List<int> buf = List();
+    for (int i = 0; i < 7; i++) {
+      for(int n =0;n<5;n++){
+        buf.add(widget.mScheduleListModel["week${i}timeId$n"]);
+        buf.add(widget.mScheduleListModel["week${i}startTime$n"] >> 8);
+        buf.add(widget.mScheduleListModel["week${i}startTime$n"] - ((widget.mScheduleListModel["week${i}startTime$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] >> 8);
+        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] - ((widget.mScheduleListModel["week${i}heatTemp$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] >> 8);
+        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] - ((widget.mScheduleListModel["week${i}coolTemp$n"] >> 8) << 8));
+      }
+    }
+    return buf;
+  }
+
+  void _save() async{
     if (firstCheckBoxState) {
       if (widget.mWeek == 0) {
         copyScheduleValue(1, widget.mWeek);
@@ -155,7 +173,19 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
         copyScheduleValue(5, widget.mWeek);
       }
     }
-    OwonLog.e("=====>schedule${widget.mScheduleListModel}");
+    List<int> data = mapScheduleToList();
+    OwonLog.e("=====>copy schedule${widget.mScheduleListModel}");
+    OwonLog.e("=====>copy schedule data$data");
+
+    OwonLoading(context).show();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/WeeklySchedule";
+//    var msg;
+//    msg = data.toString();
+    OwonMqtt.getInstance().publishRawMessage(topic, data);
+//    OwonLog.e("=====>copy schedule data string===>>$msg");
   }
 
   @override

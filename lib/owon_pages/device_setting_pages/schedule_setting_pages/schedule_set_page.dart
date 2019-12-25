@@ -3,7 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/owon_utils/owon_temperature.dart';
+import 'package:owon_pct513/res/owon_constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../component/owon_header.dart';
 import '../../../component/owon_pickerView.dart';
 import '../../../component/owon_timeTextfield.dart';
@@ -103,16 +107,32 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
     _listEvenBusSubscription.cancel();
   }
 
-  void _save() {
+  List<int> mapScheduleToList() {
+    List<int> buf = List();
+    for (int i = 0; i < 7; i++) {
+      for(int n =0;n<5;n++){
+        buf.add(widget.mScheduleListModel["week${i}timeId$n"]);
+        buf.add(widget.mScheduleListModel["week${i}startTime$n"] >> 8);
+        buf.add(widget.mScheduleListModel["week${i}startTime$n"] - ((widget.mScheduleListModel["week${i}startTime$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] >> 8);
+        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] - ((widget.mScheduleListModel["week${i}heatTemp$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] >> 8);
+        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] - ((widget.mScheduleListModel["week${i}coolTemp$n"] >> 8) << 8));
+      }
+    }
+    return buf;
+  }
+
+  void _save() async{
     List timeStr = vc.text.split(" : ");
     int time = int.parse(timeStr[0]) * 60 + int.parse(timeStr[1]);
     double heatTemp, coolTemp;
     if (widget.mTempUnit) {
-      heatTemp = OwonTemperature().fToC(_heatFValue) * 1000;
-      coolTemp = OwonTemperature().fToC(_coolFValue) * 1000;
+      heatTemp = OwonTemperature().fToC(_heatFValue) * 100;
+      coolTemp = OwonTemperature().fToC(_coolFValue) * 100;
     } else {
-      heatTemp = _heatCValue * 1000;
-      coolTemp = _coolCValue * 1000;
+      heatTemp = _heatCValue * 100;
+      coolTemp = _coolCValue * 100;
     }
     widget.mScheduleListModel["week${widget.mWeek}startTime${widget.mMode}"] =
         time;
@@ -121,6 +141,21 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
     widget.mScheduleListModel["week${widget.mWeek}coolTemp${widget.mMode}"] =
         coolTemp.toInt();
     OwonLog.e("------>>>>schedule${widget.mScheduleListModel}");
+
+    List<int> data = mapScheduleToList();
+    OwonLog.e("=====>set schedule${widget.mScheduleListModel}");
+    OwonLog.e("=====>set schedule data$data");
+
+    OwonLoading(context).show();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/WeeklySchedule";
+//    var msg;
+//    msg = data.toString();
+    OwonMqtt.getInstance().publishRawMessage(topic, data);
+//    OwonLog.e("=====>copy schedule data string===>>$msg");
+
   }
 
   @override
