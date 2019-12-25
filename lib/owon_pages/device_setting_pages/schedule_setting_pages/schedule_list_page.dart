@@ -679,8 +679,8 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
       return "-.-";
     } else {
       return tempUnit == false
-          ? "${mScheduleListModel["week${_selectTab}heatTemp$mode"] / 100} ℃"
-          : "${OwonTemperature().cToF(mScheduleListModel["week${_selectTab}heatTemp$mode"] / 100)} ℉";
+          ? "${mScheduleListModel["week${_selectTab}heatTemp$mode"] / 100} ${S.of(context).global_celsius_unit}"
+          : "${OwonTemperature().cToF(mScheduleListModel["week${_selectTab}heatTemp$mode"] / 100)} ${S.of(context).global_fahrenheit_unit}";
     }
   }
 
@@ -689,8 +689,8 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
       return "-.-";
     } else {
       return tempUnit == false
-          ? "${mScheduleListModel["week${_selectTab}coolTemp$mode"] / 100} ℃"
-          : "${OwonTemperature().cToF(mScheduleListModel["week${_selectTab}coolTemp$mode"] / 100)} ℉";
+          ? "${mScheduleListModel["week${_selectTab}coolTemp$mode"] / 100} ${S.of(context).global_celsius_unit}"
+          : "${OwonTemperature().cToF(mScheduleListModel["week${_selectTab}coolTemp$mode"] / 100)} ${S.of(context).global_fahrenheit_unit}";
     }
   }
 }

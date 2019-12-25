@@ -45,14 +45,22 @@ class S implements WidgetsLocalizations {
   String get dSet_temp_unit => "温度单位";
   String get dSet_vacation => "Vacation Setting";
   String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
+  String get device_info_current_version => "· Device Firmware Version: ";
+  String get device_info_mac => "· Device Mac: ";
+  String get device_info_network => "· Device Network: ";
+  String get device_info_title => "Device About";
+  String get device_info_upgrade => "Upgrade";
+  String get device_info_upgrade_version => "· Device Upgradeable Version: ";
   String get device_max => "100 min/h";
   String get device_min => "0 min/h";
   String get device_unit => "min/h";
   String get global_account_exist => "Account has been registered";
   String get global_cancel => "Cancel";
+  String get global_celsius_unit => "℃";
   String get global_delete => "Remove";
   String get global_enter_psw_not_match => "New Password and Confirmed Password do not match";
   String get global_enter_verify_null => "Please enter your verification code";
+  String get global_fahrenheit_unit => "℉";
   String get global_fri => "Fri";
   String get global_get_verify_code => "Get Code";
   String get global_get_verify_code_email_success => "A verification code has been sent to your email";
@@ -121,6 +129,20 @@ class S implements WidgetsLocalizations {
   String get schedule_mode_wake => "Wake";
   String get schedule_setting_title => "Schedule Settings";
   String get schedule_title => "Schedule";
+  String get sensor_about_battery => "· Sensor Remaining Battery: ";
+  String get sensor_about_id => "· Sensor ID: ";
+  String get sensor_about_occupied => "Occupied";
+  String get sensor_about_occupied_or => "· Occupied or Unoccupied: ";
+  String get sensor_about_temp => "· Sensor Temperature: ";
+  String get sensor_about_unoccupied => "Unoccupied";
+  String get sensor_about_version => "· Sensor Firmware Version: ";
+  String get sensor_list_occupied => "Occupied";
+  String get sensor_list_title => "Sensor Settings";
+  String get sensor_list_unoccupied => "Unoccupied";
+  String get sensor_setting_delete_sensor => "Delete Sensor";
+  String get sensor_setting_participation_period => "Participation Period";
+  String get sensor_setting_sensor_about => "Sensor About";
+  String get sensor_setting_sensor_name => "Sensor Name";
   String get set_about => "About";
   String get set_appearance => "Appearance";
   String get set_dig => "Electric Fence";
@@ -147,6 +169,8 @@ class $zh extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
+  String get sensor_about_id => "· 设备ID: ";
+  @override
   String get login_retry_limit => "密码重试次数超出限制";
   @override
   String get login_button => "登录";
@@ -166,6 +190,8 @@ class $zh extends S {
   String get global_register_account_success => "账号注册成功";
   @override
   String get schedule_mode_away => "外出";
+  @override
+  String get sensor_about_occupied_or => "· 是否有人: ";
   @override
   String get appearance_dark => "深色";
   @override
@@ -189,9 +215,17 @@ class $zh extends S {
   @override
   String get login_no_account => "账号不存在";
   @override
+  String get sensor_about_unoccupied => "没有";
+  @override
+  String get sensor_about_occupied => "有人";
+  @override
+  String get sensor_about_temp => "· 温度: ";
+  @override
   String get schedule_setting_title => "计划表设置";
   @override
   String get global_hint_new_password => "输入新密码";
+  @override
+  String get sensor_setting_sensor_about => "传感器信息";
   @override
   String get schedule_disabled_tip => "The schedule has been disabled.";
   @override
@@ -209,11 +243,15 @@ class $zh extends S {
   @override
   String get global_fri => "周五";
   @override
+  String get global_celsius_unit => "℃";
+  @override
   String get global_thermostat => "温控器";
   @override
   String get global_get_verify_code => "校验码";
   @override
   String get global_get_verify_code_phone_num_error => "手机号错误";
+  @override
+  String get device_info_network => "· 网络: ";
   @override
   String get global_lock_account => "账号被锁定";
   @override
@@ -239,9 +277,17 @@ class $zh extends S {
   @override
   String get set_dig => "电子围栏";
   @override
+  String get sensor_setting_delete_sensor => "删除传感器";
+  @override
   String get app_name => "OWON";
   @override
+  String get sensor_list_unoccupied => "Unoccupied";
+  @override
   String get global_delete => "删除";
+  @override
+  String get sensor_about_version => "· 固件版本: ";
+  @override
+  String get device_info_title => "设备信息";
   @override
   String get dSet_device_info => "设备信息";
   @override
@@ -267,6 +313,8 @@ class $zh extends S {
   @override
   String get reset_psw_reset => "重置";
   @override
+  String get sensor_setting_sensor_name => "传感器名称";
+  @override
   String get set_resetPsw => "重置密码";
   @override
   String get login_retry_time => "分钟后才能重试";
@@ -287,6 +335,8 @@ class $zh extends S {
   @override
   String get vacation_title => "假期列表";
   @override
+  String get sensor_list_occupied => "Occupied";
+  @override
   String get set_help => "帮助";
   @override
   String get global_mon => "周一";
@@ -298,6 +348,8 @@ class $zh extends S {
   String get dSet_vacation => "假期设置";
   @override
   String get global_psw_retry_limit => "密码重试次数超出限制";
+  @override
+  String get device_info_current_version => "· 设备当前版本: ";
   @override
   String get vacation_noEvent => "当前还没有任何设置";
   @override
@@ -339,13 +391,21 @@ class $zh extends S {
   @override
   String get global_user_name_regex_string => "账号只能包含,数字，大小写字母以及下划线,@或空格，并且只能以数字或字母开头，长度请控制在4到15之间";
   @override
+  String get sensor_list_title => "传感器设置";
+  @override
   String get app_listView => "ListView";
+  @override
+  String get device_info_upgrade => "升级";
   @override
   String get dSet_temp => "温度单位选择";
   @override
   String get change_psw_fail => "修改密码失败";
   @override
+  String get sensor_setting_participation_period => "Participation Period";
+  @override
   String get tab_list => "温控器列表";
+  @override
+  String get global_fahrenheit_unit => "℉";
   @override
   String get global_ok => "确认";
   @override
@@ -355,6 +415,10 @@ class $zh extends S {
   @override
   String get global_get_verify_code_often => "操作过于频繁，请稍后在尝试";
   @override
+  String get device_info_upgrade_version => "· 设备可升级版本: ";
+  @override
+  String get device_info_mac => "· 设备MAC: ";
+  @override
   String get global_unknown => "未知错误";
   @override
   String get login_username_null => "请输入用户名";
@@ -362,6 +426,8 @@ class $zh extends S {
   String get appearance_light => "浅色";
   @override
   String get login_forgot => "忘记密码";
+  @override
+  String get sensor_about_battery => "· 电池: ";
   @override
   String get set_about => "关于";
   @override

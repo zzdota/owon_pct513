@@ -103,6 +103,8 @@ class OwonPic {
   static String deviceRename = "assets/images/device_rename.svg";
   static String deviceRenamePng = "assets/images/device_rename.png";
 
+  static String sensorSettingParticipationPeriodB = "assets/images/device_set/sensor_setting_participation_period_b.png";
+  static String sensorSettingParticipationPeriodW = "assets/images/device_set/sensor_setting_participation_period_w.png";
 
 }
 

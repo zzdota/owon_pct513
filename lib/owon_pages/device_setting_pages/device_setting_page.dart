@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/device_about_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/device_fanTime_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/device_rename_page.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_list_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/vacation_setting_pages/vacation_list_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
@@ -74,7 +76,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                         {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
-                            return SensorSettingPage(widget.devModel);
+                            return SensorListPage(widget.devModel);
                           }));
                         }
                         break;
@@ -87,7 +89,12 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
                         }
                         break;
                       case 5:
-                        {}
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return DeviceAboutPage(widget.devModel);
+                          }));
+                        }
                         break;
                       default:
                         break;

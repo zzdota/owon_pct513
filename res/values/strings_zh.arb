@@ -122,6 +122,31 @@
   "device_unit": "min/h",
 
   "global_save_success": "保存成功",
-  "global_save_fail": "保存失败"
+  "global_save_fail": "保存失败",
+
+  "sensor_list_title": "传感器设置",
+  "sensor_list_occupied": "Occupied",
+  "sensor_list_unoccupied": "Unoccupied",
+  "sensor_setting_sensor_name": "传感器名称",
+  "sensor_setting_participation_period": "Participation Period",
+  "sensor_setting_sensor_about": "传感器信息",
+  "sensor_setting_delete_sensor": "删除传感器",
+  "sensor_about_id": "· 设备ID: ",
+  "sensor_about_version": "· 固件版本: ",
+  "sensor_about_battery": "· 电池: ",
+  "sensor_about_temp": "· 温度: ",
+  "sensor_about_occupied_or": "· 是否有人: ",
+  "sensor_about_occupied": "有人",
+  "sensor_about_unoccupied": "没有",
+
+  "device_info_title": "设备信息",
+  "device_info_current_version": "· 设备当前版本: ",
+  "device_info_upgrade_version": "· 设备可升级版本: ",
+  "device_info_mac": "· 设备MAC: ",
+  "device_info_network": "· 网络: ",
+  "device_info_upgrade": "升级",
+
+  "global_fahrenheit_unit": "℉",
+  "global_celsius_unit": "℃"
 
 }

@@ -179,6 +179,9 @@ flutter:
     - assets/images/device_set/setting_save.svg
     - assets/images/device_set/setting_upgrade.svg
 
+    - assets/images/device_set/sensor_setting_participation_period_b.png
+    - assets/images/device_set/sensor_setting_participation_period_w.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

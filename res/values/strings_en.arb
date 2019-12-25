@@ -122,6 +122,32 @@
   "device_unit": "min/h",
 
   "global_save_success": "Save successfully",
-  "global_save_fail": "Save failed"
+  "global_save_fail": "Save failed",
+
+  "sensor_list_title": "Sensor Settings",
+  "sensor_list_occupied": "Occupied",
+  "sensor_list_unoccupied": "Unoccupied",
+  "sensor_setting_sensor_name": "Sensor Name",
+  "sensor_setting_participation_period": "Participation Period",
+  "sensor_setting_sensor_about": "Sensor About",
+  "sensor_setting_delete_sensor": "Delete Sensor",
+  "sensor_about_id": "· Sensor ID: ",
+  "sensor_about_version": "· Sensor Firmware Version: ",
+  "sensor_about_battery": "· Sensor Remaining Battery: ",
+  "sensor_about_temp": "· Sensor Temperature: ",
+  "sensor_about_occupied_or": "· Occupied or Unoccupied: ",
+  "sensor_about_occupied": "Occupied",
+  "sensor_about_unoccupied": "Unoccupied",
+
+  "device_info_title": "Device About",
+  "device_info_current_version": "· Device Firmware Version: ",
+  "device_info_upgrade_version": "· Device Upgradeable Version: ",
+  "device_info_mac": "· Device Mac: ",
+  "device_info_network": "· Device Network: ",
+  "device_info_upgrade": "Upgrade",
+
+
+  "global_fahrenheit_unit": "℉",
+  "global_celsius_unit": "℃"
 
 }

@@ -169,7 +169,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _login() async {
-    OwonLoading(context).show();
     _userName = _useController.text;
     if (TextUtil.isEmpty(_userName)) {
       OwonToast.show(S.of(context).login_username_null);
@@ -193,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
       }
       _userName = _userNameCountryCode + _userName;
     }
-
+    OwonLoading(context).show();
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().login(_userName, _password), (value) async {
       LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
