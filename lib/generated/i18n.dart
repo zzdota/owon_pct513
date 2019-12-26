@@ -47,7 +47,6 @@ class S implements WidgetsLocalizations {
   String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
   String get device_info_current_version => "· Device Firmware Version: ";
   String get device_info_mac => "· Device Mac: ";
-  String get device_info_network => "· Device Network: ";
   String get device_info_title => "Device About";
   String get device_info_upgrade => "Upgrade";
   String get device_info_upgrade_version => "· Device Upgradeable Version: ";
@@ -250,8 +249,6 @@ class $zh extends S {
   String get global_get_verify_code => "校验码";
   @override
   String get global_get_verify_code_phone_num_error => "手机号错误";
-  @override
-  String get device_info_network => "· 网络: ";
   @override
   String get global_lock_account => "账号被锁定";
   @override

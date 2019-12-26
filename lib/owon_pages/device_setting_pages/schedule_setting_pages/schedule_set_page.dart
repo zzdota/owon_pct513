@@ -78,9 +78,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
         if (topic.contains("WeeklySchedule")) {
           if (topic.startsWith("reply")) {
             OwonLoading(context).dismiss();
-            OwonToast.show(S
-                .of(context)
-                .global_save_success);
+            OwonToast.show(S.of(context).global_save_success);
             Navigator.pop(context);
           }
           List payload = msg["payload"];
@@ -97,10 +95,10 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
             }
           }
           setState(() {
-//              if (mScheduleListModel != null) {
-//                mScheduleListModel.clear();
-//                mScheduleListModel = scheduleMode;
-//              }
+            if (widget.mScheduleListModel != null) {
+              widget.mScheduleListModel.clear();
+              widget.mScheduleListModel = scheduleMode;
+            }
           });
         }
       }
@@ -117,20 +115,23 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
   List<int> mapScheduleToList() {
     List<int> buf = List();
     for (int i = 0; i < 7; i++) {
-      for(int n =0;n<5;n++){
+      for (int n = 0; n < 5; n++) {
         buf.add(widget.mScheduleListModel["week${i}timeId$n"]);
         buf.add(widget.mScheduleListModel["week${i}startTime$n"] >> 8);
-        buf.add(widget.mScheduleListModel["week${i}startTime$n"] - ((widget.mScheduleListModel["week${i}startTime$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}startTime$n"] -
+            ((widget.mScheduleListModel["week${i}startTime$n"] >> 8) << 8));
         buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] >> 8);
-        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] - ((widget.mScheduleListModel["week${i}heatTemp$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] -
+            ((widget.mScheduleListModel["week${i}heatTemp$n"] >> 8) << 8));
         buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] >> 8);
-        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] - ((widget.mScheduleListModel["week${i}coolTemp$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] -
+            ((widget.mScheduleListModel["week${i}coolTemp$n"] >> 8) << 8));
       }
     }
     return buf;
   }
 
-  void _save() async{
+  void _save() async {
     List timeStr = vc.text.split(" : ");
     int time = int.parse(timeStr[0]) * 60 + int.parse(timeStr[1]);
     double heatTemp, coolTemp;
@@ -163,7 +164,6 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
     OwonMqtt.getInstance().publishRawMessage(topic, data);
     OwonLog.e("=====>set schedule$data");
 //    OwonLog.e("=====>copy schedule data string===>>$msg");
-
   }
 
   @override

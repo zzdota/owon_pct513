@@ -181,6 +181,8 @@ flutter:
 
     - assets/images/device_set/sensor_setting_participation_period_b.png
     - assets/images/device_set/sensor_setting_participation_period_w.png
+    - assets/images/device_set/sensor_setting_mode_no_select.svg
+    - assets/images/device_set/sensor_setting_mode_select.svg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

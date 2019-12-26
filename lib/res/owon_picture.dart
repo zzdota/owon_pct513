@@ -105,6 +105,7 @@ class OwonPic {
 
   static String sensorSettingParticipationPeriodB = "assets/images/device_set/sensor_setting_participation_period_b.png";
   static String sensorSettingParticipationPeriodW = "assets/images/device_set/sensor_setting_participation_period_w.png";
-
+  static String sensorSettingModeSelect = "assets/images/device_set/sensor_setting_mode_select.svg";
+  static String sensorSettingModeNoSelect = "assets/images/device_set/sensor_setting_mode_no_select.svg";
 }
 

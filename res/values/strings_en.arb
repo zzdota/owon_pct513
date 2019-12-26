@@ -143,7 +143,6 @@
   "device_info_current_version": "· Device Firmware Version: ",
   "device_info_upgrade_version": "· Device Upgradeable Version: ",
   "device_info_mac": "· Device Mac: ",
-  "device_info_network": "· Device Network: ",
   "device_info_upgrade": "Upgrade",
 
 

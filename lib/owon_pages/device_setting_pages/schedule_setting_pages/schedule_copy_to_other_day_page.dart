@@ -9,6 +9,7 @@ import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
@@ -50,28 +51,32 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
         String payload = msg["payload"];
         OwonLog.e("----上报的payload=$payload");
       } else if (msg["type"] == "raw") {
-        if (!topic.contains("WeeklySchedule")) {
-          return;
-        }
-        List payload = msg["payload"];
-        OwonLog.e("======>payload$payload");
-        Map<String, dynamic> scheduleMode = Map();
-        for (int i = 0; i < 7; i++) {
-          List buf = payload.sublist(i * 35, 35 * i + 35);
-          for (int m = 0; m < 5; m++) {
-            List mode = buf.sublist(m * 7, 7 * m + 7);
-            scheduleMode["week${i}timeId$m"] = mode[0];
-            scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
-            scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
-            scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
+        if (topic.contains("WeeklySchedule")) {
+          if (topic.startsWith("reply")) {
+            OwonLoading(context).dismiss();
+            OwonToast.show(S.of(context).global_save_success);
+            Navigator.pop(context);
           }
-        }
-        setState(() {
-          if (scheduleMode != null) {
-            widget.mScheduleListModel.clear();
-            widget.mScheduleListModel = scheduleMode;
+          List payload = msg["payload"];
+          OwonLog.e("======>payload$payload");
+          Map<String, dynamic> scheduleMode = Map();
+          for (int i = 0; i < 7; i++) {
+            List buf = payload.sublist(i * 35, 35 * i + 35);
+            for (int m = 0; m < 5; m++) {
+              List mode = buf.sublist(m * 7, 7 * m + 7);
+              scheduleMode["week${i}timeId$m"] = mode[0];
+              scheduleMode["week${i}startTime$m"] = (mode[1] << 8) + mode[2];
+              scheduleMode["week${i}heatTemp$m"] = (mode[3] << 8) + mode[4];
+              scheduleMode["week${i}coolTemp$m"] = (mode[5] << 8) + mode[6];
+            }
           }
-        });
+          setState(() {
+            if (scheduleMode != null) {
+              widget.mScheduleListModel.clear();
+              widget.mScheduleListModel = scheduleMode;
+            }
+          });
+        }
       }
     });
     Future.delayed(Duration(seconds: 0), () {
@@ -117,20 +122,23 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
   List<int> mapScheduleToList() {
     List<int> buf = List();
     for (int i = 0; i < 7; i++) {
-      for(int n =0;n<5;n++){
+      for (int n = 0; n < 5; n++) {
         buf.add(widget.mScheduleListModel["week${i}timeId$n"]);
         buf.add(widget.mScheduleListModel["week${i}startTime$n"] >> 8);
-        buf.add(widget.mScheduleListModel["week${i}startTime$n"] - ((widget.mScheduleListModel["week${i}startTime$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}startTime$n"] -
+            ((widget.mScheduleListModel["week${i}startTime$n"] >> 8) << 8));
         buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] >> 8);
-        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] - ((widget.mScheduleListModel["week${i}heatTemp$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}heatTemp$n"] -
+            ((widget.mScheduleListModel["week${i}heatTemp$n"] >> 8) << 8));
         buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] >> 8);
-        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] - ((widget.mScheduleListModel["week${i}coolTemp$n"] >> 8) << 8));
+        buf.add(widget.mScheduleListModel["week${i}coolTemp$n"] -
+            ((widget.mScheduleListModel["week${i}coolTemp$n"] >> 8) << 8));
       }
     }
     return buf;
   }
 
-  void _save() async{
+  void _save() async {
     if (firstCheckBoxState) {
       if (widget.mWeek == 0) {
         copyScheduleValue(1, widget.mWeek);

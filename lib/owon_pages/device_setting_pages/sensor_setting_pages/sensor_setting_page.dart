@@ -5,6 +5,7 @@ import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_api/model/sensor_list_model_entity.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_about_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_name_page.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_participation_period_page.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:owon_pct513/owon_providers/theme_provider.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
@@ -119,7 +120,7 @@ class _SensorSettingPageState extends State<SensorSettingPage> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => SensorRenamePage(widget.devModel,
+                        builder: (context) => SensorParticipationPeriodPage(widget.devModel,
                             widget.sensorListModelEntity, widget.index)));
                   },
                   child: createCard(

@@ -55,7 +55,8 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
               });
             }
           });
-          getDeviceUpgradeInfo();
+          getDeviceUpgradeInfo(false);
+          getDeviceUpgradeInfo(true);
         } else if (payload.containsKey("version.get")) {
           if (topic.startsWith("reply")) {
             OwonLoading(context).dismiss();
@@ -86,7 +87,7 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
     _listEvenBusSubscription.cancel();
   }
 
-  getDeviceUpgradeInfo() async {
+  getDeviceUpgradeInfo(bool flag) async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic = "api/cloud/$clientID";
@@ -95,7 +96,10 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
     p["type"] = "UAA8BC7Cais7dJGc";
     p["sequence"] = OwonSequence.getDeviceUpgradeInfo;
     p["language"] = "en";
-    p["firmwaretype"] = "pct513";
+    if (flag)
+      p["firmwaretype"] = "pct513";
+    else
+      p["firmwaretype"] = "wifi";
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
@@ -164,14 +168,6 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
                       height: 15,
                     ),
                     Text("${S.of(context).device_info_mac}$mDeviceId",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color:
-                                OwonColor().getCurrent(context, "textColor"))),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text("${S.of(context).device_info_network}$mDeviceNetwork",
                         style: TextStyle(
                             fontSize: 20,
                             color:

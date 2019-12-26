@@ -247,7 +247,7 @@ class _SensorListPageState extends State<SensorListPage> {
                   Text(
                     mSensorListModelEntity.para[index].name,
                     style: TextStyle(
-                        color: OwonColor().getCurrent(context, "textColor")),
+                        color: OwonColor().getCurrent(context, "textColor"),fontSize: 16),
                   ),
                   SizedBox(
                     width: 20.0,
@@ -257,7 +257,7 @@ class _SensorListPageState extends State<SensorListPage> {
                         ? "${OwonTemperature().cToF(mSensorListModelEntity.para[index].temp / 100)}${S.of(context).global_fahrenheit_unit} / ${mSensorListModelEntity.para[index].occupy == 0 ? S.of(context).sensor_list_occupied : S.of(context).sensor_list_unoccupied}"
                         : "${(mSensorListModelEntity.para[index].temp / 100)}${S.of(context).global_celsius_unit} / ${mSensorListModelEntity.para[index].occupy == 0 ? S.of(context).sensor_list_occupied : S.of(context).sensor_list_unoccupied}",
                     style: TextStyle(
-                        color: OwonColor().getCurrent(context, "blue")),
+                        color: OwonColor().getCurrent(context, "blue"),fontSize: 16),
                   ),
                   Icon(
                     Icons.keyboard_arrow_right,

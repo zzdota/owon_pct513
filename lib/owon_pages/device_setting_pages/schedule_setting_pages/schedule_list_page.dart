@@ -372,24 +372,28 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                         getCard(
                             OwonPic.scheduleModeWake,
                             S.of(context).schedule_mode_wake,
+                            0,
                             getStartTime(0),
                             getHeatTemp(0),
                             getCoolTemp(0)),
                         getCard(
                             OwonPic.scheduleModeAway,
                             S.of(context).schedule_mode_away,
+                            1,
                             getStartTime(1),
                             getHeatTemp(1),
                             getCoolTemp(1)),
                         getCard(
                             OwonPic.scheduleModeHome,
                             S.of(context).schedule_mode_home,
+                            2,
                             getStartTime(2),
                             getHeatTemp(2),
                             getCoolTemp(2)),
                         getCard(
                             OwonPic.scheduleModeSleep,
                             S.of(context).schedule_mode_sleep,
+                            3,
                             getStartTime(3),
                             getHeatTemp(3),
                             getCoolTemp(3)),
@@ -484,15 +488,15 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     );
   }
 
-  Widget getCard(String imageUrl, String modeStr, String timeStr,
+  Widget getCard(String imageUrl, String modeStr, int modeNum,String timeStr,
       String heatStr, String coolStr) {
     return Container(
         height: OwonConstant.cHeight,
         padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
         child: InkWell(
           onTap: () {
-            switch (modeStr) {
-              case "Wake":
+            switch (modeNum) {
+              case 0:
                 if (mScheduleListModel.length != 0) {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
@@ -506,7 +510,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                   }));
                 }
                 break;
-              case "Away":
+              case 1:
                 if (mScheduleListModel.length != 0) {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
@@ -520,7 +524,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                   }));
                 }
                 break;
-              case "Home":
+              case 2:
                 if (mScheduleListModel.length != 0) {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
@@ -534,7 +538,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                   }));
                 }
                 break;
-              case "Sleep":
+              case 3:
                 if (mScheduleListModel.length != 0) {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
