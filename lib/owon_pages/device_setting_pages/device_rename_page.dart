@@ -46,7 +46,7 @@ class _DeviceRenamePageState extends State<DeviceRenamePage> {
         String payload = msg["payload"];
 
         OwonLog.e("----上报的payload=$payload");
-        if (topic.contains("DeviceName")) {
+        if (topic.startsWith("reply") && topic.contains("DeviceName")) {
 
 //          OwonLoading(context).dismiss();
           OwonLoading(context).hide().then((e){

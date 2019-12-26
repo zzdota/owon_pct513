@@ -34,47 +34,48 @@ class _ListPageState extends State<ListPage> {
   void initState() {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
-          String topic = msg["topic"];
+      String topic = msg["topic"];
 
-          if(msg["type"] == "json"){
+      if (msg["type"] == "json") {
         Map<String, dynamic> payload = msg["payload"];
-        if( payload.containsKey("addrs")) {
+        if (payload.containsKey("addrs")) {
           OwonLog.e("++++++++");
           OwonLoading(context).dismiss();
           setState(() {
             _addrModels = AddressModelEntity.fromJson(payload);
             _addressModel = _addrModels.addrs.first;
-            _addrModels.addrs.forEach((item){
-              item.devlist.forEach((deviceItem){
+            _addrModels.addrs.forEach((item) {
+              item.devlist.forEach((deviceItem) {
                 String deviceId = deviceItem.deviceid;
                 String deviceTopic = "device/$deviceId/#";
 
                 OwonMqtt.getInstance().subscribeMessage(deviceTopic);
-
-
               });
             });
           });
-
-
         }
-
-
-      }else if (msg["type"] == "string"){
-
+      } else if (msg["type"] == "string") {
         String payload = msg["payload"];
-        if(topic == ""){
+        if (!topic.startsWith("reply") && topic.endsWith("DeviceName")) {
+          List tem = topic.split("/");
+          String updateDeviceId = tem[1];
+          String updateDeviceName = payload;
 
-        }else if(topic == ""){
-
-        }else if(topic == ""){
-
-        }else if(topic == ""){
-
-        }
+          _addressModel = _addrModels.addrs.first;
+          _addrModels.addrs.forEach((item) {
+            item.devlist.forEach((deviceItem) {
+              String deviceId = deviceItem.deviceid;
+              if (deviceId == updateDeviceId) {
+                deviceItem.devname = updateDeviceName;
+                setState(() {});
+              }
+            });
+          });
+        } else if (topic == "") {
+        } else if (topic == "") {
+        } else if (topic == "") {}
 
         OwonLog.e("----list上报的payload=$payload");
-
       }
     });
     super.initState();
@@ -90,22 +91,18 @@ class _ListPageState extends State<ListPage> {
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
 
-
-
-
     String topic = "api/cloud/$clientID";
     Map p = Map();
     p["command"] = "addr.dev.list";
     p["sequence"] = OwonSequence.addList;
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
-
-
-
   }
 
   @override
   Widget build(BuildContext context) {
+    OwonLog.e("[[[[[[[build list");
+
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
@@ -174,7 +171,8 @@ class _ListPageState extends State<ListPage> {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ManagementPage(_addressModel.devlist[index])));
+                                  builder: (context) => ManagementPage(
+                                      _addressModel.devlist[index])));
                             },
                             child: Card(
                                 shape: RoundedRectangleBorder(

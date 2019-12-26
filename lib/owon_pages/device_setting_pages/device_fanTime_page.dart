@@ -52,7 +52,7 @@ class _DeviceFanTimePageState extends State<DeviceFanTimePage> {
         String payload = msg["payload"];
 
         OwonLog.e("----上报的payload=$payload");
-        if (topic.contains("FanCycleTime")) {
+        if (topic.startsWith("reply") && topic.contains("FanCycleTime")) {
           OwonLoading(context).hide().then((e){
             OwonToast.show(S.of(context).global_save_success);
           });
