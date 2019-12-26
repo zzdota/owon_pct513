@@ -57,6 +57,7 @@ class S implements WidgetsLocalizations {
   String get global_cancel => "Cancel";
   String get global_celsius_unit => "℃";
   String get global_delete => "Remove";
+  String get global_delete_device => "Delete Device";
   String get global_enter_psw_not_match => "New Password and Confirmed Password do not match";
   String get global_enter_verify_null => "Please enter your verification code";
   String get global_fahrenheit_unit => "℉";
@@ -187,6 +188,8 @@ class $zh extends S {
   String get global_get_verify_code_phone_success => "验证码已发送到您的手机，请查收";
   @override
   String get global_register_account_success => "账号注册成功";
+  @override
+  String get global_delete_device => "删除设备";
   @override
   String get schedule_mode_away => "外出";
   @override

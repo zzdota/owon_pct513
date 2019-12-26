@@ -146,6 +146,7 @@
   "device_info_upgrade": "升级",
 
   "global_fahrenheit_unit": "℉",
-  "global_celsius_unit": "℃"
+  "global_celsius_unit": "℃",
+  "global_delete_device": "删除设备"
 
 }

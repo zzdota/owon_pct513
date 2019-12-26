@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/device_about_page.dart';
@@ -7,6 +9,7 @@ import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages
 import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_page.dart';
 import 'package:owon_pct513/owon_pages/device_setting_pages/vacation_setting_pages/vacation_list_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
+import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:provider/provider.dart';
 import '../../owon_providers/theme_provider.dart';
@@ -122,39 +125,62 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
     var imageUrl = myIndex == 0
         ? dataList[index]["imageUrl"]
         : dataList[index]["imageUrlW"];
-    return GestureDetector(
+    if(index == dataList.length-1){
+      return GestureDetector(
+          onTap: () {
+            OwonLog.e("delet===>");
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16), color: Colors.red),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    name,
+                    style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                 Icon(Icons.delete,color: Colors.white,)
+                ],
+              )));
+    }else{
+      return GestureDetector(
 //      onTap: (){
 //        OwonMqtt.getInstance().disconnect();
 //        Navigator.of(context).pop();
 //      },
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Image.asset(
-                  imageUrl,
-                  width: 20,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  name,
-                  style: TextStyle(
-                      color: OwonColor().getCurrent(context, "textColor"),
-                      fontSize: 16.0),
-                ),
-              ],
-            ),
-            Icon(Icons.keyboard_arrow_right,
-                color: OwonColor().getCurrent(context, "textColor"))
-          ],
+        child: Container(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Image.asset(
+                    imageUrl,
+                    width: 20,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    name,
+                    style: TextStyle(
+                        color: OwonColor().getCurrent(context, "textColor"),
+                        fontSize: 16.0),
+                  ),
+                ],
+              ),
+              Icon(Icons.keyboard_arrow_right,
+                  color: OwonColor().getCurrent(context, "textColor"))
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }

@@ -234,7 +234,7 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                 int end = start + 14;
                 List<int> newList = createParameter();
 
-                widget.originList.replaceRange(start, end, newList);
+                widget.originList.addAll(newList);
                 print("增加${widget.originList}");
 
 

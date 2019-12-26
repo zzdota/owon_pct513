@@ -234,6 +234,14 @@ List loadDeviceSettingData(context) {
       "imageUrl": OwonPic.dSetDeviceInfoB,
       "imageUrlW": OwonPic.dSetDeviceInfoW,
 
+    },
+    {
+      "name": S.of(context).global_delete_device,
+      "description":
+      "西部森林中隐藏了无数的秘密。其中之一就是受到风神眷顾的森林弓箭大师莱瑞蕾。风行者莱瑞蕾的家人在她出生那夜的暴风雨中全部去世了，狂风摧毁了他们的房屋，一切都化为乌有。",
+      "imageUrl": OwonPic.dSetDeviceInfoB,
+      "imageUrlW": OwonPic.dSetDeviceInfoW,
+
     }
   ];
 }
