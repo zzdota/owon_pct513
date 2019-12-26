@@ -30,6 +30,8 @@ class _ListPageState extends State<ListPage> {
       addrs: [AddressModelAddr(addrid: 1, addrname: "默认地址1")]);
   AddressModelAddr _addressModel =
       AddressModelAddr(addrid: 1, addrname: "...", devlist: []);
+
+  String noDeviceTip = "";
   @override
   void initState() {
     _listEvenBusSubscription =
@@ -40,10 +42,17 @@ class _ListPageState extends State<ListPage> {
         Map<String, dynamic> payload = msg["payload"];
         if (payload.containsKey("addrs")) {
           OwonLog.e("++++++++");
-          OwonLoading(context).dismiss();
+          Future.delayed(Duration(milliseconds: 100),(){
+            OwonLog.e("---dismiss");
+
+            OwonLoading(context).dismiss();
+          });
           setState(() {
             _addrModels = AddressModelEntity.fromJson(payload);
             _addressModel = _addrModels.addrs.first;
+            if(_addrModels.addrs.length== 0 || _addrModels.addrs.length== null){
+             noDeviceTip = "当前家庭没有设备";
+            }
             _addrModels.addrs.forEach((item) {
               item.devlist.forEach((deviceItem) {
                 String deviceId = deviceItem.deviceid;
@@ -79,10 +88,14 @@ class _ListPageState extends State<ListPage> {
       }
     });
     super.initState();
-    Future.delayed(Duration(milliseconds: 200), () {
-      OwonLoading(context).show();
+    Future.delayed(Duration(milliseconds: 1000), () {
     });
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(milliseconds:250 ), () {
+
+      OwonLoading(context).hide().then((e){
+        OwonLog.e("---show");
+        OwonLoading(context).show();
+      });
       toGetList();
     });
   }
@@ -127,7 +140,7 @@ class _ListPageState extends State<ListPage> {
                 _addressModel.devlist.length == 0)
             ? Center(
                 child: Text(
-                  "当前家庭没有设备",
+                  noDeviceTip,
                   style: TextStyle(color: Colors.white),
                 ),
               )
@@ -362,8 +375,12 @@ class _ListPageState extends State<ListPage> {
           child: Text(addrModel.addrname),
           onTap: () {
             print("-----$value");
+            _addressModel = value;
+            if(_addressModel.devlist.length== 0 || _addressModel.devlist.length == null){
+              noDeviceTip = "当前家庭没有设备";
+            }
             setState(() {
-              _addressModel = value;
+
             });
             return false;
           },

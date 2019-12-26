@@ -228,7 +228,6 @@ class _LoginPageState extends State<LoginPage> {
           OwonToast.show(S.of(context).login_lock_account);
           break;
       }
-      OwonLoading(context).dismiss();
     }, (value) {
       OwonLog.e("error-------$value");
       OwonLoading(context).dismiss();
@@ -250,13 +249,17 @@ class _LoginPageState extends State<LoginPage> {
         .then((v) {
       OwonLog.e("res=$v");
       if (v.returnCode == MqttConnectReturnCode.connectionAccepted) {
-        OwonLog.e("恭喜你~ ====mqtt连接成功");
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return HomePage();
-        }));
-        pre.setString(OwonConstant.clientID, clientId);
-        startListen();
-        toSubscribe(clientId);
+        OwonLoading(context).hide().then((item){
+//          OwonLoading(context).dismiss();
+          OwonLog.e("恭喜你~ ====mqtt连接成功");
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return HomePage();
+          }));
+          pre.setString(OwonConstant.clientID, clientId);
+          startListen();
+          toSubscribe(clientId);
+        });
+
       } else {
         OwonLog.e("有事做了~ ====mqtt连接失败!!!");
         OwonToast.show(S.of(context).login_fail);

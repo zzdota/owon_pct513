@@ -55,7 +55,9 @@ class _ManagementPageState extends State<ManagementPage> {
   void initState() {
     getProperty();
     super.initState();
-
+    Future.delayed(Duration(seconds: 0),(){
+      OwonLoading(context).show();
+    });
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
       String topic = msg["topic"];
@@ -66,6 +68,7 @@ class _ManagementPageState extends State<ManagementPage> {
         if(!payload.containsValue("device.attr.str.batch")) {
             return;
           }
+        OwonLoading(context).dismiss();
         OwonLog.e("----m=${payload["response"]}");
         List tempList = payload["response"];
         tempList.forEach((item) {
