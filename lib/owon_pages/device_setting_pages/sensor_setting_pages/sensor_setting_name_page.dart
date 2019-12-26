@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/generated/i18n.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
@@ -37,16 +38,41 @@ class _SensorRenamePageState extends State<SensorRenamePage> {
       String topic = msg["topic"];
 
       if (msg["type"] == "json") {
-//        Map<String, dynamic> payload = msg["payload"];
-//        OwonLog.e("----m=${payload["response"]}");
+        Map<String, dynamic> payload = msg["payload"];
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
-        OwonLog.e("----上报的payload=$payload");
-        if (topic.contains("DeviceName")) {
-//          OwonLoading(context).dismiss();
-          OwonLoading(context).hide().then((e) {
+      } else if (msg["type"] == "raw") {
+        if (topic.contains("SensorList")) {
+          if (topic.startsWith("reply")) {
+            OwonLoading(context).dismiss();
             OwonToast.show(S.of(context).global_save_success);
-          });
+          }
+          List payload = msg["payload"];
+          int count = payload[0];
+          payload = payload.sublist(1, payload.length);
+          List sensor = List();
+          Map<String, dynamic> sensorMode = Map();
+          for (int i = 0; i < count; i++) {
+            sensor.add(payload.sublist(i * 51, 51 * i + 51));
+          }
+          List buf = List();
+          for (int e = 0; e < sensor.length; e++) {
+            Map<String, dynamic> sensorPara = Map();
+            sensorPara["id"] = byteToInt(sensor[e].sublist(0, 4));
+            sensorPara["name"] = String.fromCharCodes(sensor[e].sublist(4, 34));
+            sensorPara["enable"] = sensor[e][34];
+            sensorPara["occupy"] = sensor[e][35];
+            sensorPara["temp"] = byteToInt(sensor[e].sublist(36, 38));
+            sensorPara["connect"] = sensor[e][38];
+            sensorPara["scheduleId"] = sensor[e][39];
+            sensorPara["batteryStatus"] = sensor[e][40];
+            sensorPara["reserve"] =
+                String.fromCharCodes(sensor[e].sublist(41, 51));
+            buf.add(sensorPara);
+          }
+          sensorMode["para"] = buf;
+          widget.sensorListModelEntity =
+              SensorListModelEntity.fromJson(sensorMode);
         }
       }
     });
@@ -58,13 +84,63 @@ class _SensorRenamePageState extends State<SensorRenamePage> {
     _listEvenBusSubscription.cancel();
   }
 
-  setProperty({String attribute, String value}) async {
+  int byteToInt(List list) {
+    int value = 0;
+    for (int i = 0; i < list.length; i++) {
+      value = value + (list[i] << ((list.length - i - 1) * 8));
+    }
+    return value;
+  }
+
+  List<int> intToByte(int value, int byte) {
+    List<int> buf = List();
+    for (int i = 0; i < byte; i++) {
+      int valueBuf = value >> ((byte - 1 - i) * 8);
+      value = value - (valueBuf << ((byte - 1 - i) * 8));
+      buf.add(valueBuf);
+    }
+    return buf;
+  }
+
+  List<int> mapSensorToList() {
+    List<int> buf = List();
+    buf.add(widget.sensorListModelEntity.para.length);
+    for (int i = 0; i < widget.sensorListModelEntity.para.length; i++) {
+      SensorListModelParam sensorPara = widget.sensorListModelEntity.para[i];
+
+      List<int> name = List();
+      name.addAll(utf8.encode(sensorPara.name));
+      for (int i = name.length; i < 30; i++) {
+        name.add(0);
+      }
+
+      List<int> reserve = List();
+      for (int i = 0; i < 10; i++) {
+        reserve.add(0);
+      }
+
+      buf.addAll(intToByte(sensorPara.id, 4));
+      buf.addAll(name);
+      buf.add(sensorPara.enable);
+      buf.add(sensorPara.occupy);
+      buf.addAll(intToByte(sensorPara.temp, 2));
+      buf.add(sensorPara.connect);
+      buf.add(sensorPara.scheduleId);
+      buf.add(sensorPara.batteryStatus);
+      buf.addAll(reserve);
+    }
+    return buf;
+  }
+
+  save() async {
+    OwonLoading(context).show();
+    widget.sensorListModelEntity.para[widget.index].name = _tfVC.text;
+    List<int> data = mapSensorToList();
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic =
-        "api/device/${widget.devModel.deviceid}/$clientID/attribute/$attribute";
-    var msg = value;
-    OwonMqtt.getInstance().publishMessage(topic, msg);
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/SensorList";
+    OwonMqtt.getInstance().publishRawMessage(topic, data);
   }
 
   @override
@@ -74,13 +150,11 @@ class _SensorRenamePageState extends State<SensorRenamePage> {
         title: Text(S.of(context).dSet_rename),
       ),
       body: Container(
-//        color: Colors.red,
         padding: EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
             Expanded(
               child: TextField(
-//          autofocus: true,
                   style: TextStyle(
                       color: OwonColor().getCurrent(
                         context,
@@ -119,14 +193,12 @@ class _SensorRenamePageState extends State<SensorRenamePage> {
                   height: OwonConstant.systemHeight,
                   width: double.infinity,
                   child: OwonTextIconButton.icon(
-//                      color: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(OwonConstant.cRadius),
                       ),
                       onPressed: () {
-                        OwonLoading(context).show();
-                        setProperty(attribute: "DeviceName", value: _tfVC.text);
+                        save();
                       },
                       icon: Icon(
                         Icons.save_alt,

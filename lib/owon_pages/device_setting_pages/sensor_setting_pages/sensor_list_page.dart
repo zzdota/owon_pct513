@@ -83,43 +83,56 @@ class _SensorListPageState extends State<SensorListPage> {
         String payload = msg["payload"];
         OwonLog.e("----上报的payload=$payload");
       } else if (msg["type"] == "raw") {
-        if (!topic.contains("SensorList")) {
-          return;
+        if (topic.contains("SensorList")) {
+          if(topic.startsWith("reply")){
+            OwonLoading(context).dismiss();
+            OwonToast.show(S.of(context).global_save_success);
+          }
+          List payload = msg["payload"];
+          int count = payload[0];
+          payload = payload.sublist(1, payload.length);
+          List sensor = List();
+          Map<String, dynamic> sensorMode = Map();
+          for (int i = 0; i < count; i++) {
+            sensor.add(payload.sublist(i * 51, 51 * i + 51));
+          }
+          List buf = List();
+          for (int e = 0; e < sensor.length; e++) {
+            Map<String, dynamic> sensorPara = Map();
+            sensorPara["id"] = byteToInt(sensor[e].sublist(0, 4));
+            sensorPara["name"] = String.fromCharCodes(sensor[e].sublist(4, 34));
+            sensorPara["enable"] = sensor[e][34];
+            sensorPara["occupy"] = sensor[e][35];
+            sensorPara["temp"] = byteToInt(sensor[e].sublist(36, 38));
+            sensorPara["connect"] = sensor[e][38];
+            sensorPara["scheduleId"] = sensor[e][39];
+            sensorPara["batteryStatus"] = sensor[e][40];
+            sensorPara["reserve"] =
+                String.fromCharCodes(sensor[e].sublist(41, 51));
+            buf.add(sensorPara);
+          }
+          sensorMode["para"] = buf;
+          mSensorListModelEntity = SensorListModelEntity.fromJson(sensorMode);
+          setState(() {
+            mSensorListCount = mSensorListModelEntity.para.length;
+          });
         }
-        List payload = msg["payload"];
-        int count = payload[0];
-        payload = payload.sublist(1, payload.length);
-        List sensor = List();
-        Map<String, dynamic> sensorMode = Map();
-        for (int i = 0; i < count; i++) {
-          sensor.add(payload.sublist(i * 51, 51 * i + 51));
-        }
-        List buf = List();
-        for (int e = 0; e < sensor.length; e++) {
-          Map<String, dynamic> sensorPara = Map();
-          sensorPara["id"] = byteToInt(sensor[e].sublist(0, 4));
-          sensorPara["name"] = String.fromCharCodes(sensor[e].sublist(4, 34));
-          sensorPara["enable"] = sensor[e][34];
-          sensorPara["occupy"] = sensor[e][35];
-          sensorPara["temp"] = byteToInt(sensor[e].sublist(36, 38));
-          sensorPara["connect"] = sensor[e][38];
-          sensorPara["scheduleId"] = sensor[e][39];
-          sensorPara["batteryStatus"] = sensor[e][40];
-          sensorPara["reserve"] =
-              String.fromCharCodes(sensor[e].sublist(41, 51));
-          buf.add(sensorPara);
-        }
-        sensorMode["para"] = buf;
-        mSensorListModelEntity = SensorListModelEntity.fromJson(sensorMode);
-        setState(() {
-          mSensorListCount = mSensorListModelEntity.para.length;
-        });
       }
     });
 
     Future.delayed(Duration(seconds: 0), () {
       toGetSensorList();
     });
+  }
+
+  List<int> intToByte(int value, int byte) {
+    List<int> buf = List();
+    for (int i = 0; i < byte; i++) {
+      int valueBuf = value >> ((byte - 1 - i) * 8);
+      value = value - (valueBuf << ((byte - 1 - i) * 8));
+      buf.add(valueBuf);
+    }
+    return buf;
   }
 
   int byteToInt(List list) {
@@ -142,6 +155,46 @@ class _SensorListPageState extends State<SensorListPage> {
     p["attributeName"] = "SensorList";
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
+
+  List<int> mapSensorToList() {
+    List<int> buf = List();
+    buf.add(mSensorListModelEntity.para.length);
+    for (int i = 0; i < mSensorListModelEntity.para.length; i++) {
+      SensorListModelParam sensorPara = mSensorListModelEntity.para[i];
+
+      List<int> name = List();
+      name.addAll(utf8.encode(sensorPara.name));
+      for (int i = name.length; i < 30; i++) {
+        name.add(0);
+      }
+
+      List<int> reserve = List();
+      for (int i = 0; i < 10; i++) {
+        reserve.add(0);
+      }
+
+      buf.addAll(intToByte(sensorPara.id, 4));
+      buf.addAll(name);
+      buf.add(sensorPara.enable);
+      buf.add(sensorPara.occupy);
+      buf.addAll(intToByte(sensorPara.temp, 2));
+      buf.add(sensorPara.connect);
+      buf.add(sensorPara.scheduleId);
+      buf.add(sensorPara.batteryStatus);
+      buf.addAll(reserve);
+    }
+    return buf;
+  }
+
+  void save() async {
+//    OwonLoading(context).show();
+    List<int> data = mapSensorToList();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/SensorList";
+    OwonMqtt.getInstance().publishRawMessage(topic, data);
   }
 
   @override
@@ -239,6 +292,7 @@ class _SensorListPageState extends State<SensorListPage> {
                         setState(() {
                           mSensorListModelEntity.para[index].enable =
                               value ? 1 : 0;
+                          save();
                         });
                       }),
                   SizedBox(
@@ -247,7 +301,8 @@ class _SensorListPageState extends State<SensorListPage> {
                   Text(
                     mSensorListModelEntity.para[index].name,
                     style: TextStyle(
-                        color: OwonColor().getCurrent(context, "textColor"),fontSize: 16),
+                        color: OwonColor().getCurrent(context, "textColor"),
+                        fontSize: 16),
                   ),
                   SizedBox(
                     width: 20.0,
@@ -257,7 +312,8 @@ class _SensorListPageState extends State<SensorListPage> {
                         ? "${OwonTemperature().cToF(mSensorListModelEntity.para[index].temp / 100)}${S.of(context).global_fahrenheit_unit} / ${mSensorListModelEntity.para[index].occupy == 0 ? S.of(context).sensor_list_occupied : S.of(context).sensor_list_unoccupied}"
                         : "${(mSensorListModelEntity.para[index].temp / 100)}${S.of(context).global_celsius_unit} / ${mSensorListModelEntity.para[index].occupy == 0 ? S.of(context).sensor_list_occupied : S.of(context).sensor_list_unoccupied}",
                     style: TextStyle(
-                        color: OwonColor().getCurrent(context, "blue"),fontSize: 16),
+                        color: OwonColor().getCurrent(context, "blue"),
+                        fontSize: 16),
                   ),
                   Icon(
                     Icons.keyboard_arrow_right,
