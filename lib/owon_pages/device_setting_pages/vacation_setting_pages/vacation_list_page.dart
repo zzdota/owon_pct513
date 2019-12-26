@@ -101,9 +101,16 @@ class _VacationListPageState extends State<VacationListPage> {
         }
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
+        if(topic.startsWith('reply') && topic.contains('VactionSchedule')){
+
+          OwonLoading(context).hide().then((e) {
+            OwonToast.show(S.of(context).global_save_success);
+          });
+        }
+
         OwonLog.e("----上报的payload=$payload");
       } else if (msg["type"] == "raw") {
-        if (topic.startsWith("reply") && topic.contains("VactionSchedule")) {
+        if ((!topic.startsWith("reply")) && topic.contains("VactionSchedule")) {
           List listPayload = msg["payload"];
 //          createList();
 //          convert.base64Decode(value).toList();
@@ -180,6 +187,7 @@ class _VacationListPageState extends State<VacationListPage> {
   }
 
   setProperty({String attribute, List<int> value}) async {
+    OwonLoading(context).show();
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic =
@@ -392,6 +400,7 @@ class _VacationListPageState extends State<VacationListPage> {
             FlatButton(
                 child: Text('Ok'),
                 onPressed: () {
+                  Navigator.of(context).pop(false);
 
                   int start = 1 + 14 * index;
                   int end = start + 14;
@@ -563,7 +572,23 @@ class _VacationListPageState extends State<VacationListPage> {
             ),
             FlatButton(
               child: Text('Ok'),
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+
+                int start = 1 + 14 * index;
+                int end = start + 14;
+                originalList.removeRange(start, end);
+
+                print("删除$originalList");
+                int endIndex = (originalList[0] - 1) * 14 + 1;
+                List desList = originalList.sublist(0, endIndex);
+                int firstNum = desList[0];
+                int desNum = firstNum - 1;
+                desList[0] = desNum;
+                print("删除desList$desList");
+
+                setProperty(attribute: "VactionSchedule", value: desList);
+              },
             ),
           ],
         );

@@ -122,8 +122,11 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
         if (topic.startsWith("reply") && topic.contains("VactionSchedule")) {
           OwonLoading(context).hide().then((e) {
             OwonToast.show(S.of(context).global_save_success);
+            Navigator.of(context).pop();
           });
         }
+      }else if(msg["type"] == "raw") {
+        print("222222222222=====>");
       }
     });
     super.initState();
@@ -134,6 +137,7 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
   }
 
   setProperty({String attribute, List<int> value}) async {
+    OwonLoading(context).show();
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
     String topic =
@@ -187,33 +191,6 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
     return totalList;
   }
 
-//  List<int> createList() {
-//    List<int> first = [
-//      1,
-//      19,
-//      12,
-//      24,
-//      14,
-//      2,
-//      19,
-//      12,
-//      25,
-//      23,
-//      59,
-//      10,
-//      40,
-//      10,
-//      10
-//    ];
-//    List<int> tem = List.generate(141 - first.length, (index) {
-//      return 255;
-//    });
-//
-//    List<int> desList = [];
-//    desList.addAll(first);
-//    desList.addAll(tem);
-//    return desList;
-//  }
 
   @override
   Widget build(BuildContext context) {
