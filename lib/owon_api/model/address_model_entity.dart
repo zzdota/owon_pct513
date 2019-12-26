@@ -58,14 +58,16 @@ class AddressModelAddrsDevlist {
 	String devname;
 	String deviceid;
 	bool tempUnit;
-
-	AddressModelAddrsDevlist({this.modelid, this.devname, this.deviceid, this.tempUnit});
+	int online;
+	AddressModelAddrsDevlist({this.modelid, this.devname, this.deviceid, this.tempUnit,this.online});
 
 	AddressModelAddrsDevlist.fromJson(Map<String, dynamic> json) {
 		modelid = json['modelid'];
 		devname = json['devname'];
 		deviceid = json['deviceid'];
 		tempUnit = json['tempUnit'];
+		online = json['online'];
+
 	}
 
 	Map<String, dynamic> toJson() {
@@ -74,6 +76,8 @@ class AddressModelAddrsDevlist {
 		data['devname'] = this.devname;
 		data['deviceid'] = this.deviceid;
 		data['tempUnit'] = this.tempUnit;
+		data['online'] = this.online;
+
 		return data;
 	}
 }

@@ -74,6 +74,7 @@ flutter:
     - assets/images/modifyPsw.svg
     - assets/images/device_fan.svg
     - assets/images/device_rename.png
+    - assets/images/device_disconnect.png
 
     #login
     - assets/images/login/confirm_psw_icon.svg

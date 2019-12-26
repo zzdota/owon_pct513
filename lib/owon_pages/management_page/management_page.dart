@@ -243,39 +243,7 @@ class _ManagementPageState extends State<ManagementPage> {
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
 
-//  setProperty() async {
-//    SharedPreferences pre = await SharedPreferences.getInstance();
-//    var clientID = pre.get(OwonConstant.clientID);
-//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/SystemMode";
-//    var msg = "3";
 
-//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/FanMode";
-//    var msg = "4";
-
-//        String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/HomeMode";
-//    var msg = "2";
-
-//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/OccupiedCoolingSetpoint";
-//    var msg = "2600";
-
-//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/OccupiedHeatingSetpoint";
-//    var msg = "2600";
-
-//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/UnoccupiedCoolingSetpoint";
-//    var msg = "2200";
-
-//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/SetpointHold";
-//    var msg = "1";
-
-//    String topic = "api/device/${widget.devModel.deviceid}/$clientID/attribute/SetpointHoldDuration";
-////    var msg = "65535";
-//    var msg = "65530";
-
-//    String topic =
-//        "api/device/${widget.devModel.deviceid}/$clientID/attribute/TemperatureUnit";
-//    var msg = "0";
-//    OwonMqtt.getInstance().publishMessage(topic, msg);
-//  }
 
   @override
   Widget build(BuildContext context) {

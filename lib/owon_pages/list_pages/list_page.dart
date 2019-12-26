@@ -190,8 +190,9 @@ class _ListPageState extends State<ListPage> {
                             child: Card(
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(
-                                      color: OwonColor()
-                                          .getCurrent(context, "borderNormal"),
+                                      color: _addressModel.devlist[index].online>0?OwonColor()
+                                          .getCurrent(context, "borderNormal"):OwonColor()
+                                          .getCurrent(context, "borderDisconnect"),
                                       width: 1.0,
                                     ),
                                     borderRadius: BorderRadius.all(
@@ -224,7 +225,8 @@ class _ListPageState extends State<ListPage> {
                                           ),
                                         ],
                                       ),
-                                      getRightWidget(true)
+                                      getRightWidget(_addressModel
+                                          .devlist[index].online)
                                     ],
                                   ),
                                 )),
@@ -248,8 +250,8 @@ class _ListPageState extends State<ListPage> {
               ));
   }
 
-  Widget getRightWidget(bool normal) {
-    if (normal) {
+  Widget getRightWidget(int normal) {
+    if (normal>0) {
       return Icon(
         Icons.keyboard_arrow_right,
         color: OwonColor().getCurrent(context, "textColor"),
@@ -258,7 +260,7 @@ class _ListPageState extends State<ListPage> {
       return Row(
         children: <Widget>[
           Image.asset(
-            "assets/images/launch_icon.png",
+            OwonPic.deviceDisconnected,
             fit: BoxFit.contain,
             height: 20,
           ),
