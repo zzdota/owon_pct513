@@ -247,4 +247,26 @@ class OwonTemperature {
     }
     return cTempBuf;
   }
+
+  String c100ToF100String(String c) {
+    int fTempBuf = 0;
+    for (int i = 0; i < cTemp.length; i++) {
+      if (int.parse(c) == cTemp[i]) {
+        fTempBuf = fTemp[i];
+        break;
+      }
+    }
+    return fTempBuf.toString();
+  }
+
+  String f100ToC100String(String f) {
+    int cTempBuf = 0;
+    for (int i = 0; i < fTemp.length; i++) {
+      if (int.parse(f) == fTemp[i]) {
+        cTempBuf = cTemp[i];
+        break;
+      }
+    }
+    return cTempBuf.toString();
+  }
 }
