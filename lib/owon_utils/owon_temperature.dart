@@ -225,4 +225,26 @@ class OwonTemperature {
     }
     return (cTempBuf / 100.0).toDouble();
   }
+
+  int c100ToF100(int c) {
+    int fTempBuf = 0;
+    for (int i = 0; i < cTemp.length; i++) {
+      if (c == cTemp[i]) {
+        fTempBuf = fTemp[i];
+        break;
+      }
+    }
+    return fTempBuf;
+  }
+
+  int f100ToC100(int f) {
+    int cTempBuf = 0;
+    for (int i = 0; i < fTemp.length; i++) {
+      if (f == fTemp[i]) {
+        cTempBuf = cTemp[i];
+        break;
+      }
+    }
+    return cTempBuf;
+  }
 }
