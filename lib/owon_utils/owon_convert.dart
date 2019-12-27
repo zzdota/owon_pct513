@@ -83,10 +83,10 @@ class OwonConvert {
 
 
 
-  static Widget createSystemIcon(String str) {
+  static Widget createSystemIcon(String str,BuildContext context) {
     Widget desWidget;
     if(str == "0"){
-      desWidget = SvgPicture.asset(OwonPic.mSysOff,color:Colors.white,width: 20,);
+      desWidget = SvgPicture.asset(OwonPic.mSysOff,color:OwonColor().getCurrent(context, "textColor"),width: 20,);
     }else if(str == "1"){
       double width = 30;
       desWidget = Container(
@@ -111,11 +111,11 @@ class OwonConvert {
     return desWidget;
   }
 
-  static Widget createFanIcon(String str) {
+  static Widget createFanIcon(String str ,BuildContext context) {
 
     Widget desWidget;
     if(str == "4"){
-      desWidget = SvgPicture.asset(OwonPic.mFanShow,color:Colors.white,width: 20,);
+      desWidget = SvgPicture.asset(OwonPic.mFanShow,color:OwonColor().getCurrent(context, "textColor"),width: 20,);
     }else if(str == "6"){
       desWidget = SvgPicture.asset(OwonPic.mFanAuto,color:Colors.grey,width: 20,);
     }else if(str == "5"){
@@ -126,17 +126,17 @@ class OwonConvert {
   }
 
 
-  static Widget createHoldIcon({String setPointHold,String setPointHoldDuration}) {
+  static Widget createHoldIcon({String setPointHold,String setPointHoldDuration,BuildContext context}) {
 
     Widget desWidget;
     if(setPointHold == "0"){
       desWidget = SvgPicture.asset(OwonPic.mHoldSchedule,color:Colors.green,width: 20,);
     }else {
       if(setPointHoldDuration == "65535") {
-        desWidget = SvgPicture.asset(OwonPic.mHoldPermHold,color:Colors.white,width: 20,);
+        desWidget = SvgPicture.asset(OwonPic.mHoldPermHold,color:OwonColor().getCurrent(context, "textColor"),width: 20,);
 
       }else{
-        desWidget = SvgPicture.asset(OwonPic.mHoldTempHold,color:Colors.white,width: 20,);
+        desWidget = SvgPicture.asset(OwonPic.mHoldTempHold,color:OwonColor().getCurrent(context, "textColor"),width: 20,);
 
       }
     }

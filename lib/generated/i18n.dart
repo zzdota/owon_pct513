@@ -99,6 +99,7 @@ class S implements WidgetsLocalizations {
   String get global_verify_code_remaining2 => " seconds left";
   String get global_wed => "Wed";
   String get list_disconnect => "Disconnected";
+  String get list_no_device => "No device in current home";
   String get login_button => "Login";
   String get login_fail => "Login failed";
   String get login_forgot => "Forgot";
@@ -376,6 +377,8 @@ class $zh extends S {
   String get about_version => "版本号";
   @override
   String get reset_psw_confirm => "确认修改";
+  @override
+  String get list_no_device => "当前家庭没有设备";
   @override
   String get change_psw_old_psw_error => "请输入正确的原密码";
   @override

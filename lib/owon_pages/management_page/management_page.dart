@@ -21,6 +21,7 @@ import '../../res/owon_settingData.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import '../../owon_providers/owon_evenBus/list_evenbus.dart';
 import '../../owon_utils/owon_convert.dart';
+import '../../generated/i18n.dart';
 
 class ManagementPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
@@ -31,9 +32,7 @@ class ManagementPage extends StatefulWidget {
 }
 
 class _ManagementPageState extends State<ManagementPage> {
-  var systemList = loadSystemData;
-  var fanList = loadFanData;
-  var holdList = loadHoldData;
+
 
   String _localTemp = "3000";
   String _localHumi = "5500";
@@ -47,7 +46,9 @@ class _ManagementPageState extends State<ManagementPage> {
 
   String _justSetValue;
   String _justSetPointHoldDurationValue;
-  String _ThermostatRunningMode = "0";
+//  String _ThermostatRunningMode = "0";
+  String _relayState = "0";
+
   String _homeMode;
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   Timer _timer;
@@ -110,6 +111,9 @@ class _ManagementPageState extends State<ManagementPage> {
               widget.devModel.tempUnit = _tempUnit;
               OwonLog.e("======>>>tempUnit====${widget.devModel.tempUnit}");
             });
+          }else if (attr == "RelayState") {
+            _relayState = item["attrValue"];
+            setState(() {});
           }
         });
       } else if (msg["type"] == "string") {
@@ -177,15 +181,19 @@ class _ManagementPageState extends State<ManagementPage> {
             _setPointHoldDuration = payload;
           });
         } else if (topic.contains("TemperatureUnit")) {
-            setState(() {
-              if(payload == "0"){
-                _tempUnit = false;
-              } else {
-                _tempUnit = true;
-              }
-              widget.devModel.tempUnit = _tempUnit;
-              OwonLog.e("======>>>tempUnit====${widget.devModel.tempUnit}");
-            });
+          setState(() {
+            if(payload == "0"){
+              _tempUnit = false;
+            } else {
+              _tempUnit = true;
+            }
+            widget.devModel.tempUnit = _tempUnit;
+            OwonLog.e("======>>>tempUnit====${widget.devModel.tempUnit}");
+          });
+        } else if (topic.contains("RelayState")) {
+          setState(() {
+            _relayState = payload;
+          });
         }
       }
     });
@@ -247,6 +255,9 @@ class _ManagementPageState extends State<ManagementPage> {
 
   @override
   Widget build(BuildContext context) {
+    var systemList = loadSystemData(context);
+    var fanList = loadFanData(context);
+    var holdList = loadHoldData(context);
     Widget getBottomWidget() {
       return OwonTwoBtn(
         leftTitle: "Temp Hold",
@@ -262,6 +273,28 @@ class _ManagementPageState extends State<ManagementPage> {
         },
       );
     }
+    bool getShowFan(String relayState) {
+      bool desFan =false;
+      int relayStateNum = int.parse(relayState);
+      if((relayStateNum & (0x1<<2))== (0x1<<2) || (relayStateNum & (0x1<<5))== (0x1<<5)|| (relayStateNum & (0x1<<6))== (0x1<<6)) {
+        desFan = true;
+      }
+      return desFan;
+    }
+
+
+    Color getBackgroundColor(String relayState) {
+      Color desColor = Colors.transparent;
+      int relayStateNum = int.parse(relayState);
+      if((relayStateNum & (0x1<<0))== (0x1<<0) || (relayStateNum & (0x1<<3))== (0x1<<3)) {
+        desColor = Colors.red;
+
+      }else if((relayStateNum & (0x1<<1))== (0x1<<1) || (relayStateNum & (0x1<<4))== (0x1<<4)) {
+        desColor = Colors.blue;
+      }
+
+      return desColor;
+    }
 
     Widget getOffWidget() {
       return Column(
@@ -273,8 +306,8 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
-                    localHumi: OwonConvert.reduce100(_localHumi),
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
+                    localHumi: OwonConvert.reduce100(_localHumi), showFan: getShowFan(_relayState)
                   )),
                 ],
               ),
@@ -287,7 +320,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   OwonMode(
-                    rightIcon: OwonConvert.createSystemIcon(_systemMode),
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode, context),
                     leftTitle: "System",
                     rightTitle: OwonConvert.toSystemMode(_systemMode),
                     onPressed: () {
@@ -318,45 +351,15 @@ class _ManagementPageState extends State<ManagementPage> {
       );
     }
 
-    Color getAutoBackgroundColor(String systemMode,String runningMode) {
-      Color desColor = Colors.transparent;
 
-        if(runningMode == "3") {
-          desColor = Colors.blue;
-        }else if(runningMode == "4") {
-          desColor = Colors.red;
 
-        }
 
-        return desColor;
-    }
-
-    Color getCoolBackgroundColor(String runningMode) {
-      Color desColor = Colors.transparent;
-
-      if(runningMode == "3") {
-        desColor = Colors.blue;
-      }
-
-      return desColor;
-    }
-    Color getHeatBackgroundColor(String runningMode) {
-      Color desColor = Colors.transparent;
-
-      if(runningMode == "4" || runningMode == "5") {
-        desColor = Colors.red;
-
-      }
-
-      return desColor;
-    }
-
-    Widget getAutoWidget(String systemMode,String runningMode) {
+    Widget getAutoWidget(String systemMode,String relayState) {
       return Column(
         children: <Widget>[
           Expanded(
             child: Container(
-          color: getAutoBackgroundColor(systemMode, runningMode),
+          color: getBackgroundColor(relayState),
               child: Row(
                 children: <Widget>[
                   Padding(
@@ -364,7 +367,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Cool To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_OccupiedCoolingSetpoint)+ S.of(context).global_celsius_unit,
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -403,15 +406,18 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit
+                        :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
                     localHumi: OwonConvert.reduce100(_localHumi),
+                        showFan: getShowFan(_relayState),
                   )),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint) :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)+ S.of(context).global_fahrenheit_unit
+                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint)+ S.of(context).global_celsius_unit,
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -459,7 +465,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   OwonMode(
-                    rightIcon: OwonConvert.createSystemIcon(_systemMode),
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode, context),
                     leftTitle: "System",
                     rightTitle: OwonConvert.toSystemMode(_systemMode),
                     onPressed: () {
@@ -486,7 +492,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   OwonMode(
                     leftTitle: "Fan",
-                    rightIcon: OwonConvert.createFanIcon(_fanMode),
+                    rightIcon: OwonConvert.createFanIcon(_fanMode,context),
                     rightTitle: OwonConvert.toFanMode(_fanMode),
                     onPressed: () {
                       OwonLog.e("----");
@@ -509,7 +515,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   OwonMode(
                     rightIcon: OwonConvert.createHoldIcon(
                         setPointHold: _setPointHold,
-                        setPointHoldDuration: _setPointHoldDuration),
+                        setPointHoldDuration: _setPointHoldDuration,context: context),
                     leftTitle: "Hold",
                     rightTitle: OwonConvert.toHoldMode(
                         setPointHold: _setPointHold,
@@ -558,25 +564,26 @@ class _ManagementPageState extends State<ManagementPage> {
       );
     }
 
-    Widget getCoolWidget(String runningMode) {
+    Widget getCoolWidget(String relayState) {
       return Column(
         children: <Widget>[
           Expanded(
             child: Container(
-          color: getCoolBackgroundColor(runningMode),
+          color: getBackgroundColor(relayState),
               child: Row(
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
                     localHumi: OwonConvert.reduce100(_localHumi),
+                        showFan: getShowFan(_relayState),
                   )),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
                     child: OwonAdjustTemp(
                       title: "Cool To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_OccupiedCoolingSetpoint)+ S.of(context).global_celsius_unit,
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -624,7 +631,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   OwonMode(
-                    rightIcon: OwonConvert.createSystemIcon(_systemMode),
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode,context),
                     leftTitle: "System",
                     rightTitle: OwonConvert.toSystemMode(_systemMode),
                     onPressed: () {
@@ -651,7 +658,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   OwonMode(
                     leftTitle: "Fan",
-                    rightIcon: OwonConvert.createFanIcon(_fanMode),
+                    rightIcon: OwonConvert.createFanIcon(_fanMode, context),
                     rightTitle: OwonConvert.toFanMode(_fanMode),
                     onPressed: () {
                       OwonLog.e("----");
@@ -674,7 +681,8 @@ class _ManagementPageState extends State<ManagementPage> {
                   OwonMode(
                     rightIcon: OwonConvert.createHoldIcon(
                         setPointHold: _setPointHold,
-                        setPointHoldDuration: _setPointHoldDuration),
+                        setPointHoldDuration: _setPointHoldDuration,
+                    context: context),
                     leftTitle: "Hold",
                     rightTitle: OwonConvert.toHoldMode(
                         setPointHold: _setPointHold,
@@ -723,25 +731,26 @@ class _ManagementPageState extends State<ManagementPage> {
       );
     }
 
-    Widget getHeatWidget(String runningMode) {
+    Widget getHeatWidget(String relayState) {
       return Column(
         children: <Widget>[
           Expanded(
             child: Container(
-          color: getHeatBackgroundColor(runningMode),
+          color: getBackgroundColor(relayState),
               child: Row(
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
                     localHumi: OwonConvert.reduce100(_localHumi),
+                        showFan: getShowFan(_relayState),
                   )),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint) :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_OccupiedHeatingSetpoint)+ S.of(context).global_celsius_unit,
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -789,7 +798,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   OwonMode(
-                    rightIcon: OwonConvert.createSystemIcon(_systemMode),
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode, context),
                     leftTitle: "System",
                     rightTitle: OwonConvert.toSystemMode(_systemMode),
                     onPressed: () {
@@ -816,7 +825,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   OwonMode(
                     leftTitle: "Fan",
-                    rightIcon: OwonConvert.createFanIcon(_fanMode),
+                    rightIcon: OwonConvert.createFanIcon(_fanMode, context),
                     rightTitle: OwonConvert.toFanMode(_fanMode),
                     onPressed: () {
                       OwonLog.e("----");
@@ -839,7 +848,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   OwonMode(
                     rightIcon: OwonConvert.createHoldIcon(
                         setPointHold: _setPointHold,
-                        setPointHoldDuration: _setPointHoldDuration),
+                        setPointHoldDuration: _setPointHoldDuration,context: context),
                     leftTitle: "Hold",
                     rightTitle: OwonConvert.toHoldMode(
                         setPointHold: _setPointHold,
@@ -888,25 +897,28 @@ class _ManagementPageState extends State<ManagementPage> {
       );
     }
 
-    Widget getEHeatWidget(String runningMode) {
+    Widget getEHeatWidget(String relayState) {
       return Column(
         children: <Widget>[
           Expanded(
             child: Container(
-              color: getHeatBackgroundColor(runningMode),
+              color: getBackgroundColor(relayState),
               child: Row(
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit
+                        :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
                     localHumi: OwonConvert.reduce100(_localHumi),
+                        showFan: getShowFan(_relayState),
                   )),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint) :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)+ S.of(context).global_fahrenheit_unit
+                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint)+ S.of(context).global_celsius_unit,
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -954,7 +966,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   OwonMode(
-                    rightIcon: OwonConvert.createSystemIcon(_systemMode),
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode,context),
                     leftTitle: "System",
                     rightTitle: OwonConvert.toSystemMode(_systemMode),
                     onPressed: () {
@@ -981,7 +993,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   OwonMode(
                     leftTitle: "Fan",
-                    rightIcon: OwonConvert.createFanIcon(_fanMode),
+                    rightIcon: OwonConvert.createFanIcon(_fanMode, context),
                     rightTitle: OwonConvert.toFanMode(_fanMode),
                     onPressed: () {
                       OwonLog.e("----");
@@ -1004,7 +1016,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   OwonMode(
                     rightIcon: OwonConvert.createHoldIcon(
                         setPointHold: _setPointHold,
-                        setPointHoldDuration: _setPointHoldDuration),
+                        setPointHoldDuration: _setPointHoldDuration,context: context),
                     leftTitle: "Hold",
                     rightTitle: OwonConvert.toHoldMode(
                         setPointHold: _setPointHold,
@@ -1053,20 +1065,20 @@ class _ManagementPageState extends State<ManagementPage> {
       );
     }
 
-    Widget getWidget({String systemMode, String runningMode}) {
+    Widget getWidget({String systemMode, String relayState}) {
 
-      Widget desWidget = getAutoWidget(systemMode,runningMode);
+      Widget desWidget = getAutoWidget(systemMode,relayState);
 
       if(systemMode == "0"){
         desWidget = getOffWidget();
       }else if(systemMode == "3") {
-        desWidget = getCoolWidget(runningMode);
+        desWidget = getCoolWidget(relayState);
       }else if(systemMode == "4") {
-        desWidget = getHeatWidget(runningMode);
+        desWidget = getHeatWidget(relayState);
       }else if(systemMode == "5") {
-        desWidget = getEHeatWidget(runningMode);
+        desWidget = getEHeatWidget(relayState);
       }else if(systemMode == "1") {
-        desWidget = getAutoWidget(systemMode,runningMode);
+        desWidget = getAutoWidget(systemMode,relayState);
       }
 
      return desWidget;
@@ -1090,7 +1102,7 @@ class _ManagementPageState extends State<ManagementPage> {
       ),
       body: Container(
           child: getWidget(
-              systemMode: _systemMode, runningMode: _ThermostatRunningMode)),
+              systemMode: _systemMode, relayState: _relayState)),
     );
   }
 }

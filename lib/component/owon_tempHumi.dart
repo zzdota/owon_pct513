@@ -6,7 +6,8 @@ import '../res/owon_themeColor.dart';
 class OwonTempHumi extends StatefulWidget {
   String localTemp;
   String localHumi;
-  OwonTempHumi({this.localHumi="55",this.localTemp="30"});
+  bool showFan;
+  OwonTempHumi({this.localHumi="55",this.localTemp="30",this.showFan});
 
   @override
   _OwonTempHumiState createState() => _OwonTempHumiState();
@@ -22,7 +23,7 @@ class _OwonTempHumiState extends State<OwonTempHumi> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SvgPicture.asset(OwonPic.mFanShow,width: 13,color: OwonColor().getCurrent(context, "textColor"),),
+              widget.showFan?SvgPicture.asset(OwonPic.mFanShow,width: 13,color: OwonColor().getCurrent(context, "textColor"),):Text(""),
 //              Icon(Icons.invert_colors_off,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
               SizedBox(width: 8,),
               Container(
@@ -37,7 +38,7 @@ class _OwonTempHumiState extends State<OwonTempHumi> {
               SizedBox(width: 8,),
               SvgPicture.asset(OwonPic.mHumidityWater,color:  OwonColor().getCurrent(context, "textColor",),width: 11,),
 //              Icon(Icons.watch,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
-
+              SizedBox(width: 2,),
               Text("${widget.localHumi}%",style: TextStyle(
                   color:  OwonColor().getCurrent(context, "textColor",),fontSize: 14.0
               ),),
