@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_sequence.dart';
+import '../../../owon_utils/owon_loading.dart';
+import '../../../owon_utils/owon_toast.dart';
+import '../../../res/owon_sequence.dart';
 import '../../../owon_utils/owon_temperature.dart';
 import '../../../owon_api/model/address_model_entity.dart';
 import '../../../owon_pages/device_setting_pages/schedule_setting_pages/schedule_copy_to_other_day_page.dart';
@@ -73,7 +73,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
           String value = payload["attributeValue"];
           OwonLog.e("=====>>>>value$value");
           setState(() {
-            if(value == "0"){
+            if (value == "0") {
               _switchValue = false;
               hadData = false;
               OwonLoading(context).dismiss();
@@ -95,12 +95,13 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
               tempUnit = true;
             }
           });
-        } else if(topic.contains("ProgramOperationMode")) {
+        } else if (topic.contains("ProgramOperationMode")) {
           if (topic.startsWith("reply")) {
-            OwonLoading(context).dismiss();
-            OwonToast.show(S.of(context).global_save_success);
+            OwonLoading(context).hide().then((e) {
+              OwonToast.show(S.of(context).global_save_success);
+            });
             setState(() {
-              if(payload == "0"){
+              if (payload == "0") {
                 _switchValue = false;
                 hadData = false;
               } else {
@@ -143,7 +144,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     });
   }
 
-  toGetCurrentWeek(){
+  toGetCurrentWeek() {
     setState(() {
       _selectTab = DateTime.now().weekday;
     });
@@ -488,7 +489,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     );
   }
 
-  Widget getCard(String imageUrl, String modeStr, int modeNum,String timeStr,
+  Widget getCard(String imageUrl, String modeStr, int modeNum, String timeStr,
       String heatStr, String coolStr) {
     return Container(
         height: OwonConstant.cHeight,

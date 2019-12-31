@@ -5,20 +5,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:owon_pct513/generated/i18n.dart';
-import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
-import 'package:owon_pct513/owon_api/model/sensor_list_model_entity.dart';
-import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_page.dart';
-import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
-import 'package:owon_pct513/owon_utils/owon_temperature.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
-import 'package:owon_pct513/res/owon_picture.dart';
-import 'package:owon_pct513/res/owon_sequence.dart';
-import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../../../generated/i18n.dart';
+import '../../../owon_api/model/address_model_entity.dart';
+import '../../../owon_api/model/sensor_list_model_entity.dart';
+import '../../../owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_page.dart';
+import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../../owon_utils/owon_loading.dart';
+import '../../../owon_utils/owon_log.dart';
+import '../../../owon_utils/owon_mqtt.dart';
+import '../../../owon_utils/owon_temperature.dart';
+import '../../../owon_utils/owon_toast.dart';
+import '../../../res/owon_constant.dart';
+import '../../../res/owon_sequence.dart';
+import '../../../res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SensorListPage extends StatefulWidget {
@@ -84,7 +83,7 @@ class _SensorListPageState extends State<SensorListPage> {
         OwonLog.e("----上报的payload=$payload");
       } else if (msg["type"] == "raw") {
         if (topic.contains("SensorList")) {
-          if(topic.startsWith("reply")){
+          if (topic.startsWith("reply")) {
             OwonLoading(context).dismiss();
             OwonToast.show(S.of(context).global_save_success);
           }
@@ -188,7 +187,18 @@ class _SensorListPageState extends State<SensorListPage> {
   }
 
   void save() async {
-//    OwonLoading(context).show();
+    OwonLoading(context).show();
+    List<int> data = mapSensorToList();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/SensorList";
+    OwonMqtt.getInstance().publishRawMessage(topic, data);
+  }
+
+  void delete(int index) async {
+    OwonLoading(context).show();
+    mSensorListModelEntity.para.remove(index);
     List<int> data = mapSensorToList();
     SharedPreferences pre = await SharedPreferences.getInstance();
     var clientID = pre.get(OwonConstant.clientID);
@@ -340,9 +350,11 @@ class _SensorListPageState extends State<SensorListPage> {
               onPressed: () => Navigator.of(context).pop(false),
             ),
             FlatButton(
-              child: Text('Ok'),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
+                child: Text('Ok'),
+                onPressed: () {
+                  delete(index);
+                  Navigator.of(context).pop(true);
+                }),
           ],
         );
       },
@@ -363,9 +375,11 @@ class _SensorListPageState extends State<SensorListPage> {
               onPressed: () => Navigator.of(context).pop(false),
             ),
             FlatButton(
-              child: Text('Ok'),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
+                child: Text('Ok'),
+                onPressed: () {
+                  delete(index);
+                  Navigator.of(context).pop(true);
+                }),
           ],
         );
       },

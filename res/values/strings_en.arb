@@ -9,6 +9,7 @@
   "global_thermostat": "Thermostat",
   "global_delete": "Remove",
   "global_save": "Save",
+  "global_retry": "Retry",
   "global_timeout": "Time out",
 
   "global_hint_user": "E-Mail / Phone",
@@ -142,9 +143,16 @@
   "device_info_title": "Device About",
   "device_info_current_version": "· Device Firmware Version: ",
   "device_info_upgrade_version": "· Device Upgradeable Version: ",
+  "device_info_wifi_current_version": "· Wifi Firmware Version: ",
+  "device_info_wifi_upgrade_version": "· Wifi Upgradeable Version: ",
   "device_info_mac": "· Device Mac: ",
   "device_info_upgrade": "Upgrade",
-
+  "device_info_upgrading": "Upgrading...",
+  "device_info_upgrade_success": "Update successed",
+  "device_info_upgrade_fail": "Upgrade unsuccessful",
+  "device_info_confirm_title": "There is a new version of the firmware. Is it upgraded?",
+  "device_info_update_btn": "Update Now",
+  "device_info_late_update_btn": "Update Later",
 
   "global_fahrenheit_unit": "℉",
   "global_celsius_unit": "℃",

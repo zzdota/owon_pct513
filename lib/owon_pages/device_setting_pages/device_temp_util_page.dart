@@ -1,19 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/generated/i18n.dart';
-import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
-import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
-import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
-import 'package:owon_pct513/res/owon_picture.dart';
-import 'package:owon_pct513/res/owon_sequence.dart';
-import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../../generated/i18n.dart';
+import '../../owon_api/model/address_model_entity.dart';
+import '../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../owon_utils/owon_loading.dart';
+import '../../owon_utils/owon_log.dart';
+import '../../owon_utils/owon_mqtt.dart';
+import '../../owon_utils/owon_text_icon_button.dart';
+import '../../owon_utils/owon_toast.dart';
+import '../../res/owon_constant.dart';
+import '../../res/owon_sequence.dart';
+import '../../res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DeviceSettingTempUtilPage extends StatefulWidget {
@@ -126,7 +124,7 @@ class _DeviceSettingTempUtilPageState extends State<DeviceSettingTempUtilPage> {
                           mSelectValue = false;
                         });
                       },
-                      child: checkBox(!mSelectValue, "℉"),
+                      child: checkBox(!mSelectValue, S.of(context).global_fahrenheit_unit),
                     ),
                     InkWell(
                       onTap: () {
@@ -134,7 +132,7 @@ class _DeviceSettingTempUtilPageState extends State<DeviceSettingTempUtilPage> {
                           mSelectValue = true;
                         });
                       },
-                      child: checkBox(mSelectValue, "℃"),
+                      child: checkBox(mSelectValue, S.of(context).global_celsius_unit),
                     ),
                   ],
                 ),

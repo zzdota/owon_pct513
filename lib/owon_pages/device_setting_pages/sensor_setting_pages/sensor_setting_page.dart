@@ -1,19 +1,24 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:owon_pct513/generated/i18n.dart';
-import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
-import 'package:owon_pct513/owon_api/model/sensor_list_model_entity.dart';
-import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_about_page.dart';
-import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_name_page.dart';
-import 'package:owon_pct513/owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_participation_period_page.dart';
-import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
-import 'package:owon_pct513/owon_providers/theme_provider.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
-import 'package:owon_pct513/res/owon_picture.dart';
-import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../../../generated/i18n.dart';
+import '../../../owon_api/model/address_model_entity.dart';
+import '../../../owon_api/model/sensor_list_model_entity.dart';
+import '../../../owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_about_page.dart';
+import '../../../owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_name_page.dart';
+import '../../../owon_pages/device_setting_pages/sensor_setting_pages/sensor_setting_participation_period_page.dart';
+import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../../owon_providers/theme_provider.dart';
+import '../../../owon_utils/owon_loading.dart';
+import '../../../owon_utils/owon_log.dart';
+import '../../../owon_utils/owon_mqtt.dart';
+import '../../../owon_utils/owon_text_icon_button.dart';
+import '../../../owon_utils/owon_toast.dart';
+import '../../../res/owon_constant.dart';
+import '../../../res/owon_picture.dart';
+import '../../../res/owon_themeColor.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SensorSettingPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
@@ -44,6 +49,10 @@ class _SensorSettingPageState extends State<SensorSettingPage> {
         OwonLog.e("----上报的payload=$payload");
       } else if (msg["type"] == "raw") {
         if (topic.contains("SensorList")) {
+          if (topic.startsWith("reply")) {
+            OwonLoading(context).dismiss();
+            OwonToast.show(S.of(context).global_save_success);
+          }
           List payload = msg["payload"];
           int count = payload[0];
           payload = payload.sublist(1, payload.length);
@@ -77,12 +86,63 @@ class _SensorSettingPageState extends State<SensorSettingPage> {
     });
   }
 
+  List<int> intToByte(int value, int byte) {
+    List<int> buf = List();
+    for (int i = 0; i < byte; i++) {
+      int valueBuf = value >> ((byte - 1 - i) * 8);
+      value = value - (valueBuf << ((byte - 1 - i) * 8));
+      buf.add(valueBuf);
+    }
+    return buf;
+  }
+
   int byteToInt(List list) {
     int value = 0;
     for (int i = 0; i < list.length; i++) {
       value = value + (list[i] << ((list.length - i - 1) * 8));
     }
     return value;
+  }
+
+  List<int> mapSensorToList() {
+    List<int> buf = List();
+    buf.add(widget.sensorListModelEntity.para.length);
+    for (int i = 0; i < widget.sensorListModelEntity.para.length; i++) {
+      SensorListModelParam sensorPara = widget.sensorListModelEntity.para[i];
+
+      List<int> name = List();
+      name.addAll(utf8.encode(sensorPara.name));
+      for (int i = name.length; i < 30; i++) {
+        name.add(0);
+      }
+
+      List<int> reserve = List();
+      for (int i = 0; i < 10; i++) {
+        reserve.add(0);
+      }
+
+      buf.addAll(intToByte(sensorPara.id, 4));
+      buf.addAll(name);
+      buf.add(sensorPara.enable);
+      buf.add(sensorPara.occupy);
+      buf.addAll(intToByte(sensorPara.temp, 2));
+      buf.add(sensorPara.connect);
+      buf.add(sensorPara.scheduleId);
+      buf.add(sensorPara.batteryStatus);
+      buf.addAll(reserve);
+    }
+    return buf;
+  }
+
+  void delete(int index) async {
+    OwonLoading(context).show();
+    widget.sensorListModelEntity.para.remove(index);
+    List<int> data = mapSensorToList();
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic =
+        "api/device/${widget.devModel.deviceid}/$clientID/attribute/SensorList";
+    OwonMqtt.getInstance().publishRawMessage(topic, data);
   }
 
   @override
@@ -120,8 +180,10 @@ class _SensorSettingPageState extends State<SensorSettingPage> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => SensorParticipationPeriodPage(widget.devModel,
-                            widget.sensorListModelEntity, widget.index)));
+                        builder: (context) => SensorParticipationPeriodPage(
+                            widget.devModel,
+                            widget.sensorListModelEntity,
+                            widget.index)));
                   },
                   child: createCard(
                       Provider.of<ThemeProvider>(context).themeIndex == 0
@@ -152,7 +214,7 @@ class _SensorSettingPageState extends State<SensorSettingPage> {
                     padding: EdgeInsets.fromLTRB(10, 4, 10, 0),
                     child: InkWell(
                       onTap: () {
-
+                        delete(widget.index);
                       },
                       child: OwonTextIconButton.icon(
                           color: Colors.red,
@@ -169,7 +231,8 @@ class _SensorSettingPageState extends State<SensorSettingPage> {
                             S.of(context).sensor_setting_delete_sensor,
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
-                          iconTextAlignment: TextIconAlignment.iconRightTextLeft),
+                          iconTextAlignment:
+                              TextIconAlignment.iconRightTextLeft),
                     ))
           ],
         ));

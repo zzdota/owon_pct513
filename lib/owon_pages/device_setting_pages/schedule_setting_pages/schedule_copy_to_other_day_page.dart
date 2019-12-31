@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/component/owon_header.dart';
-import 'package:owon_pct513/generated/i18n.dart';
-import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
-import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
-import 'package:owon_pct513/res/owon_picture.dart';
-import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../../../component/owon_header.dart';
+import '../../../generated/i18n.dart';
+import '../../../owon_api/model/address_model_entity.dart';
+import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../../owon_utils/owon_loading.dart';
+import '../../../owon_utils/owon_log.dart';
+import '../../../owon_utils/owon_mqtt.dart';
+import '../../../owon_utils/owon_toast.dart';
+import '../../../res/owon_constant.dart';
+import '../../../res/owon_picture.dart';
+import '../../../res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ScheduleCopySCH extends StatefulWidget {
@@ -53,9 +53,10 @@ class _ScheduleCopySCHState extends State<ScheduleCopySCH> {
       } else if (msg["type"] == "raw") {
         if (topic.contains("WeeklySchedule")) {
           if (topic.startsWith("reply")) {
-            OwonLoading(context).dismiss();
-            OwonToast.show(S.of(context).global_save_success);
-            Navigator.pop(context);
+            OwonLoading(context).hide().then((e) {
+              OwonToast.show(S.of(context).global_save_success);
+              Navigator.of(context).pop();
+            });
           }
           List payload = msg["payload"];
           OwonLog.e("======>payload$payload");

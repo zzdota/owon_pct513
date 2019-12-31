@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:owon_pct513/generated/i18n.dart';
-import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
-import 'package:owon_pct513/owon_api/model/sensor_list_model_entity.dart';
-import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../../../generated/i18n.dart';
+import '../../../owon_api/model/address_model_entity.dart';
+import '../../../owon_api/model/sensor_list_model_entity.dart';
+import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../../owon_utils/owon_loading.dart';
+import '../../../owon_utils/owon_mqtt.dart';
+import '../../../owon_utils/owon_toast.dart';
+import '../../../res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
+import '../../../owon_utils/owon_text_icon_button.dart';
+import '../../../res/owon_constant.dart';
 
 class SensorRenamePage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
@@ -44,8 +43,9 @@ class _SensorRenamePageState extends State<SensorRenamePage> {
       } else if (msg["type"] == "raw") {
         if (topic.contains("SensorList")) {
           if (topic.startsWith("reply")) {
-            OwonLoading(context).dismiss();
-            OwonToast.show(S.of(context).global_save_success);
+            OwonLoading(context).hide().then((e) {
+              OwonToast.show(S.of(context).global_save_success);
+            });
           }
           List payload = msg["payload"];
           int count = payload[0];

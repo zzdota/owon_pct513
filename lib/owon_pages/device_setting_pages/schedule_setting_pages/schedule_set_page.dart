@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
-import 'package:owon_pct513/owon_utils/owon_temperature.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
+import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../../owon_utils/owon_loading.dart';
+import '../../../owon_utils/owon_mqtt.dart';
+import '../../../owon_utils/owon_temperature.dart';
+import '../../../owon_utils/owon_toast.dart';
+import '../../../res/owon_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../component/owon_header.dart';
 import '../../../component/owon_pickerView.dart';
@@ -77,9 +77,10 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
       } else if (msg["type"] == "raw") {
         if (topic.contains("WeeklySchedule")) {
           if (topic.startsWith("reply")) {
-            OwonLoading(context).dismiss();
-            OwonToast.show(S.of(context).global_save_success);
-            Navigator.pop(context);
+            OwonLoading(context).hide().then((e) {
+              OwonToast.show(S.of(context).global_save_success);
+              Navigator.of(context).pop();
+            });
           }
           List payload = msg["payload"];
           OwonLog.e("======>payload$payload");

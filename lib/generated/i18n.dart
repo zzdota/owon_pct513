@@ -45,11 +45,19 @@ class S implements WidgetsLocalizations {
   String get dSet_temp_unit => "温度单位";
   String get dSet_vacation => "Vacation Setting";
   String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
+  String get device_info_confirm_title => "There is a new version of the firmware. Is it upgraded?";
   String get device_info_current_version => "· Device Firmware Version: ";
+  String get device_info_late_update_btn => "Update Later";
   String get device_info_mac => "· Device Mac: ";
   String get device_info_title => "Device About";
+  String get device_info_update_btn => "Update Now";
   String get device_info_upgrade => "Upgrade";
+  String get device_info_upgrade_fail => "Upgrade unsuccessful";
+  String get device_info_upgrade_success => "Update successed";
   String get device_info_upgrade_version => "· Device Upgradeable Version: ";
+  String get device_info_upgrading => "Upgrading...";
+  String get device_info_wifi_current_version => "· Wifi Firmware Version: ";
+  String get device_info_wifi_upgrade_version => "· Wifi Upgradeable Version: ";
   String get device_max => "55 min/h";
   String get device_min => "0 min/h";
   String get device_unit => "min/h";
@@ -174,7 +182,11 @@ class $zh extends S {
   @override
   String get login_retry_limit => "密码重试次数超出限制";
   @override
+  String get device_info_upgrading => "正在升级...";
+  @override
   String get login_button => "登录";
+  @override
+  String get device_info_late_update_btn => "稍后升级";
   @override
   String get reset_psw_success => "重置密码成功";
   @override
@@ -238,6 +250,8 @@ class $zh extends S {
   @override
   String get change_psw_old_psw => "旧密码";
   @override
+  String get device_info_update_btn => "立即升级";
+  @override
   String get global_hint_password => "密码";
   @override
   String get global_save => "保存";
@@ -251,6 +265,8 @@ class $zh extends S {
   String get global_thermostat => "温控器";
   @override
   String get global_get_verify_code => "校验码";
+  @override
+  String get device_info_wifi_upgrade_version => "· Wifi可升级版本: ";
   @override
   String get global_get_verify_code_phone_num_error => "手机号错误";
   @override
@@ -352,6 +368,8 @@ class $zh extends S {
   @override
   String get device_info_current_version => "· 设备当前版本: ";
   @override
+  String get device_info_wifi_current_version => "· Wifi当前版本: ";
+  @override
   String get vacation_noEvent => "当前还没有任何设置";
   @override
   String get vacation_depart => "离家";
@@ -371,6 +389,8 @@ class $zh extends S {
   String get device_unit => "min/h";
   @override
   String get dSet_fan_set => "风扇运行时间闸";
+  @override
+  String get device_info_confirm_title => "固件有新版，是否升级？";
   @override
   String get global_password_regex_string => "密码不能包含空格和其他特殊字符，长度请控制在6到16之间";
   @override
@@ -395,6 +415,8 @@ class $zh extends S {
   String get global_user_name_regex_string => "账号只能包含,数字，大小写字母以及下划线,@或空格，并且只能以数字或字母开头，长度请控制在4到15之间";
   @override
   String get sensor_list_title => "传感器设置";
+  @override
+  String get device_info_upgrade_success => "升级成功";
   @override
   String get app_listView => "ListView";
   @override
@@ -425,6 +447,8 @@ class $zh extends S {
   String get global_unknown => "未知错误";
   @override
   String get login_username_null => "请输入用户名";
+  @override
+  String get device_info_upgrade_fail => "升级失败";
   @override
   String get appearance_light => "浅色";
   @override

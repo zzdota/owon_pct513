@@ -185,6 +185,9 @@ flutter:
     - assets/images/device_set/sensor_setting_mode_no_select.svg
     - assets/images/device_set/sensor_setting_mode_select.svg
 
+    - assets/images/success_icon.svg
+    - assets/images/fail_icon.svg
+
 #address
     - assets/images/address/address_home.svg
     - assets/images/address/address_home_colorful.png

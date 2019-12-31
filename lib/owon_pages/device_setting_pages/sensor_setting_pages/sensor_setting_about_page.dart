@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:owon_pct513/generated/i18n.dart';
-import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
-import 'package:owon_pct513/owon_api/model/sensor_list_model_entity.dart';
-import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
-import 'package:owon_pct513/owon_utils/owon_loading.dart';
-import 'package:owon_pct513/owon_utils/owon_log.dart';
-import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
-import 'package:owon_pct513/owon_utils/owon_temperature.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
-import 'package:owon_pct513/res/owon_themeColor.dart';
+import '../../../generated/i18n.dart';
+import '../../../owon_api/model/address_model_entity.dart';
+import '../../../owon_api/model/sensor_list_model_entity.dart';
+import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
+import '../../../owon_utils/owon_log.dart';
+import '../../../owon_utils/owon_mqtt.dart';
+import '../../../owon_utils/owon_temperature.dart';
+import '../../../res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:owon_pct513/res/owon_constant.dart';
+import '../../../res/owon_constant.dart';
 
 class SensorAboutPage extends StatefulWidget {
   AddressModelAddrsDevlist devModel;
@@ -24,7 +22,6 @@ class SensorAboutPage extends StatefulWidget {
 }
 
 class _SensorAboutPageState extends State<SensorAboutPage> {
-  var _tfVC = TextEditingController();
 
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
 
@@ -42,12 +39,6 @@ class _SensorAboutPageState extends State<SensorAboutPage> {
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
         OwonLog.e("----上报的payload=$payload");
-        if (topic.contains("DeviceName")) {
-//          OwonLoading(context).dismiss();
-          OwonLoading(context).hide().then((e) {
-            OwonToast.show(S.of(context).global_save_success);
-          });
-        }
       }
     });
   }
