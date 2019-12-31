@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_pages/login_pages/change_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:provider/provider.dart';
 import '../../owon_providers/theme_provider.dart';
 import '../../res/owon_themeColor.dart';
@@ -35,7 +36,7 @@ class _SettingPageState extends State<SettingPage> {
             itemCount: dataList.length,
             itemBuilder: (context, index) {
               return Container(
-                height: 90,
+                height: OwonConstant.cHeight,
                 padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                 child: InkWell(
                   onTap: () {
@@ -103,6 +104,9 @@ class _SettingPageState extends State<SettingPage> {
               Navigator.of(context).pop();
             },
             child: Container(
+              constraints: BoxConstraints(
+                maxHeight: OwonConstant.systemHeight -20,
+              ),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16), color: Colors.red),
                 child: Row(

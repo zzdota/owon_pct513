@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/owon_pages/address_management_page/AddressManagementPage.dart';
+import 'package:owon_pct513/owon_pages/address_management_pages/address_list_page.dart';
 import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
@@ -447,7 +447,7 @@ class _ListPageState extends State<ListPage> {
         _isDown = true;
         Navigator.of(context).pop();
         Navigator.of(context).push(MaterialPageRoute(builder: (context){
-          return AddressManagementPage();
+          return AddressListPage(_addrModels);
         }));
       },
       child: Container(

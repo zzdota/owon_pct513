@@ -27,6 +27,7 @@ class AddressModelAddr {
 	int addrid;
 	double lon;
 	double lat;
+	String addrDesc;
 
 	AddressModelAddr({this.addrname, this.devlist, this.addrid, this.lon, this.lat});
 
@@ -38,6 +39,8 @@ class AddressModelAddr {
 		addrid = json['addrid'];
 		lon = json['lon'];
 		lat = json['lat'];
+		addrDesc = json['addrDesc'];
+
 	}
 
 	Map<String, dynamic> toJson() {
@@ -49,6 +52,8 @@ class AddressModelAddr {
 		data['addrid'] = this.addrid;
 		data['lon'] = this.lon;
 		data['lat'] = this.lat;
+		data['addrDesc'] = this.addrDesc;
+
 		return data;
 	}
 }
