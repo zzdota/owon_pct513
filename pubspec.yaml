@@ -185,6 +185,13 @@ flutter:
     - assets/images/device_set/sensor_setting_mode_no_select.svg
     - assets/images/device_set/sensor_setting_mode_select.svg
 
+#address
+    - assets/images/address/address_home.svg
+    - assets/images/address/address_home_colorful.png
+    - assets/images/address/address_loction.png
+    - assets/images/address/address_noDevices.png
+    - assets/images/address/address_show_local.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

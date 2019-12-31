@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/owon_pages/address_management_page/AddressManagementPage.dart';
 import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
@@ -30,6 +32,7 @@ class _ListPageState extends State<ListPage> {
       addrs: [AddressModelAddr(addrid: 1, addrname: "默认地址1")]);
   AddressModelAddr _addressModel =
       AddressModelAddr(addrid: 1, addrname: "...", devlist: []);
+  bool _isDown = true;
 
   String noDeviceTip = "";
   @override
@@ -119,7 +122,7 @@ class _ListPageState extends State<ListPage> {
         appBar: AppBar(
           leading: Text(""),
           title: Container(
-            color: Colors.purple,
+//            color: Colors.purple,
             child: GestureDetector(
               onTap: () {
                 OwonLog.e("-----title");
@@ -329,15 +332,23 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  Widget _buildPopoverButton(AddressModelAddr addrModel, List addrList) {
+  Widget _buildPopoverButton(AddressModelAddr addrModel, List addrList ) {
     String btnTitle = addrModel.addrname;
     return Container(
         child: CupertinoPopoverButton(
+          onTap: (){
+            OwonLog.e("=====>");
+            _isDown = false;
+            setState(() {
+
+            });
+            return false;
+          },
             radius: OwonConstant.cRadius,
             popoverConstraints: BoxConstraints(
               minWidth: 50,
               maxWidth: 280,
-              minHeight: 250,
+              minHeight: 280,
               maxHeight: 400,
             ),
             child: Container(
@@ -358,7 +369,9 @@ class _ListPageState extends State<ListPage> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       )),
-                  Icon(Icons.keyboard_arrow_down,
+                  _isDown?Icon(Icons.keyboard_arrow_down,
+                      size: 20.0,
+                      color: OwonColor().getCurrent(context, "textColor")):Icon(Icons.keyboard_arrow_up,
                       size: 20.0,
                       color: OwonColor().getCurrent(context, "textColor")),
                 ],
@@ -384,31 +397,85 @@ class _ListPageState extends State<ListPage> {
               _addressModel.devlist.length == null) {
             noDeviceTip = S.of(context).list_no_device;
           }
+
+          _isDown = true;
           setState(() {});
           Navigator.of(context).pop();
         },
         child: Container(
-            height: 100,
-            margin: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+//          color: Colors.red,
+            height: 70,
+            margin: EdgeInsets.only(top: 10),
+            child: Row(
               children: <Widget>[
-                Text(addrModel.addrname),
-                Text("address is beijing"),
-                Text("3 devices"),
+                Container(
+                    margin: EdgeInsets.all(20),
+                    child: SvgPicture.asset(
+                      OwonPic.addressHome,
+                      color: Color(0xff1c1c1c),
+                      width: 20,
+                    )),
+                Container(
+                  width: 200,
+//                  color: Colors.purple,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        addrModel.addrname,
+                        style: TextStyle(
+                            color: Color(0xff1c1c1c),
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        "address is beijing address is beijing address is beijing address is beijing",
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text("3 devices"),
+                    ],
+                  ),
+                ),
               ],
             )),
       ));
     });
 
-    desList.add(IconButton(
-        icon: Icon(Icons.add_a_photo),
-        onPressed: () {
-          OwonLog.e("----->");
-          Navigator.of(context).pop();
+    desList.add(GestureDetector(
+      onTap: () {
 
-          setState(() {});
+        _isDown = true;
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+          return AddressManagementPage();
         }));
+      },
+      child: Container(
+        height: 70,
+        child: Row(
+          children: <Widget>[
+            SizedBox(
+              width: 17,
+            ),
+            Icon(
+              Icons.add,
+              size: 30,
+              color: OwonColor().getCurrent(context, "blue"),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Text(
+              "Add A New Home",
+              style: TextStyle(
+                color: OwonColor().getCurrent(context, "blue"),
+                fontSize: 20.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ));
 
     return desList;
   }

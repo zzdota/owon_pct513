@@ -108,5 +108,15 @@ class OwonPic {
   static String sensorSettingModeSelect = "assets/images/device_set/sensor_setting_mode_select.svg";
   static String sensorSettingModeNoSelect = "assets/images/device_set/sensor_setting_mode_no_select.svg";
   static String deviceDisconnected = "assets/images/device_disconnect.png";
+
+
+//  address
+  static String addressHome = "assets/images/address/address_home.svg";
+  static String addressHomeColorful = "assets/images/address/address_home_colorful.png";
+  static String addressLocation = "assets/images/address/address_loction.png";
+  static String addressNoDevice = "assets/images/address/address_noDevices.png";
+  static String addressShowLocal = "assets/images/address/address_show_local.png";
+
+
 }
 
