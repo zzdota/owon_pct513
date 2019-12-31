@@ -42,7 +42,7 @@ class _ListPageState extends State<ListPage> {
         Map<String, dynamic> payload = msg["payload"];
         if (payload.containsKey("addrs")) {
           OwonLog.e("++++++++");
-          Future.delayed(Duration(milliseconds: 100),(){
+          Future.delayed(Duration(milliseconds: 100), () {
             OwonLog.e("---dismiss");
 
             OwonLoading(context).dismiss();
@@ -50,8 +50,9 @@ class _ListPageState extends State<ListPage> {
           setState(() {
             _addrModels = AddressModelEntity.fromJson(payload);
             _addressModel = _addrModels.addrs.first;
-            if(_addrModels.addrs.length== 0 || _addrModels.addrs.length== null){
-             noDeviceTip = S.of(context).list_no_device;
+            if (_addrModels.addrs.length == 0 ||
+                _addrModels.addrs.length == null) {
+              noDeviceTip = S.of(context).list_no_device;
             }
             _addrModels.addrs.forEach((item) {
               item.devlist.forEach((deviceItem) {
@@ -88,11 +89,9 @@ class _ListPageState extends State<ListPage> {
       }
     });
     super.initState();
-    Future.delayed(Duration(milliseconds: 1000), () {
-    });
-    Future.delayed(Duration(milliseconds:250 ), () {
-
-      OwonLoading(context).hide().then((e){
+    Future.delayed(Duration(milliseconds: 1000), () {});
+    Future.delayed(Duration(milliseconds: 250), () {
+      OwonLoading(context).hide().then((e) {
         OwonLog.e("---show");
         OwonLoading(context).show();
       });
@@ -119,11 +118,14 @@ class _ListPageState extends State<ListPage> {
     return Scaffold(
         appBar: AppBar(
           leading: Text(""),
-          title: GestureDetector(
-            onTap: () {
-              OwonLog.e("-----title");
-            },
-            child: _buildPopoverButton(_addressModel, _addrModels.addrs),
+          title: Container(
+            color: Colors.purple,
+            child: GestureDetector(
+              onTap: () {
+                OwonLog.e("-----title");
+              },
+              child: _buildPopoverButton(_addressModel, _addrModels.addrs),
+            ),
           ),
           centerTitle: true,
           actions: <Widget>[
@@ -190,9 +192,13 @@ class _ListPageState extends State<ListPage> {
                             child: Card(
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(
-                                      color: _addressModel.devlist[index].online>0?OwonColor()
-                                          .getCurrent(context, "borderNormal"):OwonColor()
-                                          .getCurrent(context, "borderDisconnect"),
+                                      color: _addressModel
+                                                  .devlist[index].online >
+                                              0
+                                          ? OwonColor().getCurrent(
+                                              context, "borderNormal")
+                                          : OwonColor().getCurrent(
+                                              context, "borderDisconnect"),
                                       width: 1.0,
                                     ),
                                     borderRadius: BorderRadius.all(
@@ -225,8 +231,8 @@ class _ListPageState extends State<ListPage> {
                                           ),
                                         ],
                                       ),
-                                      getRightWidget(_addressModel
-                                          .devlist[index].online)
+                                      getRightWidget(
+                                          _addressModel.devlist[index].online)
                                     ],
                                   ),
                                 )),
@@ -251,7 +257,7 @@ class _ListPageState extends State<ListPage> {
   }
 
   Widget getRightWidget(int normal) {
-    if (normal>0) {
+    if (normal > 0) {
       return Icon(
         Icons.keyboard_arrow_right,
         color: OwonColor().getCurrent(context, "textColor"),
@@ -330,7 +336,7 @@ class _ListPageState extends State<ListPage> {
             radius: OwonConstant.cRadius,
             popoverConstraints: BoxConstraints(
               minWidth: 50,
-              maxWidth: 210.99,
+              maxWidth: 280,
               minHeight: 250,
               maxHeight: 400,
             ),
@@ -370,25 +376,40 @@ class _ListPageState extends State<ListPage> {
 
     addressList.forEach((value) {
       AddressModelAddr addrModel = value;
-      desList.add(Container(
-        height: 30,
-        margin: EdgeInsets.all(10),
-        child: CupertinoPopoverMenuItem(
-          child: Text(addrModel.addrname),
-          onTap: () {
-            print("-----$value");
-            _addressModel = value;
-            if(_addressModel.devlist.length== 0 || _addressModel.devlist.length == null){
-              noDeviceTip = S.of(context).list_no_device;
-            }
-            setState(() {
-
-            });
-            return false;
-          },
-        ),
+      desList.add(GestureDetector(
+        onTap: () {
+          print("-----$value");
+          _addressModel = value;
+          if (_addressModel.devlist.length == 0 ||
+              _addressModel.devlist.length == null) {
+            noDeviceTip = S.of(context).list_no_device;
+          }
+          setState(() {});
+          Navigator.of(context).pop();
+        },
+        child: Container(
+            height: 100,
+            margin: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(addrModel.addrname),
+                Text("address is beijing"),
+                Text("3 devices"),
+              ],
+            )),
       ));
     });
+
+    desList.add(IconButton(
+        icon: Icon(Icons.add_a_photo),
+        onPressed: () {
+          OwonLog.e("----->");
+          Navigator.of(context).pop();
+
+          setState(() {});
+        }));
+
     return desList;
   }
 }
