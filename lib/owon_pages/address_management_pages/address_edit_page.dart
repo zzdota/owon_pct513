@@ -41,16 +41,18 @@ class _AddressEditPageState extends State<AddressEditPage> {
       if (msg["type"] == "json") {
         Map<String, dynamic> payload = msg["payload"];
 
-        OwonLog.e("---->>>>回复的payload=$payload");
-
         if (payload["command"] == "addr.add") {
-          OwonLoading(context).dismiss();
-
+          OwonLoading(context).hide().then((e) {
+            OwonToast.show(S.of(context).global_save_success);
+            Navigator.of(context).pop();
+          });
           OwonLog.e("----回复的payload=$payload");
 
         }else if (payload["command"] == "addr.update") {
-          OwonLoading(context).dismiss();
-
+          OwonLoading(context).hide().then((e) {
+            OwonToast.show(S.of(context).global_save_success);
+            Navigator.of(context).pop();
+          });
           OwonLog.e("----回复的payload=$payload");
 
         }
@@ -127,6 +129,7 @@ class _AddressEditPageState extends State<AddressEditPage> {
 //              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
 //                return AddressEditPage();
 //              }));
+               OwonLoading(context).show();
               if(widget.isFromAdd) {
                 addAddress();
 
