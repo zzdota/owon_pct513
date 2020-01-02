@@ -255,7 +255,7 @@ class _LoginPageState extends State<LoginPage> {
           }));
           pre.setString(OwonConstant.clientID, clientId);
           startListen();
-          toSubscribe(clientId);
+          toSubscribe(clientId,userName);
         });
 
       } else {
@@ -265,12 +265,16 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  toSubscribe(String clientID) {
+  toSubscribe(String clientID,String userName) {
     String topic = "reply/cloud/$clientID";
     OwonMqtt.getInstance().subscribeMessage(topic);
 
     String replyTopic = "reply/device/+/$clientID/#";
     OwonMqtt.getInstance().subscribeMessage(replyTopic);
+
+    String accountTopic = "account/$userName/attribute/#";
+    OwonMqtt.getInstance().subscribeMessage(accountTopic);
+
   }
 
   startListen() {
