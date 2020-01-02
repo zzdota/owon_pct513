@@ -6,6 +6,8 @@ import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 
+import 'address_edit_page.dart';
+
 class AddressListPage extends StatefulWidget {
   AddressModelEntity addrModels;
   AddressListPage(this.addrModels);
@@ -21,7 +23,13 @@ class _AddressListPageState extends State<AddressListPage> {
           title: Text("地址列表"),
           actions: <Widget>[
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    AddressModelAddr addrModel = AddressModelAddr(addrname: "");
+
+                    return AddressEditPage(addrModel,true);
+                  }));
+                },
                 icon: Icon(
                   Icons.add,
                   color: OwonColor().getCurrent(context, "textColor"),

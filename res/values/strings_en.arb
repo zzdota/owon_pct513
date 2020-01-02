@@ -157,5 +157,8 @@
   "global_fahrenheit_unit": "℉",
   "global_celsius_unit": "℃",
   "global_delete_device": "Delete Device",
-  "list_no_device" : "No device in current home"
+  "list_no_device" : "No device in current home",
+
+  "address_delete_home" : "Delete Home"
+
 }

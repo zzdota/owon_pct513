@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_edit_page.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
+import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
+import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../generated/i18n.dart';
 
 class AddressDevicesPage extends StatefulWidget {
@@ -27,7 +32,7 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
           FlatButton(
             onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return AddressEditPage();
+                return AddressEditPage(widget.addrModel,false);
               }));
             },
             child: Text(
@@ -43,6 +48,23 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
       body:
           hadDevice ? getHasDeviceWidget(context) : getNoDeviceWidget(context),
     );
+  }
+
+
+  deleteAddress() async {
+
+
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "addr.del";
+    p["sequence"] = OwonSequence.temp;
+    p["addrid"] = widget.addrModel.addrid;
+
+
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
   }
 
   Widget getHasDeviceWidget(context) {
@@ -149,13 +171,15 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(OwonConstant.cRadius),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteAddress();
+                  },
                   icon: Icon(
                     Icons.delete,
                     color: Colors.white,
                   ),
                   label: Text(
-                    S.of(context).vacation_delete,
+                    "Delete Home",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   iconTextAlignment: TextIconAlignment.iconRightTextLeft))
