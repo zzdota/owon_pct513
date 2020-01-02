@@ -5,9 +5,10 @@ import '../res/owon_themeColor.dart';
 
 class OwonHeader {
   static Widget header(BuildContext context, String imageUrl, String title,
-      {String subTitle, String thirdTitle,
+      {String subTitle,
+      String thirdTitle,
       double fontSize = 30.0,
-        double width = 250.0,
+      double width = 250.0,
 //        double height = 100.0,
       MainAxisAlignment alignment = MainAxisAlignment.center}) {
     return Container(
@@ -54,12 +55,15 @@ class OwonHeader {
                           color: OwonColor().getCurrent(context, "textColor"),
                           fontSize: fontSize),
                     ),
-                    thirdTitle != null ? Text(
-                      thirdTitle,
-                      style: TextStyle(
-                          color: OwonColor().getCurrent(context, "textColor"),
-                          fontSize: fontSize),
-                    ) : Container(),
+                    thirdTitle != null
+                        ? Text(
+                            thirdTitle,
+                            style: TextStyle(
+                                color: OwonColor()
+                                    .getCurrent(context, "textColor"),
+                                fontSize: fontSize),
+                          )
+                        : Container(),
                   ],
                 )
         ],
@@ -67,27 +71,13 @@ class OwonHeader {
     );
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  static Widget normalHeader(BuildContext context, String imageUrl, String title,
+  static Widget normalHeader(
+      BuildContext context, String imageUrl, String title,
       {String subTitle,
-        double fontSize = 20.0,
-        double width = 250.0,
+      double fontSize = 20.0,
+      double width = 250.0,
 //        double height = 100.0,
-        MainAxisAlignment alignment = MainAxisAlignment.start}) {
+      MainAxisAlignment alignment = MainAxisAlignment.start}) {
     return Container(
       child: Row(
         mainAxisAlignment: alignment,
@@ -102,7 +92,7 @@ class OwonHeader {
           ),
           SizedBox(
             width: 2,
-            height: subTitle==null?45:70,
+            height: subTitle == null ? 45 : 70,
             child: Container(
               color: OwonColor().getCurrent(context, "textColor"),
             ),
@@ -112,47 +102,97 @@ class OwonHeader {
           ),
           subTitle == null
               ? Container(
-            width: 250,
-                child: Text(
-            title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                  color: OwonColor().getCurrent(context, "textColor"),
-                  fontSize: fontSize),
-          ),
-              )
+                  width: 250,
+                  child: Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: OwonColor().getCurrent(context, "textColor"),
+                        fontSize: fontSize),
+                  ),
+                )
               : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 250,
-                child: Text(
-                  title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: OwonColor().getCurrent(context, "textColor"),
-                      fontSize: fontSize),
-                ),
-              ),
-              SizedBox(height: 5,),
-              Container(
-                width: 250,
-                child: Text(
-                  subTitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: OwonColor().getCurrent(context, "textColor"),
-                      fontSize: fontSize-4),
-                ),
-              ),
-
-            ],
-          )
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 250,
+                      child: Text(
+                        title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: OwonColor().getCurrent(context, "textColor"),
+                            fontSize: fontSize),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      width: 250,
+                      child: Text(
+                        subTitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: OwonColor().getCurrent(context, "textColor"),
+                            fontSize: fontSize - 4),
+                      ),
+                    ),
+                  ],
+                )
         ],
+      ),
+    );
+  }
+
+  static Widget baseHeader(
+    BuildContext context,
+    String subtitle, {
+    String title,
+    TextStyle titleStyle,
+    TextStyle subtitleStyle =
+        const TextStyle(fontSize: 20, color: Colors.white),
+    Widget imageWidget,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.start,
+    Color dividerColor = Colors.white,
+  }) {
+    return Container(
+      child: IntrinsicHeight(
+        child: Row(
+          children: <Widget>[
+            imageWidget,
+            Container(
+              color: dividerColor,
+              width: 2,
+              margin: EdgeInsets.only(right: 15, top: 5, bottom: 5),
+            ),
+            Expanded(
+                child: title == null
+                    ? Text(
+                        subtitle,
+                        style: subtitleStyle,
+                      )
+                    : Column(
+                        crossAxisAlignment: crossAxisAlignment,
+                        children: <Widget>[
+                          Text(
+                            title,
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            subtitle,
+                            style: subtitleStyle,
+                          ),
+                        ],
+                      )),
+          ],
+        ),
       ),
     );
   }
