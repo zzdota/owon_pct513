@@ -284,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
   _onData(List<MqttReceivedMessage<MqttMessage>> data) {
     final MqttPublishMessage recMess = data[0].payload;
     final String topic = data[0].topic;
-    if (topic.contains("reply/cloud")) {
+    if (topic.contains("reply/cloud") || topic.startsWith("account")) {
       final String pt =
       MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       String desString = "topic is <$topic>, payload is <-- $pt -->";

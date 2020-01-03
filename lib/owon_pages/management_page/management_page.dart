@@ -8,7 +8,6 @@ import 'package:owon_pct513/owon_utils/owon_bottomsheet.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_temperature.dart';
-import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -252,6 +251,26 @@ class _ManagementPageState extends State<ManagementPage> {
         } else if (topic.contains("RelayState")) {
           setState(() {
             _relayState = payload;
+          });
+        }else if (topic.contains("OccupiedCoolingSetpoint")) {
+          if (topic.startsWith("reply")) {
+            setState(() {
+              _OccupiedCoolingSetpoint = _justSetValue;
+            });
+            return;
+          }
+          setState(() {
+            _OccupiedCoolingSetpoint = payload;
+          });
+        }else if (topic.contains("OccupiedHeatingSetpoint")) {
+          if (topic.startsWith("reply")) {
+            setState(() {
+              _OccupiedHeatingSetpoint = _justSetValue;
+            });
+            return;
+          }
+          setState(() {
+            _OccupiedHeatingSetpoint = payload;
           });
         }
       }
