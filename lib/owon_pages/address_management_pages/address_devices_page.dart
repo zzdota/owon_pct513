@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,9 +6,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_edit_page.dart';
+import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
+import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:owon_pct513/res/owon_sequence.dart';
@@ -24,6 +28,47 @@ class AddressDevicesPage extends StatefulWidget {
 
 class _AddressDevicesPageState extends State<AddressDevicesPage> {
   bool hadDevice = true;
+  StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _listEvenBusSubscription =
+        ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
+          String topic = msg["topic"];
+
+          if (msg["type"] == "json") {
+            Map<String, dynamic> payload = msg["payload"];
+
+            if (payload["command"] == "addr.del") {
+              OwonLoading(context).hide().then((e) {
+                OwonToast.show(S.of(context).global_save_success);
+                Navigator.of(context).pop();
+              });
+              OwonLog.e("----回复的payload=$payload");
+
+            }else if (payload["command"] == "addr.update") {
+              OwonLoading(context).hide().then((e) {
+                OwonToast.show(S.of(context).global_save_success);
+                Navigator.of(context).pop();
+              });
+              OwonLog.e("----回复的payload=$payload");
+
+            }
+          } else if (msg["type"] == "string") {
+            String payload = msg["payload"];
+            if (topic.startsWith('reply') && topic.contains('VactionSchedule')) {
+              OwonLoading(context).hide().then((e) {
+                OwonToast.show(S.of(context).global_save_success);
+              });
+            }
+
+            OwonLog.e("----上报的payload=$payload");
+          } else if (msg["type"] == "raw") {}
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,9 +123,9 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
           Container(
               padding: EdgeInsets.only(left: 20),
               child: OwonHeader.normalHeader(
-                  context, OwonPic.addressHomeColorful, "My home1",
+                  context, OwonPic.addressHomeColorful, widget.addrModel.addrname,
                   subTitle:
-                      "room 2 fu jian shen xia men shi si ming qu,zheng zhu wang chuang xing da sha B qu room 2 fu jian shen xia men shi si ming qu,zheng zhu wang chuang xing da sha B qu",
+                  widget.addrModel.addrdesc,
                   width: 180,
                   fontSize: 20)),
           SizedBox(
@@ -131,7 +176,7 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
                                       height: 8,
                                     ),
                                     Text(
-                                      "haha",
+                                      widget.addrModel.devlist[index].devname,
 //                                    widget.addrModel
 //                                        .devlist[index].devname,
                                       style: TextStyle(
@@ -172,6 +217,7 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
                     borderRadius: BorderRadius.circular(OwonConstant.cRadius),
                   ),
                   onPressed: () {
+                    OwonLoading(context).show();
                     deleteAddress();
                   },
                   icon: Icon(

@@ -429,10 +429,10 @@ class _ListPageState extends State<ListPage> {
                             fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        "address is beijing address is beijing address is beijing address is beijing",
+                        addrModel.addrdesc,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text("3 devices"),
+                      Text("${addrModel.devlist.length} devices"),
                     ],
                   ),
                 ),
