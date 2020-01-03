@@ -14,6 +14,14 @@ class OwonConvert {
     return desString;
   }
 
+  static String reduce100ForHumidity(String str) {
+    String desString;
+    int num = int.parse(str);
+    double desNum = num / 100.0;
+    desString = desNum.toStringAsFixed(0);
+    return desString;
+  }
+
   static String zoom100(String str) {
     String desString;
     double num = double.parse(str);

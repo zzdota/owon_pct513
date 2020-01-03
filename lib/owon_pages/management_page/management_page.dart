@@ -390,7 +390,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   Expanded(
                       child: OwonTempHumi(
                     localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
-                    localHumi: OwonConvert.reduce100(_localHumi), showFan: getShowFan(_relayState)
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi), showFan: getShowFan(_relayState)
                   )),
                 ],
               ),
@@ -542,7 +542,7 @@ class _ManagementPageState extends State<ManagementPage> {
                       child: OwonTempHumi(
                     localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit
                         :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
-                    localHumi: OwonConvert.reduce100(_localHumi),
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
                   Padding(
@@ -761,7 +761,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   Expanded(
                       child: OwonTempHumi(
                     localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
-                    localHumi: OwonConvert.reduce100(_localHumi),
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
                   Padding(
@@ -974,7 +974,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   Expanded(
                       child: OwonTempHumi(
                     localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
-                    localHumi: OwonConvert.reduce100(_localHumi),
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
                   Padding(
@@ -1141,7 +1141,7 @@ class _ManagementPageState extends State<ManagementPage> {
                       child: OwonTempHumi(
                     localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit
                         :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
-                    localHumi: OwonConvert.reduce100(_localHumi),
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
                   Padding(

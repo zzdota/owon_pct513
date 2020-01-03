@@ -23,24 +23,24 @@ class _OwonTempHumiState extends State<OwonTempHumi> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              widget.showFan?SvgPicture.asset(OwonPic.mFanShow,width: 13,color: OwonColor().getCurrent(context, "textColor"),):Text(""),
+              widget.showFan?SvgPicture.asset(OwonPic.mFanShow,width: 18,color: OwonColor().getCurrent(context, "textColor"),):Text(""),
 //              Icon(Icons.invert_colors_off,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
               SizedBox(width: 8,),
               Container(
                 color: OwonColor().getCurrent(context, "textColor"),
                 child: VerticalDivider(
-                  indent: 8.0,
-                  endIndent: 8.0,
+                  indent: 10.0,
+                  endIndent: 10.0,
                   width: 1,
                   thickness: 1,
                 ),
               ),
               SizedBox(width: 8,),
-              SvgPicture.asset(OwonPic.mHumidityWater,color:  OwonColor().getCurrent(context, "textColor",),width: 11,),
+              SvgPicture.asset(OwonPic.mHumidityWater,color:  OwonColor().getCurrent(context, "textColor",),width: 15,),
 //              Icon(Icons.watch,color: OwonColor().getCurrent(context, "textColor",),size: 16,),
               SizedBox(width: 2,),
               Text("${widget.localHumi}%",style: TextStyle(
-                  color:  OwonColor().getCurrent(context, "textColor",),fontSize: 14.0
+                  color:  OwonColor().getCurrent(context, "textColor",),fontSize: 17.0
               ),),
 
 
@@ -48,7 +48,7 @@ class _OwonTempHumiState extends State<OwonTempHumi> {
           ),
           SizedBox(height: 5,),
           Text(widget.localTemp,style: TextStyle(
-              color:  OwonColor().getCurrent(context, "textColor",),fontSize: 70.0
+              color:  OwonColor().getCurrent(context, "textColor",),fontSize: 75.0
           ),),
         ],
       ),
