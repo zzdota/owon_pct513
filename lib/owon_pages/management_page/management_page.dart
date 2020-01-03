@@ -56,10 +56,10 @@ class _ManagementPageState extends State<ManagementPage> {
 
 
   String _SetpointDeadBand = "150";
-  String _MaxHeatSetpointLimit = "3200";
-  String _MinHeatSetpointLimit = "700";
-  String _MaxCoolSetpointLimit = "3000";
-  String _MinCoolSetpointLimit = "500";
+  String _MaxHeatSetpointLimit = "3000";
+  String _MinHeatSetpointLimit = "500";
+  String _MaxCoolSetpointLimit = "3200";
+  String _MinCoolSetpointLimit = "700";
 
   String _homeMode;
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
