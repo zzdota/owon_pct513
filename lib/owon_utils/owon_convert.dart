@@ -36,7 +36,7 @@ class OwonConvert {
 
   //  f:86 ==> c:2700
   static String zoom100FToC(String f) {
-    return (OwonTemperature().fToC(int.parse(f))*100).toString();
+    return (OwonTemperature().fToC(double.parse(f).floor())*100).toStringAsFixed(0);
   }
 
   static String toSystemMode(String str) {
