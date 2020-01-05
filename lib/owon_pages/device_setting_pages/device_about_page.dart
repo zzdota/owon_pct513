@@ -284,14 +284,10 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
     double radius = 20;
     mOwonDialog = showDialog(
         context: context,
-        //点击背景不消失
         barrierDismissible: false,
         builder: (ctx) {
-          //StatefulBuilder 来构建 dialog
-          //使用参数 state来更新 dialog 中的数据内容
           return StatefulBuilder(builder: (ctx, state) {
             mStateSetter = state;
-            //创建dialog
             return ShowCommonAlert(
               negativeText: S.of(ctx).global_cancel,
               isShowTitleDivide: false,
@@ -370,14 +366,10 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
   showUpgradSuccess() {
     showDialog(
         context: context,
-        //点击背景不消失
         barrierDismissible: false,
         builder: (ctx) {
-          //StatefulBuilder 来构建 dialog
-          //使用参数 state来更新 dialog 中的数据内容
           return StatefulBuilder(builder: (ctx, state) {
             mStateSetter = state;
-            //创建dialog
             return ShowCommonAlert(
               negativeText: S.of(ctx).global_ok,
               isShowTitleDivide: false,
@@ -422,14 +414,10 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
   showUpgradeFail() {
     showDialog(
         context: context,
-        //点击背景不消失
         barrierDismissible: false,
         builder: (ctx) {
-          //StatefulBuilder 来构建 dialog
-          //使用参数 state来更新 dialog 中的数据内容
           return StatefulBuilder(builder: (ctx, state) {
             mStateSetter = state;
-            //创建dialog
             return ShowCommonAlert(
               negativeText: S.of(ctx).global_cancel,
               positiveText: S.of(ctx).global_ok,

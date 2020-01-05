@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/owon_pages/login_pages/change_page.dart';
 import 'package:owon_pct513/owon_pages/setting_pages/about_page.dart';
+import 'package:owon_pct513/owon_pages/setting_pages/geofence_page.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,12 @@ class _SettingPageState extends State<SettingPage> {
                         }
                         break;
                       case 2:
-                        {}
+                        {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return GeofencePage();
+                          }));
+                        }
                         break;
                       case 3:
                         {

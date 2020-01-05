@@ -58,14 +58,15 @@ class ShowCommonAlert extends Dialog {
                   //标题
                   title != ""
                       ? Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 30, bottom: 10),
                           child: Container(
                             height: defaultTitleHeight,
                             child: Center(
                               child: Text(
                                 title,
                                 style: TextStyle(
-                                    fontSize: 16.0,
+                                    fontSize: 20.0,
                                     color: OwonColor()
                                         .getCurrent(context, "blue")),
                               ),
@@ -77,15 +78,16 @@ class ShowCommonAlert extends Dialog {
                   Container(
                     color: isShowTitleDivide
                         ? OwonColor().getCurrent(context, "blue")
-                        : OwonColor().getCurrent(context, "blue"),
-                    margin: EdgeInsets.only(bottom: 10.0),
+                        : Color.fromARGB(0xff, 0xff, 0xff, 0xff),
+                    margin:
+                        EdgeInsets.only(bottom: isShowTitleDivide ? 10.0 : 0),
                     height: 1.0,
                   ),
                   //中间显示的Widget
                   Container(
                     constraints: BoxConstraints(minHeight: 80.0),
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.only(left:20.0,right: 20.0),
                       child: childWidget,
                     ),
                   ),
@@ -93,8 +95,8 @@ class ShowCommonAlert extends Dialog {
                   Container(
                     color: isShowBottomDivide
                         ? OwonColor().getCurrent(context, "blue")
-                        : OwonColor().getCurrent(context, "blue"),
-                    margin: EdgeInsets.only(top: 10.0),
+                        : Color.fromARGB(0xff, 0xff, 0xff, 0xff),
+                    margin: EdgeInsets.only(top: isShowTitleDivide ? 10.0 : 0),
                     height: 1.0,
                   ),
                   //底部的确认取消按钮

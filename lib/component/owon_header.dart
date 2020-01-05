@@ -163,7 +163,7 @@ class OwonHeader {
       child: IntrinsicHeight(
         child: Row(
           children: <Widget>[
-            imageWidget,
+            imageWidget == null ? Container():imageWidget,
             Container(
               color: dividerColor,
               width: 2,

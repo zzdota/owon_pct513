@@ -8,4 +8,6 @@ class OwonSequence {
   static const int getSensorList = getScheduleEnable + 1;
   static const int getDeviceInfo = getSensorList + 1;
   static const int getDeviceUpgradeInfo = getDeviceInfo + 1;
+  static const int getGeofence = getDeviceUpgradeInfo + 1;
+  static const int setGeofence = getGeofence + 1;
 }

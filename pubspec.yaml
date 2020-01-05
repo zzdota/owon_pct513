@@ -187,6 +187,7 @@ flutter:
 
     - assets/images/success_icon.svg
     - assets/images/fail_icon.svg
+    - assets/images/setting_geofence_icon.png
 
 #address
     - assets/images/address/address_home.svg

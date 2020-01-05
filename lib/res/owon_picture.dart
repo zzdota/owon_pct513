@@ -118,5 +118,6 @@ class OwonPic {
 
   static String successIcon = "assets/images/success_icon.svg";
   static String failIcon = "assets/images/fail_icon.svg";
+  static String geofenceIcon = "assets/images/setting_geofence_icon.png";
 }
 
