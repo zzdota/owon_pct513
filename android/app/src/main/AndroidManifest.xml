@@ -16,7 +16,7 @@
     
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="owon_pct513"
+        android:label="SmartONE"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
