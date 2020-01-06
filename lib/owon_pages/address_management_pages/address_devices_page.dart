@@ -31,6 +31,8 @@ class AddressDevicesPage extends StatefulWidget {
 
 class _AddressDevicesPageState extends State<AddressDevicesPage> {
   bool hadDevice = true;
+  bool isFromDelete;
+
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   @override
   void dispose() {
@@ -75,7 +77,23 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
               });
 
 
+            }else if (payload["command"] == "device.move") {
+              if(isFromDelete){
+                deleteAddress();
+              }else {
+                OwonLoading(context).hide().then((e) {
+                  OwonToast.show(S
+                      .of(context)
+                      .global_save_success);
+                  Navigator.of(context).pop();
+                });
+                OwonLog.e("----回复的payload=$payload");
+              }
             }
+
+
+
+
           } else if (msg["type"] == "string") {
             String payload = msg["payload"];
             if (topic.startsWith('reply') && topic.contains('VactionSchedule')) {
@@ -114,6 +132,30 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
           hadDevice ? getHasDeviceWidget(context) : getNoDeviceWidget(context),
     );
   }
+  moveAllDevice() async {
+
+
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "device.move";
+    p["sequence"] = OwonSequence.temp;
+    p["desaddrid"] = widget.addrModels.addrs[mSelectModeNum].addrid;
+    p["oriaddrid"] = widget.addrModel.addrid;
+
+    List desDeviceidList = [];
+    for(int i=0;i<widget.addrModel.devlist.length;i++) {
+      Map deviceMap = Map();
+      String tempDeviceId = widget.addrModel.devlist[i].deviceid;
+      deviceMap["deviceid"] = tempDeviceId;
+      desDeviceidList.add(deviceMap);
+    }
+    p["deviceids"] = desDeviceidList;
+
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
 
 
   deleteAddress() async {
@@ -142,10 +184,14 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
     Map p = Map();
     p["command"] = "device.move";
     p["sequence"] = OwonSequence.temp;
-    p["addrid"] = widget.addrModels.addrs[mSelectModeNum].addrid;
-    p["addrid"] = widget.addrModel.addrid;
+    p["desaddrid"] = widget.addrModels.addrs[mSelectModeNum].addrid;
+    p["oriaddrid"] = widget.addrModel.addrid;
 
-    p["deviceid"] = widget.addrModel.devlist[deviceIndex].deviceid;
+
+    Map deviceMap = Map();
+    deviceMap["deviceid"] = widget.addrModel.devlist[deviceIndex].deviceid;
+
+    p["deviceids"] = [deviceMap];
 
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
@@ -257,8 +303,22 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
                     borderRadius: BorderRadius.circular(OwonConstant.cRadius),
                   ),
                   onPressed: () {
+//                    OwonLoading(context).show();
+//                    deleteAddress();
+                  OwonLog.e("count=${widget.addrModels.addrs.length}");
+                  if(widget.addrModels.addrs.length == 0) {
+                    OwonToast.show("不能删除了");
+                    return;
+                  }
+
+                  if(widget.addrModel.devlist.length == 0){
                     OwonLoading(context).show();
                     deleteAddress();
+                    return;
+                  }
+
+                    selectEnterMode(10000);
+
                   },
                   icon: Icon(
                     Icons.delete,
@@ -350,10 +410,16 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
                   Navigator.pop(ctx);
 
                   OwonLog.e("ommmmm=$mSelectModeNum");
+                  if(deviceIndex == 10000){
+                    OwonLoading(context).show();
+                    isFromDelete = true;
+                    moveAllDevice();
+                  }else {
+                    OwonLoading(context).show();
+                    isFromDelete = false;
 
-                  OwonLoading(context).show();
-                  moveDevice(deviceIndex);
-
+                    moveDevice(deviceIndex);
+                  }
                 },
                 title: S.of(context).geofence_entering_geofence,
                 childWidget: Container(
