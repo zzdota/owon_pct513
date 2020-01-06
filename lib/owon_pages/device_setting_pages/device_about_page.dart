@@ -207,7 +207,7 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
   }
 
   getDeviceInfo() async {
-//    OwonLoading(context).show();
+    OwonLoading(context).show();
     List attrsList = [
       "deviceid",
       "versionname",

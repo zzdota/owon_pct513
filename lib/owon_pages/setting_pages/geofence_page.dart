@@ -322,11 +322,11 @@ class _GeofencePageState extends State<GeofencePage> {
           return StatefulBuilder(builder: (ctx, state) {
             mStateSetter = state;
             return ShowCommonAlert(
-                negativeText: S.of(ctx).global_ok,
-                positiveText: S.of(ctx).global_cancel,
+                negativeText: S.of(ctx).global_cancel,
+                positiveText: S.of(ctx).global_ok,
                 isShowTitleDivide: false,
                 isShowBottomDivide: true,
-                onPositivePressEvent: () {
+                onCloseEvent: () {
                   Navigator.pop(ctx);
                   if (mGetGeofenceModeEntity.response.devices != null) {
                     mGetGeofenceModeEntity.response.devices.clear();
@@ -343,7 +343,7 @@ class _GeofencePageState extends State<GeofencePage> {
                   }
                   update();
                 },
-                onCloseEvent: () {
+                onPositivePressEvent: () {
                   Navigator.pop(ctx);
                   update();
                 },
@@ -420,7 +420,8 @@ class _GeofencePageState extends State<GeofencePage> {
                 mGetGeofenceModeEntity.response.devices[i].devname;
             y++;
           } else {
-            mPativipationDevice = mPativipationDevice + S.of(context).geofence_and_more;
+            mPativipationDevice =
+                mPativipationDevice + S.of(context).geofence_and_more;
             break;
           }
         }
@@ -442,17 +443,17 @@ class _GeofencePageState extends State<GeofencePage> {
           return StatefulBuilder(builder: (ctx, state) {
             mStateSetter = state;
             return ShowCommonAlert(
-                negativeText: S.of(ctx).global_ok,
-                positiveText: S.of(ctx).global_cancel,
+                negativeText: S.of(ctx).global_cancel,
+                positiveText: S.of(ctx).global_ok,
                 isShowTitleDivide: false,
                 isShowBottomDivide: true,
-                onCloseEvent: () {
+                onPositivePressEvent: () {
                   Navigator.pop(ctx);
                   mGetGeofenceModeEntity.response.enterGeofenceAction =
                       mSelectModeNum;
                   update();
                 },
-                onPositivePressEvent: () {
+                onCloseEvent: () {
                   Navigator.pop(ctx);
                   mGetGeofenceModeEntity.response.enterGeofenceAction =
                       mSelectModeNum = mSelectModeNumBuf;
@@ -492,17 +493,17 @@ class _GeofencePageState extends State<GeofencePage> {
           return StatefulBuilder(builder: (ctx, state) {
             mStateSetter = state;
             return ShowCommonAlert(
-                negativeText: S.of(ctx).global_ok,
-                positiveText: S.of(ctx).global_cancel,
+                negativeText: S.of(ctx).global_cancel,
+                positiveText: S.of(ctx).global_ok,
                 isShowTitleDivide: false,
                 isShowBottomDivide: true,
-                onCloseEvent: () {
+                onPositivePressEvent: () {
                   Navigator.pop(ctx);
                   mGetGeofenceModeEntity.response.leaveGeofenceAction =
                       mSelectModeNum;
                   update();
                 },
-                onPositivePressEvent: () {
+                onCloseEvent: () {
                   Navigator.pop(ctx);
                   mGetGeofenceModeEntity.response.leaveGeofenceAction =
                       mSelectModeNum = mSelectModeNumBuf;
