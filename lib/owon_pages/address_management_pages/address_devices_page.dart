@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_edit_page.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/device_about_progress_dialog_page.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
@@ -20,8 +21,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../generated/i18n.dart';
 
 class AddressDevicesPage extends StatefulWidget {
+  AddressModelEntity addrModels;
+
   AddressModelAddr addrModel;
-  AddressDevicesPage(this.addrModel);
+  AddressDevicesPage(this.addrModel,this.addrModels);
   @override
   _AddressDevicesPageState createState() => _AddressDevicesPageState();
 }
@@ -29,10 +32,19 @@ class AddressDevicesPage extends StatefulWidget {
 class _AddressDevicesPageState extends State<AddressDevicesPage> {
   bool hadDevice = true;
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
-
+  @override
+  void dispose() {
+    _listEvenBusSubscription.cancel();
+    super.dispose();
+  }
   @override
   void initState() {
     super.initState();
+
+    widget.addrModels.addrs.removeWhere((model){
+      return model.addrid == widget.addrModel.addrid;
+    });
+    widget.addrModels.addrs.join(', ');
 
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
@@ -54,6 +66,14 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
                 Navigator.of(context).pop();
               });
               OwonLog.e("----回复的payload=$payload");
+
+            }else if(topic.startsWith("reply") && payload.containsKey("addrs")){
+              OwonLoading(context).hide().then((e) {
+                OwonToast.show(S.of(context).global_save_success);
+                Navigator.of(context).pop();
+
+              });
+
 
             }
           } else if (msg["type"] == "string") {
@@ -107,6 +127,25 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
     p["sequence"] = OwonSequence.temp;
     p["addrid"] = widget.addrModel.addrid;
 
+
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
+
+
+  moveDevice(int deviceIndex) async {
+
+
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "device.move";
+    p["sequence"] = OwonSequence.temp;
+    p["addrid"] = widget.addrModels.addrs[mSelectModeNum].addrid;
+    p["addrid"] = widget.addrModel.addrid;
+
+    p["deviceid"] = widget.addrModel.devlist[deviceIndex].deviceid;
 
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
@@ -189,6 +228,7 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
                                 FlatButton(
                                   onPressed: () {
                                     OwonLog.e("---->");
+                                    selectEnterMode(index);
                                   },
                                   child: Text("Move",
                                       style: TextStyle(
@@ -232,6 +272,103 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
         ],
       ),
     );
+  }
+
+
+  int mSelectModeNum = 0;
+  Widget getModeLayout(String imageUrl, String modeStr, int modeNum) {
+    return Container(
+      height: OwonConstant.systemHeight,
+      margin: EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            child: Row(
+              children: <Widget>[
+                SvgPicture.asset(
+                  imageUrl,
+                  color: OwonColor().getCurrent(context, "blue"),
+                  width: 30,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(modeStr,
+                    style: TextStyle(
+                        color: OwonColor().getCurrent(context, "blue"),
+                        fontSize: 20)),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              mStateSetter(() {
+                mSelectModeNum = modeNum;
+              });
+            },
+            child: modeNum == mSelectModeNum
+                ? Icon(
+              Icons.check_circle,
+              color: OwonColor().getCurrent(context, "blue"),
+              size: 35,
+            )
+                : Icon(
+              Icons.radio_button_unchecked,
+              color: OwonColor().getCurrent(context, "blue"),
+              size: 35,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+
+
+  StateSetter mStateSetter;
+
+  void selectEnterMode(int deviceIndex) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) {
+          return StatefulBuilder(builder: (ctx, state) {
+            mStateSetter = state;
+            return ShowCommonAlert(
+                negativeText: S.of(ctx).global_cancel,
+                positiveText: S.of(ctx).global_ok,
+                isShowTitleDivide: false,
+                isShowBottomDivide: true,
+                onCloseEvent: () {
+                  Navigator.pop(ctx);
+
+
+                OwonLog.e("cmmmmm=$mSelectModeNum");
+                },
+                onPositivePressEvent: () {
+                  Navigator.pop(ctx);
+
+                  OwonLog.e("ommmmm=$mSelectModeNum");
+
+                  OwonLoading(context).show();
+                  moveDevice(deviceIndex);
+
+                },
+                title: S.of(context).geofence_entering_geofence,
+                childWidget: Container(
+                  height: OwonConstant.systemHeight*4,
+                  child: ListView.builder(
+                    itemCount: widget.addrModels.addrs.length,
+                      itemBuilder: (context,index){
+                    return getModeLayout(OwonPic.addressHome,
+                        widget.addrModels.addrs[index].addrname, index);
+                  })
+
+                )
+            );
+          });
+        });
   }
 
   Widget getNoDeviceWidget(context) {

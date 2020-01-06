@@ -177,7 +177,7 @@ class _ManagementPageState extends State<ManagementPage> {
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
 
-        OwonLog.e("----上报的payload=$payload");
+//        OwonLog.e("----上报的payload=$payload");
         if (topic.contains("LocalTemperature")) {
           setState(() {
             _localTemp = payload;

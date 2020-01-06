@@ -27,6 +27,12 @@ class _AddressListPageState extends State<AddressListPage> {
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
 
   @override
+  void dispose() {
+    _listEvenBusSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 
@@ -85,7 +91,7 @@ class _AddressListPageState extends State<AddressListPage> {
                     onTap: () {
                       AddressModelAddr addrModel = widget.addrModels.addrs[index];
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                        return AddressDevicesPage(addrModel);
+                        return AddressDevicesPage(addrModel,widget.addrModels);
                       }));
                     },
                     child: Card(

@@ -88,7 +88,7 @@ class _ListPageState extends State<ListPage> {
         } else if (topic == "") {
         } else if (topic == "") {}
 
-        OwonLog.e("----list上报的payload=$payload");
+//        OwonLog.e("----list上报的payload=$payload");
       }
     });
     super.initState();
