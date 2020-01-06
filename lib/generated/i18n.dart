@@ -22,6 +22,7 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get about_version => "Version";
+  String get address_delete_home => "Delete Home";
   String get app_listView => "ListView";
   String get app_name => "OWON";
   String get app_test => "test";
@@ -61,6 +62,15 @@ class S implements WidgetsLocalizations {
   String get device_max => "55 min/h";
   String get device_min => "0 min/h";
   String get device_unit => "min/h";
+  String get geofence_and_more => " and more";
+  String get geofence_dialog_participating_device_title => "Select Participating Devices";
+  String get geofence_disable_geofence => "You can set up a geofence (i.e., a virtual perimeter) around your home and activate comfort settings upon entering or leaving the geofence.";
+  String get geofence_entering_geofence => "When Entering Geofence";
+  String get geofence_follow_schedule => "Follow Schedule";
+  String get geofence_leaving_geofence => "When Leaving Geofence";
+  String get geofence_no_action => "No action";
+  String get geofence_paticipation_decice => "Paticipation Device";
+  String get geofence_title => "Geofence";
   String get global_account_exist => "Account has been registered";
   String get global_cancel => "Cancel";
   String get global_celsius_unit => "℃";
@@ -91,6 +101,7 @@ class S implements WidgetsLocalizations {
   String get global_register => "Register";
   String get global_register_account_fail => "Registration failed";
   String get global_register_account_success => "Registration successful";
+  String get global_retry => "Retry";
   String get global_sat => "Sat";
   String get global_save => "Save";
   String get global_save_fail => "Save failed";
@@ -180,6 +191,8 @@ class $zh extends S {
   @override
   String get sensor_about_id => "· 设备ID: ";
   @override
+  String get geofence_follow_schedule => "Follow Schedule";
+  @override
   String get login_retry_limit => "密码重试次数超出限制";
   @override
   String get device_info_upgrading => "正在升级...";
@@ -192,6 +205,8 @@ class $zh extends S {
   @override
   String get login_hi => "Hi,";
   @override
+  String get global_retry => "重试";
+  @override
   String get global_verify_code_remaining1 => "剩余";
   @override
   String get reset_psw_fail => "重置密码失败";
@@ -202,17 +217,23 @@ class $zh extends S {
   @override
   String get global_register_account_success => "账号注册成功";
   @override
+  String get geofence_and_more => " and more";
+  @override
   String get global_delete_device => "删除设备";
   @override
   String get schedule_mode_away => "外出";
   @override
   String get sensor_about_occupied_or => "· 是否有人: ";
   @override
+  String get geofence_entering_geofence => "When Entering Geofence";
+  @override
   String get appearance_dark => "深色";
   @override
   String get device_fan_time => "需要运行的风扇最小运行时间:(min/h)";
   @override
   String get global_save_success => "保存成功";
+  @override
+  String get geofence_disable_geofence => "You can set up a geofence (i.e., a virtual perimeter) around your home and activate comfort settings upon entering or leaving the geofence.";
   @override
   String get global_enter_verify_null => "请输入验证码";
   @override
@@ -262,6 +283,8 @@ class $zh extends S {
   @override
   String get global_celsius_unit => "℃";
   @override
+  String get geofence_dialog_participating_device_title => "Select Participating Devices";
+  @override
   String get global_thermostat => "温控器";
   @override
   String get global_get_verify_code => "校验码";
@@ -299,6 +322,8 @@ class $zh extends S {
   String get app_name => "OWON";
   @override
   String get sensor_list_unoccupied => "Unoccupied";
+  @override
+  String get geofence_no_action => "No action";
   @override
   String get global_delete => "删除";
   @override
@@ -410,6 +435,10 @@ class $zh extends S {
   @override
   String get dSet_device_setting => "设备设置";
   @override
+  String get geofence_paticipation_decice => "Paticipation Device";
+  @override
+  String get geofence_title => "Geofence";
+  @override
   String get dSet_rename => "设备名称";
   @override
   String get global_user_name_regex_string => "账号只能包含,数字，大小写字母以及下划线,@或空格，并且只能以数字或字母开头，长度请控制在4到15之间";
@@ -417,6 +446,8 @@ class $zh extends S {
   String get sensor_list_title => "传感器设置";
   @override
   String get device_info_upgrade_success => "升级成功";
+  @override
+  String get address_delete_home => "删除家庭";
   @override
   String get app_listView => "ListView";
   @override
@@ -463,6 +494,8 @@ class $zh extends S {
   String get change_psw_title => "修改密码";
   @override
   String get global_thur => "周四";
+  @override
+  String get geofence_leaving_geofence => "When Leaving Geofence";
   @override
   String get global_hint_user => "电子邮件/手机号码";
 }

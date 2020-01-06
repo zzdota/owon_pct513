@@ -159,6 +159,16 @@
   "global_delete_device": "删除设备",
   "list_no_device" : "当前家庭没有设备",
 
-  "address_delete_home" : "删除家庭"
+  "address_delete_home" : "删除家庭",
+
+  "geofence_follow_schedule": "Follow Schedule",
+  "geofence_no_action": "No action",
+  "geofence_title": "Geofence",
+  "geofence_paticipation_decice": "Paticipation Device",
+  "geofence_entering_geofence": "When Entering Geofence",
+  "geofence_leaving_geofence": "When Leaving Geofence",
+  "geofence_disable_geofence": "You can set up a geofence (i.e., a virtual perimeter) around your home and activate comfort settings upon entering or leaving the geofence.",
+  "geofence_dialog_participating_device_title": "Select Participating Devices",
+  "geofence_and_more": " and more"
 
 }

@@ -53,7 +53,7 @@ class _GeofencePageState extends State<GeofencePage> {
                 : false;
             update();
           });
-        } else if(payload.containsValue("account.geo.fencing.set")){
+        } else if (payload.containsValue("account.geo.fencing.set")) {
           OwonLoading(context).hide().then((e) {
             OwonToast.show(S.of(context).global_save_success);
           });
@@ -96,10 +96,10 @@ class _GeofencePageState extends State<GeofencePage> {
         mode = S.of(context).schedule_mode_sleep;
         break;
       case 4:
-        mode = "Follow Schedule";
+        mode = S.of(context).geofence_follow_schedule;
         break;
       case 5:
-        mode = "No action";
+        mode = S.of(context).geofence_no_action;
         break;
     }
     return mode;
@@ -174,7 +174,7 @@ class _GeofencePageState extends State<GeofencePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "Geofence",
+                  S.of(context).geofence_title,
                   style: TextStyle(
                       color: OwonColor().getCurrent(context, "textColor")),
                 ),
@@ -182,7 +182,6 @@ class _GeofencePageState extends State<GeofencePage> {
                     value: hadData,
                     activeColor: OwonColor().getCurrent(context, "blue"),
                     onChanged: (bool value) {
-                      ///点击切换开关的状态
                       setState(() {
                         hadData = value;
                         mGetGeofenceModeEntity.response.geoFencingEnable =
@@ -197,9 +196,12 @@ class _GeofencePageState extends State<GeofencePage> {
                   padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                   child: Column(
                     children: <Widget>[
-                      getCard("Paticipation Device", mPativipationDevice, 0),
-                      getCard("When Entering Geofence", mEnteringMode, 1),
-                      getCard("When Leaving Geofence", mLeavingMode, 2),
+                      getCard(S.of(context).geofence_paticipation_decice,
+                          mPativipationDevice, 0),
+                      getCard(S.of(context).geofence_entering_geofence,
+                          mEnteringMode, 1),
+                      getCard(S.of(context).geofence_leaving_geofence,
+                          mLeavingMode, 2),
                     ],
                   ),
                 )
@@ -223,8 +225,8 @@ class _GeofencePageState extends State<GeofencePage> {
           ),
           Container(
             margin: EdgeInsets.only(left: 50, right: 30),
-            child: OwonHeader.baseHeader(context,
-                "You can set up a geofence (i.e., a virtual perimeter) around your home and activate comfort settings upon entering or leaving the geofence."),
+            child: OwonHeader.baseHeader(
+                context, S.of(context).geofence_disable_geofence),
           )
         ],
       ),
@@ -345,7 +347,7 @@ class _GeofencePageState extends State<GeofencePage> {
                   Navigator.pop(ctx);
                   update();
                 },
-                title: "Select Participating Devices",
+                title: S.of(context).geofence_dialog_participating_device_title,
                 childWidget: Container(
                   height: 250,
                   child: ListView.builder(
@@ -418,7 +420,7 @@ class _GeofencePageState extends State<GeofencePage> {
                 mGetGeofenceModeEntity.response.devices[i].devname;
             y++;
           } else {
-            mPativipationDevice = mPativipationDevice + " and more";
+            mPativipationDevice = mPativipationDevice + S.of(context).geofence_and_more;
             break;
           }
         }
@@ -456,7 +458,7 @@ class _GeofencePageState extends State<GeofencePage> {
                       mSelectModeNum = mSelectModeNumBuf;
                   update();
                 },
-                title: "When entering geofence",
+                title: S.of(context).geofence_entering_geofence,
                 childWidget: Column(
                   children: <Widget>[
                     getModeLayout(OwonPic.scheduleModeWake,
@@ -467,8 +469,10 @@ class _GeofencePageState extends State<GeofencePage> {
                         S.of(context).schedule_mode_home, 2),
                     getModeLayout(OwonPic.scheduleModeSleep,
                         S.of(context).schedule_mode_sleep, 3),
-                    getModeLayout(OwonPic.mHoldSchedule, "Follow Schedule", 4),
-                    getModeLayout(OwonPic.mSysOff, "No action", 5),
+                    getModeLayout(OwonPic.mHoldSchedule,
+                        S.of(context).geofence_follow_schedule, 4),
+                    getModeLayout(
+                        OwonPic.mSysOff, S.of(context).geofence_no_action, 5),
                     SizedBox(
                       height: 15,
                     )
@@ -504,7 +508,7 @@ class _GeofencePageState extends State<GeofencePage> {
                       mSelectModeNum = mSelectModeNumBuf;
                   update();
                 },
-                title: "When leaving geofence",
+                title: S.of(context).geofence_leaving_geofence,
                 childWidget: Column(
                   children: <Widget>[
                     getModeLayout(OwonPic.scheduleModeWake,
@@ -515,8 +519,10 @@ class _GeofencePageState extends State<GeofencePage> {
                         S.of(context).schedule_mode_home, 2),
                     getModeLayout(OwonPic.scheduleModeSleep,
                         S.of(context).schedule_mode_sleep, 3),
-                    getModeLayout(OwonPic.mHoldSchedule, "Follow Schedule", 4),
-                    getModeLayout(OwonPic.mSysOff, "No action", 5),
+                    getModeLayout(OwonPic.mHoldSchedule,
+                        S.of(context).geofence_follow_schedule, 4),
+                    getModeLayout(
+                        OwonPic.mSysOff, S.of(context).geofence_no_action, 5),
                     SizedBox(
                       height: 15,
                     )
