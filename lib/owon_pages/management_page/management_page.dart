@@ -266,6 +266,19 @@ class _ManagementPageState extends State<ManagementPage> {
           }
           setState(() {
             _OccupiedCoolingSetpoint = payload;
+
+            if(_tempUnit){
+//              _heat_f = OwonTemperature().c100ToF100(int.parse(_OccupiedHeatingSetpoint));
+              _cool_f = OwonTemperature().c100ToF100(int.parse(_OccupiedCoolingSetpoint));
+              OwonLog.e("-coolf _OccupiedCoolingSetpoint=$_OccupiedCoolingSetpoint");
+
+              OwonLog.e("-coolf=$_cool_f");
+            } else {
+
+//              _heat_c = int.parse(_OccupiedHeatingSetpoint);
+              _cool_c = int.parse(_OccupiedCoolingSetpoint);
+              OwonLog.e("-coolc=$_cool_c");
+            }
           });
         }else if (topic.contains("OccupiedHeatingSetpoint")) {
           if (topic.startsWith("reply")) {
@@ -281,6 +294,13 @@ class _ManagementPageState extends State<ManagementPage> {
           }
           setState(() {
             _OccupiedHeatingSetpoint = payload;
+            if(_tempUnit){
+              _heat_f = OwonTemperature().c100ToF100(int.parse(_OccupiedHeatingSetpoint));
+//              _cool_f = OwonTemperature().c100ToF100(int.parse(_OccupiedCoolingSetpoint));
+            } else {
+              _heat_c = int.parse(_OccupiedHeatingSetpoint);
+//              _cool_c = int.parse(_OccupiedCoolingSetpoint);
+            }
           });
         }
       }
@@ -481,18 +501,18 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _cool_f = _cool_f + 100;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
-                          }
+//                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
+//                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
+//                            _OccupiedHeatingSetpoint = _heat_f.toString();
+//                          }
                         }else{
                           if(_cool_c >= int.parse(_MaxCoolSetpointLimit))return;
                           _cool_c = _cool_c + 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
-                            _OccupiedHeatingSetpoint = _heat_c.toString();
-                          }
+//                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
+//                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
+//                            _OccupiedHeatingSetpoint = _heat_c.toString();
+//                          }
                         }
                         if(_tempUnit){
                           _OccupiedCoolingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_cool_f.toString()));
@@ -524,16 +544,16 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _cool_f = _cool_f - 100;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
+                          if(_cool_f -_heat_f < int.parse(_SetpointDeadBand)*2){
+                            _heat_f = _cool_f - int.parse(_SetpointDeadBand)*2;
+                            _OccupiedHeatingSetpoint = OwonTemperature().f100ToC100(_heat_f).toString();
                           }
                         }else{
                           if(_cool_c <= int.parse(_MinCoolSetpointLimit))return;
                           _cool_c = _cool_c - 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
+                          if(_cool_c -_heat_c  < int.parse(_SetpointDeadBand)){
+                            _heat_c = _cool_c - int.parse(_SetpointDeadBand);
                             _OccupiedHeatingSetpoint = _heat_c.toString();
                           }
                         }
@@ -585,19 +605,19 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _heat_f = _heat_f + 100;
                           OwonLog.e("heat=$_heat_f   cool=$_cool_f");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
+                          if(_cool_f - _heat_f < int.parse(_SetpointDeadBand)*2){
+                            _cool_f =  _heat_f + int.parse(_SetpointDeadBand)*2;
                             OwonLog.e("_heat_f=$_heat_f   _cool_f=$_cool_f");
 
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
+                            _OccupiedCoolingSetpoint = OwonTemperature().f100ToC100(_cool_f).toString();
                           }
                         }else{
                           if(_heat_c >= int.parse(_MaxHeatSetpointLimit))return;
                           _heat_c = _heat_c + 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
-                            _OccupiedHeatingSetpoint = _heat_c.toString();
+                          if(_cool_c -_heat_c < int.parse(_SetpointDeadBand)){
+                            _cool_c = _heat_c + int.parse(_SetpointDeadBand);
+                            _OccupiedCoolingSetpoint = _cool_c.toString();
                           }
                         }
                         if(_tempUnit){
@@ -630,18 +650,18 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _heat_f = _heat_f - 100;
                           OwonLog.e("heatf=$_heat_f   coolf=$_cool_f");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _cool_f = _heat_f - int.parse(_SetpointDeadBand)*2;
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
-                          }
+//                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
+//                            _cool_f = _heat_f - int.parse(_SetpointDeadBand)*2;
+//                            _OccupiedHeatingSetpoint = _heat_f.toString();
+//                          }
                         }else{
                           if(_heat_c <= int.parse(_MinHeatSetpointLimit))return;
                           _heat_c = _heat_c - 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                             _cool_c =_heat_c  - int.parse(_SetpointDeadBand);
-                            _OccupiedCoolingSetpoint = _cool_c.toString();
-                          }
+//                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
+//                             _cool_c =_heat_c  - int.parse(_SetpointDeadBand);
+//                            _OccupiedCoolingSetpoint = _cool_c.toString();
+//                          }
                         }
                         if(_tempUnit){
                           OwonLog.e("====>heatf=$_heat_f   coolf=$_cool_f");
@@ -806,18 +826,18 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _cool_f = _cool_f + 100;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
-                          }
+//                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
+//                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
+//                            _OccupiedHeatingSetpoint = _heat_f.toString();
+//                          }
                         }else{
                           if(_cool_c >= int.parse(_MaxCoolSetpointLimit))return;
                           _cool_c = _cool_c + 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
-                            _OccupiedHeatingSetpoint = _heat_c.toString();
-                          }
+//                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
+//                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
+//                            _OccupiedHeatingSetpoint = _heat_c.toString();
+//                          }
                         }
                         if(_tempUnit){
                           _OccupiedCoolingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_cool_f.toString()));
@@ -846,16 +866,16 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _cool_f = _cool_f - 100;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
+                          if(_cool_f -_heat_f < int.parse(_SetpointDeadBand)*2){
+                            _heat_f = _cool_f - int.parse(_SetpointDeadBand)*2;
+                            _OccupiedHeatingSetpoint = OwonTemperature().f100ToC100(_heat_f).toString();
                           }
                         }else{
                           if(_cool_c <= int.parse(_MinCoolSetpointLimit))return;
                           _cool_c = _cool_c - 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
+                          if(_cool_c -_heat_c  < int.parse(_SetpointDeadBand)){
+                            _heat_c = _cool_c - int.parse(_SetpointDeadBand);
                             _OccupiedHeatingSetpoint = _heat_c.toString();
                           }
                         }
@@ -1025,19 +1045,19 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _heat_f = _heat_f + 100;
                           OwonLog.e("heat=$_heat_f   cool=$_cool_f");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
+                          if(_cool_f - _heat_f < int.parse(_SetpointDeadBand)*2){
+                            _cool_f =  _heat_f + int.parse(_SetpointDeadBand)*2;
                             OwonLog.e("_heat_f=$_heat_f   _cool_f=$_cool_f");
 
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
+                            _OccupiedCoolingSetpoint = OwonTemperature().f100ToC100(_cool_f).toString();
                           }
                         }else{
                           if(_heat_c >= int.parse(_MaxHeatSetpointLimit))return;
                           _heat_c = _heat_c + 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
-                            _OccupiedHeatingSetpoint = _heat_c.toString();
+                          if(_cool_c -_heat_c < int.parse(_SetpointDeadBand)){
+                            _cool_c = _heat_c + int.parse(_SetpointDeadBand);
+                            _OccupiedCoolingSetpoint = _cool_c.toString();
                           }
                         }
                         if(_tempUnit){
@@ -1070,18 +1090,18 @@ class _ManagementPageState extends State<ManagementPage> {
 
                           _heat_f = _heat_f - 100;
                           OwonLog.e("heatf=$_heat_f   coolf=$_cool_f");
-                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
-                            _cool_f = _heat_f - int.parse(_SetpointDeadBand)*2;
-                            _OccupiedHeatingSetpoint = _heat_f.toString();
-                          }
+//                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
+//                            _cool_f = _heat_f - int.parse(_SetpointDeadBand)*2;
+//                            _OccupiedHeatingSetpoint = _heat_f.toString();
+//                          }
                         }else{
                           if(_heat_c <= int.parse(_MinHeatSetpointLimit))return;
                           _heat_c = _heat_c - 50;
                           OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
-                            _cool_c =_heat_c  - int.parse(_SetpointDeadBand);
-                            _OccupiedCoolingSetpoint = _cool_c.toString();
-                          }
+//                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
+//                             _cool_c =_heat_c  - int.parse(_SetpointDeadBand);
+//                            _OccupiedCoolingSetpoint = _cool_c.toString();
+//                          }
                         }
                         if(_tempUnit){
                           OwonLog.e("====>heatf=$_heat_f   coolf=$_cool_f");
@@ -1242,9 +1262,36 @@ class _ManagementPageState extends State<ManagementPage> {
                         });
 
                         OwonLog.e("up");
-                        _OccupiedHeatingSetpoint =
-                            (int.parse(_OccupiedHeatingSetpoint) + 50)
-                                .toString();
+                        if(_tempUnit){
+                          OwonLog.e("up  heeat f=${OwonTemperature().c100ToF100(int.parse(_MaxHeatSetpointLimit))}");
+
+                          if(_heat_f >= OwonTemperature().c100ToF100(int.parse(_MaxHeatSetpointLimit)))return;
+
+                          _heat_f = _heat_f + 100;
+                          OwonLog.e("heat=$_heat_f   cool=$_cool_f");
+                          if(_cool_f - _heat_f < int.parse(_SetpointDeadBand)*2){
+                            _cool_f =  _heat_f + int.parse(_SetpointDeadBand)*2;
+                            OwonLog.e("_heat_f=$_heat_f   _cool_f=$_cool_f");
+
+                            _OccupiedCoolingSetpoint = OwonTemperature().f100ToC100(_cool_f).toString();
+                          }
+                        }else{
+                          if(_heat_c >= int.parse(_MaxHeatSetpointLimit))return;
+                          _heat_c = _heat_c + 50;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+                          if(_cool_c -_heat_c < int.parse(_SetpointDeadBand)){
+                            _cool_c = _heat_c + int.parse(_SetpointDeadBand);
+                            _OccupiedCoolingSetpoint = _cool_c.toString();
+                          }
+                        }
+                        if(_tempUnit){
+                          _OccupiedHeatingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_heat_f.toString()));
+                        }else{
+                          _OccupiedHeatingSetpoint = _heat_c.toString();
+
+                        }
+                        OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
+
                         setState(() {});
                       },
                       downBtnPressed: () {
@@ -1259,9 +1306,35 @@ class _ManagementPageState extends State<ManagementPage> {
                         });
 
                         OwonLog.e("down");
-                        _OccupiedHeatingSetpoint =
-                            (int.parse(_OccupiedHeatingSetpoint) - 50)
-                                .toString();
+                        if(_tempUnit){
+                          if(_heat_f <= OwonTemperature().c100ToF100(int.parse(_MinHeatSetpointLimit)))return;
+
+                          _heat_f = _heat_f - 100;
+                          OwonLog.e("heatf=$_heat_f   coolf=$_cool_f");
+//                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
+//                            _cool_f = _heat_f - int.parse(_SetpointDeadBand)*2;
+//                            _OccupiedHeatingSetpoint = _heat_f.toString();
+//                          }
+                        }else{
+                          if(_heat_c <= int.parse(_MinHeatSetpointLimit))return;
+                          _heat_c = _heat_c - 50;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+//                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
+//                             _cool_c =_heat_c  - int.parse(_SetpointDeadBand);
+//                            _OccupiedCoolingSetpoint = _cool_c.toString();
+//                          }
+                        }
+                        if(_tempUnit){
+                          OwonLog.e("====>heatf=$_heat_f   coolf=$_cool_f");
+
+                          OwonLog.e("---->${OwonConvert.reduce100(_heat_f.toString())}");
+
+                          _OccupiedHeatingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_heat_f.toString()));
+                        }else{
+                          _OccupiedHeatingSetpoint = _heat_c.toString();
+
+                        }
+                        OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
                         setState(() {});
                       },
                     ),
