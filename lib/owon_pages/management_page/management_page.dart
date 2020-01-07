@@ -419,7 +419,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100ForHumidity(_localHumi), showFan: getShowFan(_relayState)
                   )),
                 ],
@@ -480,7 +480,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Cool To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_OccupiedCoolingSetpoint)+ S.of(context).global_celsius_unit,
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
@@ -570,8 +570,8 @@ class _ManagementPageState extends State<ManagementPage> {
                   ),
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit
-                        :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)
+                        :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
@@ -580,8 +580,8 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)+ S.of(context).global_fahrenheit_unit
-                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint)+ S.of(context).global_celsius_unit,
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)
+                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
 
                       upBtnPressed: () {
                         if (_timer != null) {
@@ -798,7 +798,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
@@ -807,7 +807,7 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Cool To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_OccupiedCoolingSetpoint)+ S.of(context).global_celsius_unit,
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
 
                       upBtnPressed: () {
                         if (_timer != null) {
@@ -1011,7 +1011,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
@@ -1020,8 +1020,8 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)+ S.of(context).global_fahrenheit_unit
-                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint)+ S.of(context).global_celsius_unit,
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)
+                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
 
                       upBtnPressed: () {
                         if (_timer != null) {
@@ -1238,8 +1238,8 @@ class _ManagementPageState extends State<ManagementPage> {
                 children: <Widget>[
                   Expanded(
                       child: OwonTempHumi(
-                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)+ S.of(context).global_fahrenheit_unit
-                        :OwonConvert.reduce100(_localTemp)+ S.of(context).global_celsius_unit,
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp)
+                        :OwonConvert.reduce100(_localTemp),
                     localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
                         showFan: getShowFan(_relayState),
                   )),
@@ -1248,8 +1248,8 @@ class _ManagementPageState extends State<ManagementPage> {
                     child: OwonAdjustTemp(
                       title: "Heat To",
                       tempTitle:
-                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)+ S.of(context).global_fahrenheit_unit
-                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint)+ S.of(context).global_celsius_unit,
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)
+                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
                       upBtnPressed: () {
                         if (_timer != null) {
                           _timer.cancel();
