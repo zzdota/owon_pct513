@@ -248,275 +248,277 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
           ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 50,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SvgPicture.asset(
-                  OwonPic.dVacDepart,
-                  width: 20,
-                  color: OwonColor().getCurrent(context, "textColor"),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  S.of(context).vacation_depart,
-                  style: TextStyle(
-                      color: OwonColor().getCurrent(context, "textColor")),
-                )
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 50,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: OwonTimeTextField(context, _departYearVc, () async {
-                    var picker = await showDatePicker(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SvgPicture.asset(
+                    OwonPic.dVacDepart,
+                    width: 20,
+                    color: OwonColor().getCurrent(context, "textColor"),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    S.of(context).vacation_depart,
+                    style: TextStyle(
+                        color: OwonColor().getCurrent(context, "textColor")),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: OwonTimeTextField(context, _departYearVc, () async {
+                      var picker = await showDatePicker(
+                          context: context,
+                          initialDate: new DateTime.now(),
+                          firstDate: new DateTime.now()
+                              .subtract(new Duration(days: 365)),
+                          lastDate:
+                              new DateTime.now().add(new Duration(days: 365)),
+                          locale: Locale('zh'));
+                      setState(() {
+                        _departYearVc.text = createYearTimeString(
+                            picker.year, picker.month, picker.day,
+                            addYear: false);
+                      });
+                    }),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: OwonTimeTextField(context, _departDayVc, () async {
+                      var picker = await showTimePicker(
                         context: context,
-                        initialDate: new DateTime.now(),
-                        firstDate: new DateTime.now()
-                            .subtract(new Duration(days: 365)),
-                        lastDate:
-                            new DateTime.now().add(new Duration(days: 365)),
-                        locale: Locale('zh'));
-                    setState(() {
-                      _departYearVc.text = createYearTimeString(
-                          picker.year, picker.month, picker.day,
-                          addYear: false);
-                    });
-                  }),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: OwonTimeTextField(context, _departDayVc, () async {
-                    var picker = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    setState(() {
-                      _departDayVc.text =
-                          createTimeString(picker.hour, picker.minute);
-                    });
-                  }),
-                ),
-              ],
+                        initialTime: TimeOfDay.now(),
+                      );
+                      setState(() {
+                        _departDayVc.text =
+                            createTimeString(picker.hour, picker.minute);
+                      });
+                    }),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SvgPicture.asset(
-                  OwonPic.dVacReturn,
-                  width: 20,
-                  color: OwonColor().getCurrent(context, "textColor"),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  S.of(context).vacation_return,
-                  style: TextStyle(
-                      color: OwonColor().getCurrent(context, "textColor")),
-                )
-              ],
+            SizedBox(
+              height: 50,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: OwonTimeTextField(context, _returnYearVc, () async {
-                    var picker = await showDatePicker(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SvgPicture.asset(
+                    OwonPic.dVacReturn,
+                    width: 20,
+                    color: OwonColor().getCurrent(context, "textColor"),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    S.of(context).vacation_return,
+                    style: TextStyle(
+                        color: OwonColor().getCurrent(context, "textColor")),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: OwonTimeTextField(context, _returnYearVc, () async {
+                      var picker = await showDatePicker(
+                          context: context,
+                          initialDate: new DateTime.now(),
+                          firstDate: new DateTime.now()
+                              .subtract(new Duration(days: 365)),
+                          lastDate:
+                              new DateTime.now().add(new Duration(days: 365)),
+                          locale: Locale('zh'));
+                      setState(() {
+                        _returnYearVc.text = createYearTimeString(
+                            picker.year, picker.month, picker.day,
+                            addYear: false);
+                      });
+                    }),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: OwonTimeTextField(context, _returnDayVc, () async {
+                      var picker = await showTimePicker(
                         context: context,
-                        initialDate: new DateTime.now(),
-                        firstDate: new DateTime.now()
-                            .subtract(new Duration(days: 365)),
-                        lastDate:
-                            new DateTime.now().add(new Duration(days: 365)),
-                        locale: Locale('zh'));
-                    setState(() {
-                      _returnYearVc.text = createYearTimeString(
-                          picker.year, picker.month, picker.day,
-                          addYear: false);
-                    });
-                  }),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: OwonTimeTextField(context, _returnDayVc, () async {
-                    var picker = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    setState(() {
-                      _returnDayVc.text =
-                          createTimeString(picker.hour, picker.minute);
-                    });
-                  }),
-                ),
-              ],
+                        initialTime: TimeOfDay.now(),
+                      );
+                      setState(() {
+                        _returnDayVc.text =
+                            createTimeString(picker.hour, picker.minute);
+                      });
+                    }),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SvgPicture.asset(
-                  OwonPic.dVacVacationSetB,
-                  width: 20,
-                  color: OwonColor().getCurrent(context, "textColor"),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  S.of(context).dSet_vacation,
-                  style: TextStyle(
-                      color: OwonColor().getCurrent(context, "textColor")),
-                )
-              ],
+            SizedBox(
+              height: 50,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    SvgPicture.asset(
-                      OwonPic.mSysHeat,
-                      color:
-                          OwonColor().getCurrent(context, "borderDisconnect"),
-                      width: 20,
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                      width: 60,
-                      child: OwonNumberPicker.integer(
-                          initialValue: _heatValue,
-                          minValue: 0,
-                          maxValue: 100,
-                          selectItemFontColor:
-                              OwonColor().getCurrent(context, "textColor"),
-                          decoration: BoxDecoration(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SvgPicture.asset(
+                    OwonPic.dVacVacationSetB,
+                    width: 20,
+                    color: OwonColor().getCurrent(context, "textColor"),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    S.of(context).dSet_vacation,
+                    style: TextStyle(
+                        color: OwonColor().getCurrent(context, "textColor")),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        OwonPic.mSysHeat,
+                        color:
+                            OwonColor().getCurrent(context, "borderDisconnect"),
+                        width: 20,
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                        width: 60,
+                        child: OwonNumberPicker.integer(
+                            initialValue: _heatValue,
+                            minValue: 0,
+                            maxValue: 100,
+                            selectItemFontColor:
+                                OwonColor().getCurrent(context, "textColor"),
+                            decoration: BoxDecoration(
 //                        color: Colors.white,
-                              border: Border(
-                                  bottom: BorderSide(
-                                      width: 1,
-                                      color: OwonColor()
-                                          .getCurrent(context, "blue")),
-                                  top: BorderSide(
-                                      width: 1,
-                                      color: OwonColor()
-                                          .getCurrent(context, "blue")))),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _heatValue = newValue;
-                            });
-                          }),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SvgPicture.asset(
-                      OwonPic.mSysCool,
-                      color: OwonColor().getCurrent(context, "blue"),
-                      width: 20,
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                      width: 60,
-                      child: OwonNumberPicker.integer(
-                          initialValue: _coolValue,
-                          minValue: 0,
-                          maxValue: 100,
-                          selectItemFontColor:
-                              OwonColor().getCurrent(context, "textColor"),
-                          decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        width: 1,
+                                        color: OwonColor()
+                                            .getCurrent(context, "blue")),
+                                    top: BorderSide(
+                                        width: 1,
+                                        color: OwonColor()
+                                            .getCurrent(context, "blue")))),
+                            onChanged: (newValue) {
+                              setState(() {
+                                _heatValue = newValue;
+                              });
+                            }),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        OwonPic.mSysCool,
+                        color: OwonColor().getCurrent(context, "blue"),
+                        width: 20,
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                        width: 60,
+                        child: OwonNumberPicker.integer(
+                            initialValue: _coolValue,
+                            minValue: 0,
+                            maxValue: 100,
+                            selectItemFontColor:
+                                OwonColor().getCurrent(context, "textColor"),
+                            decoration: BoxDecoration(
 //                        color: Colors.white,
-                              border: Border(
-                                  bottom: BorderSide(
-                                      width: 1,
-                                      color: OwonColor()
-                                          .getCurrent(context, "blue")),
-                                  top: BorderSide(
-                                      width: 1,
-                                      color: OwonColor()
-                                          .getCurrent(context, "blue")))),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _coolValue = newValue;
-                            });
-                          }),
-                    ),
-                  ],
-                ),
-              ],
+                                border: Border(
+                                    bottom: BorderSide(
+                                        width: 1,
+                                        color: OwonColor()
+                                            .getCurrent(context, "blue")),
+                                    top: BorderSide(
+                                        width: 1,
+                                        color: OwonColor()
+                                            .getCurrent(context, "blue")))),
+                            onChanged: (newValue) {
+                              setState(() {
+                                _coolValue = newValue;
+                              });
+                            }),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-              height: OwonConstant.systemHeight,
-              width: double.infinity,
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: OwonTextIconButton.icon(
-                  color: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(OwonConstant.cRadius),
-                  ),
-                  onPressed: () {
+            Container(
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                height: OwonConstant.systemHeight,
+                width: double.infinity,
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: OwonTextIconButton.icon(
+                    color: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(OwonConstant.cRadius),
+                    ),
+                    onPressed: () {
 
-                    print("${widget.originList}");
-                    int start = 1 + 14 * widget.index;
-                    int end = start + 14;
-                    widget.originList.removeRange(start, end);
+                      print("${widget.originList}");
+                      int start = 1 + 14 * widget.index;
+                      int end = start + 14;
+                      widget.originList.removeRange(start, end);
 
-                    print("删除${widget.originList}");
-                    int endIndex = (widget.originList[0]-1)*14 +1;
-                    List desList = widget.originList.sublist(0,endIndex);
-                    int firstNum = desList[0];
-                    int desNum = firstNum - 1;
-                    desList[0] = desNum;
-                    print("删除desList$desList");
+                      print("删除${widget.originList}");
+                      int endIndex = (widget.originList[0]-1)*14 +1;
+                      List desList = widget.originList.sublist(0,endIndex);
+                      int firstNum = desList[0];
+                      int desNum = firstNum - 1;
+                      desList[0] = desNum;
+                      print("删除desList$desList");
 
-                    setProperty(
-                        attribute: "VactionSchedule", value: desList);
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    S.of(context).vacation_delete,
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  iconTextAlignment: TextIconAlignment.iconRightTextLeft))
-        ],
+                      setProperty(
+                          attribute: "VactionSchedule", value: desList);
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      S.of(context).vacation_delete,
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    iconTextAlignment: TextIconAlignment.iconRightTextLeft))
+          ],
+        ),
       ),
     );
   }
