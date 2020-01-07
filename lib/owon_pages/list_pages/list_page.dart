@@ -66,6 +66,11 @@ class _ListPageState extends State<ListPage> {
               });
             });
           });
+        }else if(topic.startsWith("reply") && payload["command"] == "device.unbind"){
+          OwonLoading(context).hide().then((e) {
+            OwonLog.e("---show");
+//            OwonLoading(context).show();
+          });
         }
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
@@ -309,6 +314,25 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
+
+  unbindDevice(int deviceIndex) async {
+
+
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    var clientID = pre.get(OwonConstant.clientID);
+    String topic = "api/cloud/$clientID";
+    Map p = Map();
+    p["command"] = "device.unbind";
+    p["sequence"] = OwonSequence.temp;
+    p["addrid"] = _addressModel.addrid;
+    p["deviceid"] = _addressModel.devlist[deviceIndex].deviceid;
+
+
+    var msg = JsonEncoder.withIndent("  ").convert(p);
+    OwonMqtt.getInstance().publishMessage(topic, msg);
+  }
+
+
   _tapDelete(int index) {
     OwonLog.e("点击了删除index=$index");
     return showDialog<bool>(
@@ -324,7 +348,14 @@ class _ListPageState extends State<ListPage> {
             ),
             FlatButton(
               child: Text('Ok'),
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+
+
+                OwonLoading(context).show();
+                unbindDevice(index);
+
+              },
             ),
           ],
         );
