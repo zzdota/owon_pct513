@@ -379,7 +379,7 @@ class _ListPageState extends State<ListPage> {
             popoverConstraints: BoxConstraints(
               minWidth: 50,
               maxWidth: 280,
-              minHeight: 280,
+              minHeight: 140,
               maxHeight: 400,
             ),
             child: Container(
