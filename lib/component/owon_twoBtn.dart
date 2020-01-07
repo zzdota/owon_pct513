@@ -34,10 +34,16 @@ class OwonTwoBtn extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: this.leftBtnPressed,
-            child: Text(
-              this.leftTitle,
-              style:
-                  TextStyle(color: OwonColor().getCurrent(context, "textColor")),
+            child: Container(
+//              color: Colors.red,
+              width: width*0.5-20,
+              alignment: Alignment.center,
+              height: height,
+              child: Text(
+                this.leftTitle,
+                style:
+                    TextStyle(color: OwonColor().getCurrent(context, "textColor")),
+              ),
             ),
           ),
           SizedBox(
@@ -52,10 +58,16 @@ class OwonTwoBtn extends StatelessWidget {
           ),
           InkWell(
             onTap: this.rightBtnPressed,
-            child: Text(
-              this.rightTitle,
-              style:
-                  TextStyle(color: OwonColor().getCurrent(context, "textColor")),
+            child: Container(
+//              color: Colors.purple,
+              width: width*0.5-20,
+              alignment: Alignment.center,
+              height: height,
+              child: Text(
+                this.rightTitle,
+                style:
+                    TextStyle(color: OwonColor().getCurrent(context, "textColor")),
+              ),
             ),
           ),
         ],
