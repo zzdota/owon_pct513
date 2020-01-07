@@ -252,10 +252,10 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 50,
+              height: 25,
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -315,10 +315,10 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 25,
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -378,10 +378,10 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 25,
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[

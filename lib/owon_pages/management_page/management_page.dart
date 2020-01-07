@@ -425,10 +425,10 @@ class _ManagementPageState extends State<ManagementPage> {
                 ],
               ),
             ),
-            flex: 5,
+            flex: 2,
           ),
           Expanded(
-              flex: 6,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -681,10 +681,10 @@ class _ManagementPageState extends State<ManagementPage> {
                 ],
               ),
             ),
-            flex: 5,
+            flex: 2,
           ),
           Expanded(
-              flex: 6,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -893,10 +893,10 @@ class _ManagementPageState extends State<ManagementPage> {
                 ],
               ),
             ),
-            flex: 5,
+            flex: 2,
           ),
           Expanded(
-              flex: 6,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -1121,10 +1121,10 @@ class _ManagementPageState extends State<ManagementPage> {
                 ],
               ),
             ),
-            flex: 5,
+            flex: 2,
           ),
           Expanded(
-              flex: 6,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -1342,10 +1342,10 @@ class _ManagementPageState extends State<ManagementPage> {
                 ],
               ),
             ),
-            flex: 5,
+            flex: 2,
           ),
           Expanded(
-              flex: 6,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
