@@ -434,7 +434,7 @@ class _ListPageState extends State<ListPage> {
           Navigator.of(context).pop();
         },
         child: Container(
-//          color: Colors.red,
+          color: Colors.transparent,
             height: 70,
             margin: EdgeInsets.only(top: 10),
             child: Row(
@@ -482,6 +482,7 @@ class _ListPageState extends State<ListPage> {
         }));
       },
       child: Container(
+        color: Colors.transparent,
         height: 70,
         child: Row(
           children: <Widget>[
