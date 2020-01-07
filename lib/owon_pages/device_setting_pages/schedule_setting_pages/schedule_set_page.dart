@@ -245,7 +245,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                 flex: 1,
                 child: Container(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(50, 0, 50, 100),
+                    padding: const EdgeInsets.fromLTRB(30, 0, 30, 100),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -258,7 +258,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                               width: 20,
                             ),
                             Container(
-                              margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                              margin: EdgeInsets.fromLTRB(15, 0, 0, 0),
                               width: 100,
                               child: widget.mTempUnit
                                   ? OwonNumberPicker.integer(
@@ -311,7 +311,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                               width: 20,
                             ),
                             Container(
-                              margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                              margin: EdgeInsets.fromLTRB(15, 0, 0, 0),
                               width: 100,
                               child: widget.mTempUnit
                                   ? OwonNumberPicker.integer(

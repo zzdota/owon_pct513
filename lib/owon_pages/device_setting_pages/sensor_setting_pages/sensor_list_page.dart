@@ -43,7 +43,7 @@ class _SensorListPageState extends State<SensorListPage> {
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
       String topic = msg["topic"];
-      if(!topic.contains(widget.devModel.deviceid)){
+      if (!topic.contains(widget.devModel.deviceid)) {
         return;
       }
 
@@ -291,12 +291,14 @@ class _SensorListPageState extends State<SensorListPage> {
                 borderRadius:
                     BorderRadius.all(Radius.circular(OwonConstant.cRadius))),
             child: Container(
-              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Row(
                     children: <Widget>[
+                      SizedBox(
+                        width: 2,
+                      ),
                       CupertinoSwitch(
                           value: mSensorListModelEntity.para[index].enable == 0
                               ? false
@@ -306,18 +308,18 @@ class _SensorListPageState extends State<SensorListPage> {
                             ///点击切换开关的状态
                             setState(() {
                               mSensorListModelEntity.para[index].enable =
-                              value ? 1 : 0;
+                                  value ? 1 : 0;
                               save();
                             });
                           }),
-                  SizedBox(
-                    width: 10.0,
-                  ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
                       Text(
                         mSensorListModelEntity.para[index].name,
                         style: TextStyle(
                             color: OwonColor().getCurrent(context, "textColor"),
-                            fontSize: 16),
+                            fontSize: 14),
                       ),
                     ],
                   ),
@@ -329,7 +331,7 @@ class _SensorListPageState extends State<SensorListPage> {
                             : "${(mSensorListModelEntity.para[index].temp / 100)}${S.of(context).global_celsius_unit} / ${mSensorListModelEntity.para[index].occupy == 0 ? S.of(context).sensor_list_occupied : S.of(context).sensor_list_unoccupied}",
                         style: TextStyle(
                             color: OwonColor().getCurrent(context, "blue"),
-                            fontSize: 16),
+                            fontSize: 14),
                       ),
                       Icon(
                         Icons.keyboard_arrow_right,

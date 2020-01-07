@@ -568,14 +568,14 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                 child: Row(
                   children: <Widget>[
                     Container(
-                      width: 100.0,
+                      width: 60.0,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           SvgPicture.asset(
                             imageUrl,
                             color: OwonColor().getCurrent(context, "textColor"),
-                            width: 40,
+                            width: 30,
                           ),
                           SizedBox(
                             height: 8,
