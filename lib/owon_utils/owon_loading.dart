@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../owon_utils/owon_toast.dart';
 import '../res/owon_themeColor.dart';
 import '../generated/i18n.dart';
-
+import '../owon_utils/owon_log.dart';
 enum OwonLoadingType { Normal, Download }
 
 String _dialogMessage = "Loading...";
@@ -114,13 +114,13 @@ class OwonLoading {
         _isShowing = false;
         if (Navigator.of(_dismissingContext).canPop()) {
           Navigator.of(_dismissingContext).pop();
-          if (_showLogs) debugPrint('OwonLoading dismissed');
+          if (_showLogs) OwonLog.e('OwonLoading dismissed');
         } else {
-          if (_showLogs) debugPrint('Cant pop OwonLoading');
+          if (_showLogs) OwonLog.e('Cant pop OwonLoading');
         }
       } catch (_) {}
     } else {
-      if (_showLogs) debugPrint('OwonLoading already dismissed');
+      if (_showLogs) OwonLog.e('OwonLoading already dismissed');
     }
   }
 
@@ -130,13 +130,13 @@ class OwonLoading {
       try {
         _isShowing = false;
         Navigator.of(_dismissingContext).pop(true);
-        if (_showLogs) debugPrint('OwonLoading dismissed');
+        if (_showLogs) OwonLog.e('OwonLoading dismissed');
         return Future.value(true);
       } catch (_) {
         return Future.value(false);
       }
     } else {
-      if (_showLogs) debugPrint('OwonLoading already dismissed');
+      if (_showLogs) OwonLog.e('OwonLoading already dismissed');
       return Future.value(false);
     }
   }
@@ -146,7 +146,7 @@ class OwonLoading {
       _dialog = new _Body();
       _isShowing = true;
 
-      if (_showLogs) debugPrint('OwonLoading shown');
+      if (_showLogs) OwonLog.e('OwonLoading shown');
       startTimer();
       showDialog<dynamic>(
         context: _context,
@@ -170,7 +170,7 @@ class OwonLoading {
         },
       );
     } else {
-      if (_showLogs) debugPrint("OwonLoading already shown/showing");
+      if (_showLogs) OwonLog.e("OwonLoading already shown/showing");
     }
   }
 
@@ -223,7 +223,7 @@ class _BodyState extends State<_Body> {
   @override
   void dispose() {
     _isShowing = false;
-    if (_showLogs) debugPrint('OwonLoading dismissed by back button');
+    if (_showLogs) OwonLog.e('OwonLoading dismissed by back button');
     super.dispose();
   }
 

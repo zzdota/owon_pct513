@@ -45,7 +45,7 @@ class _ListPageState extends State<ListPage> {
         Map<String, dynamic> payload = msg["payload"];
         if (payload.containsKey("addrs")) {
           OwonLog.e("++++++++");
-          Future.delayed(Duration(milliseconds: 100), () {
+          Future.delayed(Duration(milliseconds: 50), () {
             OwonLog.e("---dismiss");
 
             OwonLoading(context).dismiss();
@@ -97,12 +97,11 @@ class _ListPageState extends State<ListPage> {
       }
     });
     super.initState();
-    Future.delayed(Duration(milliseconds: 1000), () {});
-    Future.delayed(Duration(milliseconds: 250), () {
-      OwonLoading(context).hide().then((e) {
+    Future.delayed(Duration(milliseconds: 580), () {
+//      OwonLoading(context).hide().then((e) {
         OwonLog.e("---show");
         OwonLoading(context).show();
-      });
+//      });
       toGetList();
     });
   }
