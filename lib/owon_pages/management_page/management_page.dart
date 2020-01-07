@@ -410,59 +410,57 @@ class _ManagementPageState extends State<ManagementPage> {
     }
 
     Widget getOffWidget() {
-      return SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
 //          color: Colors.red,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: OwonTempHumi(
-                      localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
-                      localHumi: OwonConvert.reduce100ForHumidity(_localHumi), showFan: getShowFan(_relayState)
-                    )),
-                  ],
-                ),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: OwonTempHumi(
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi), showFan: getShowFan(_relayState)
+                  )),
+                ],
               ),
-              flex: 5,
             ),
-            Expanded(
-                flex: 6,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    OwonMode(
-                      rightIcon: OwonConvert.createSystemIcon(_systemMode, context),
-                      leftTitle: "System",
-                      rightTitle: OwonConvert.toSystemMode(_systemMode),
-                      onPressed: () {
-                        OwonLog.e("----");
-                        OwonBottomSheet.show(context, systemList, key: null)
-                            .then((val) {
-                          String desValue;
-                          if (val == 0) {
-                            desValue = "0";
-                          } else if (val == 1) {
-                            desValue = "1";
-                          } else if (val == 2) {
-                            desValue = "3";
-                          } else if (val == 3) {
-                            desValue = "4";
-                          } else if (val == 4) {
-                            desValue = "5";
-                          }
-                          _justSetValue = desValue;
-                          print("--消失后的回调-->$val");
-                          setProperty(attribute: "SystemMode", value: desValue);
-                        });
-                      },
-                    ),
-                  ],
-                ))
-          ],
-        ),
+            flex: 5,
+          ),
+          Expanded(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  OwonMode(
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode, context),
+                    leftTitle: "System",
+                    rightTitle: OwonConvert.toSystemMode(_systemMode),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, systemList, key: null)
+                          .then((val) {
+                        String desValue;
+                        if (val == 0) {
+                          desValue = "0";
+                        } else if (val == 1) {
+                          desValue = "1";
+                        } else if (val == 2) {
+                          desValue = "3";
+                        } else if (val == 3) {
+                          desValue = "4";
+                        } else if (val == 4) {
+                          desValue = "5";
+                        }
+                        _justSetValue = desValue;
+                        print("--消失后的回调-->$val");
+                        setProperty(attribute: "SystemMode", value: desValue);
+                      });
+                    },
+                  ),
+                ],
+              ))
+        ],
       );
     }
 
@@ -470,7 +468,7 @@ class _ManagementPageState extends State<ManagementPage> {
 
 
     Widget getAutoWidget(String systemMode,String relayState) {
-      return SingleChildScrollView(child: Column(
+      return Column(
         children: <Widget>[
           Expanded(
             child: Container(
@@ -787,455 +785,451 @@ class _ManagementPageState extends State<ManagementPage> {
                 ],
               ))
         ],
-      ),);
+      );
     }
 
     Widget getCoolWidget(String relayState) {
-      return SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-            color: getBackgroundColor(relayState),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: OwonTempHumi(
-                      localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
-                      localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
-                          showFan: getShowFan(_relayState),
-                    )),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
-                      child: OwonAdjustTemp(
-                        title: "Cool To",
-                        tempTitle:
-                        _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+          color: getBackgroundColor(relayState),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: OwonTempHumi(
+                    localTemp:_tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
+                        showFan: getShowFan(_relayState),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+                    child: OwonAdjustTemp(
+                      title: "Cool To",
+                      tempTitle:
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedCoolingSetpoint) :OwonConvert.reduce100(_OccupiedCoolingSetpoint),
 
-                        upBtnPressed: () {
-                          if (_timer != null) {
-                            _timer.cancel();
-                            _timer = null;
-                          }
-                          _timer = Timer(Duration(seconds: 1), () {
-                            setProperty(
-                                attribute: "OccupiedCoolingSetpoint",
-                                value: _OccupiedCoolingSetpoint);
-                          });
+                      upBtnPressed: () {
+                        if (_timer != null) {
+                          _timer.cancel();
+                          _timer = null;
+                        }
+                        _timer = Timer(Duration(seconds: 1), () {
+                          setProperty(
+                              attribute: "OccupiedCoolingSetpoint",
+                              value: _OccupiedCoolingSetpoint);
+                        });
 
-                          OwonLog.e("up");
-                          if(_tempUnit){
-                            if(_cool_f >= OwonTemperature().c100ToF100(int.parse(_MaxCoolSetpointLimit)))return;
+                        OwonLog.e("up");
+                        if(_tempUnit){
+                          if(_cool_f >= OwonTemperature().c100ToF100(int.parse(_MaxCoolSetpointLimit)))return;
 
-                            _cool_f = _cool_f + 100;
-                            OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+                          _cool_f = _cool_f + 100;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
 //                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
 //                            _heat_f = _cool_f + int.parse(_SetpointDeadBand)*2;
 //                            _OccupiedHeatingSetpoint = _heat_f.toString();
 //                          }
-                          }else{
-                            if(_cool_c >= int.parse(_MaxCoolSetpointLimit))return;
-                            _cool_c = _cool_c + 50;
-                            OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+                        }else{
+                          if(_cool_c >= int.parse(_MaxCoolSetpointLimit))return;
+                          _cool_c = _cool_c + 50;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
 //                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
 //                            _heat_c = _cool_c + int.parse(_SetpointDeadBand);
 //                            _OccupiedHeatingSetpoint = _heat_c.toString();
 //                          }
-                          }
-                          if(_tempUnit){
-                            _OccupiedCoolingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_cool_f.toString()));
-                          }else{
-                            _OccupiedCoolingSetpoint = _cool_c.toString();
+                        }
+                        if(_tempUnit){
+                          _OccupiedCoolingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_cool_f.toString()));
+                        }else{
+                          _OccupiedCoolingSetpoint = _cool_c.toString();
 
-                          }
-                          OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
+                        }
+                        OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
 
-                          setState(() {});
-                        },
-                        downBtnPressed: () {
-                          if (_timer != null) {
-                            _timer.cancel();
-                            _timer = null;
-                          }
-                          _timer = Timer(Duration(seconds: 1), () {
-                            setProperty(
-                                attribute: "OccupiedCoolingSetpoint",
-                                value: _OccupiedCoolingSetpoint);
-                          });
+                        setState(() {});
+                      },
+                      downBtnPressed: () {
+                        if (_timer != null) {
+                          _timer.cancel();
+                          _timer = null;
+                        }
+                        _timer = Timer(Duration(seconds: 1), () {
+                          setProperty(
+                              attribute: "OccupiedCoolingSetpoint",
+                              value: _OccupiedCoolingSetpoint);
+                        });
 
-                          OwonLog.e("down");
-                          if(_tempUnit){
-                            if(_cool_f <= OwonTemperature().c100ToF100(int.parse(_MinCoolSetpointLimit)))return;
+                        OwonLog.e("down");
+                        if(_tempUnit){
+                          if(_cool_f <= OwonTemperature().c100ToF100(int.parse(_MinCoolSetpointLimit)))return;
 
-                            _cool_f = _cool_f - 100;
-                            OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                            if(_cool_f -_heat_f < int.parse(_SetpointDeadBand)*2){
-                              _heat_f = _cool_f - int.parse(_SetpointDeadBand)*2;
-                              _OccupiedHeatingSetpoint = OwonTemperature().f100ToC100(_heat_f).toString();
-                            }
-                          }else{
-                            if(_cool_c <= int.parse(_MinCoolSetpointLimit))return;
-                            _cool_c = _cool_c - 50;
-                            OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                            if(_cool_c -_heat_c  < int.parse(_SetpointDeadBand)){
-                              _heat_c = _cool_c - int.parse(_SetpointDeadBand);
-                              _OccupiedHeatingSetpoint = _heat_c.toString();
-                            }
+                          _cool_f = _cool_f - 100;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+                          if(_cool_f -_heat_f < int.parse(_SetpointDeadBand)*2){
+                            _heat_f = _cool_f - int.parse(_SetpointDeadBand)*2;
+                            _OccupiedHeatingSetpoint = OwonTemperature().f100ToC100(_heat_f).toString();
                           }
-                          if(_tempUnit){
-                            _OccupiedCoolingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_cool_f.toString()));
-                          }else{
-                            _OccupiedCoolingSetpoint = _cool_c.toString();
+                        }else{
+                          if(_cool_c <= int.parse(_MinCoolSetpointLimit))return;
+                          _cool_c = _cool_c - 50;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+                          if(_cool_c -_heat_c  < int.parse(_SetpointDeadBand)){
+                            _heat_c = _cool_c - int.parse(_SetpointDeadBand);
+                            _OccupiedHeatingSetpoint = _heat_c.toString();
+                          }
+                        }
+                        if(_tempUnit){
+                          _OccupiedCoolingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_cool_f.toString()));
+                        }else{
+                          _OccupiedCoolingSetpoint = _cool_c.toString();
 
-                          }
-                          OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
-                          setState(() {});
-                        },
-                      ),
+                        }
+                        OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
+                        setState(() {});
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              flex: 5,
             ),
-            Expanded(
-                flex: 6,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    OwonMode(
-                      rightIcon: OwonConvert.createSystemIcon(_systemMode,context),
-                      leftTitle: "System",
-                      rightTitle: OwonConvert.toSystemMode(_systemMode),
-                      onPressed: () {
-                        OwonLog.e("----");
-                        OwonBottomSheet.show(context, systemList, key: null)
-                            .then((val) {
-                          String desValue;
-                          if (val == 0) {
-                            desValue = "0";
-                          } else if (val == 1) {
-                            desValue = "1";
-                          } else if (val == 2) {
-                            desValue = "3";
-                          } else if (val == 3) {
-                            desValue = "4";
-                          } else if (val == 4) {
-                            desValue = "5";
-                          }
+            flex: 5,
+          ),
+          Expanded(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  OwonMode(
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode,context),
+                    leftTitle: "System",
+                    rightTitle: OwonConvert.toSystemMode(_systemMode),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, systemList, key: null)
+                          .then((val) {
+                        String desValue;
+                        if (val == 0) {
+                          desValue = "0";
+                        } else if (val == 1) {
+                          desValue = "1";
+                        } else if (val == 2) {
+                          desValue = "3";
+                        } else if (val == 3) {
+                          desValue = "4";
+                        } else if (val == 4) {
+                          desValue = "5";
+                        }
+                        _justSetValue = desValue;
+                        print("--消失后的回调-->$val");
+                        setProperty(attribute: "SystemMode", value: desValue);
+                      });
+                    },
+                  ),
+                  OwonMode(
+                    leftTitle: "Fan",
+                    rightIcon: OwonConvert.createFanIcon(_fanMode, context),
+                    rightTitle: OwonConvert.toFanMode(_fanMode),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, fanList, key: null)
+                          .then((val) {
+                        print("--消失后的回调-->$val");
+                        String desValue;
+                        if (val == 0) {
+                          desValue = "4";
+                        } else if (val == 1) {
+                          desValue = "6";
+                        } else if (val == 2) {
+                          desValue = "5";
+                        }
+                        _justSetValue = desValue;
+                        setProperty(attribute: "FanMode", value: desValue);
+                      });
+                    },
+                  ),
+                  OwonMode(
+                    rightIcon: OwonConvert.createHoldIcon(
+                        setPointHold: _setPointHold,
+                        setPointHoldDuration: _setPointHoldDuration,
+                    context: context),
+                    leftTitle: "Hold",
+                    rightTitle: OwonConvert.toHoldMode(
+                        setPointHold: _setPointHold,
+                        setPointHoldDuration: _setPointHoldDuration),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, holdList, key: null)
+                          .then((val) {
+                        print("--消失后的回调-->$val");
+                        String desValue;
+                        if (val == 0) {
+                          desValue = "0";
                           _justSetValue = desValue;
-                          print("--消失后的回调-->$val");
-                          setProperty(attribute: "SystemMode", value: desValue);
-                        });
-                      },
-                    ),
-                    OwonMode(
-                      leftTitle: "Fan",
-                      rightIcon: OwonConvert.createFanIcon(_fanMode, context),
-                      rightTitle: OwonConvert.toFanMode(_fanMode),
-                      onPressed: () {
-                        OwonLog.e("----");
-                        OwonBottomSheet.show(context, fanList, key: null)
-                            .then((val) {
-                          print("--消失后的回调-->$val");
-                          String desValue;
-                          if (val == 0) {
-                            desValue = "4";
-                          } else if (val == 1) {
-                            desValue = "6";
-                          } else if (val == 2) {
-                            desValue = "5";
-                          }
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                        } else if (val == 1) {
+                          desValue = "1";
                           _justSetValue = desValue;
-                          setProperty(attribute: "FanMode", value: desValue);
-                        });
-                      },
-                    ),
-                    OwonMode(
-                      rightIcon: OwonConvert.createHoldIcon(
-                          setPointHold: _setPointHold,
-                          setPointHoldDuration: _setPointHoldDuration,
-                      context: context),
-                      leftTitle: "Hold",
-                      rightTitle: OwonConvert.toHoldMode(
-                          setPointHold: _setPointHold,
-                          setPointHoldDuration: _setPointHoldDuration),
-                      onPressed: () {
-                        OwonLog.e("----");
-                        OwonBottomSheet.show(context, holdList, key: null)
-                            .then((val) {
-                          print("--消失后的回调-->$val");
-                          String desValue;
-                          if (val == 0) {
-                            desValue = "0";
-                            _justSetValue = desValue;
+                          _justSetPointHoldDurationValue = "65535";
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                          setProperty(
+                              attribute: "SetpointHoldDuration",
+                              value: "65535");
+                        } else if (val == 2) {
+                          desValue = "1";
+                          _justSetValue = desValue;
+                          _justSetPointHoldDurationValue = "1";
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                          Future.delayed(Duration(milliseconds: 100), () {
                             setProperty(
-                                attribute: "SetpointHold", value: desValue);
-                          } else if (val == 1) {
-                            desValue = "1";
-                            _justSetValue = desValue;
-                            _justSetPointHoldDurationValue = "65535";
-                            setProperty(
-                                attribute: "SetpointHold", value: desValue);
-                            setProperty(
-                                attribute: "SetpointHoldDuration",
-                                value: "65535");
-                          } else if (val == 2) {
-                            desValue = "1";
-                            _justSetValue = desValue;
-                            _justSetPointHoldDurationValue = "1";
-                            setProperty(
-                                attribute: "SetpointHold", value: desValue);
-                            Future.delayed(Duration(milliseconds: 100), () {
-                              setProperty(
-                                  attribute: "SetpointHoldDuration", value: "1");
-                            });
-                          }
-                        });
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: getBottomWidget(),
-                    )
-                  ],
-                ))
-          ],
-        ),
+                                attribute: "SetpointHoldDuration", value: "1");
+                          });
+                        }
+                      });
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: getBottomWidget(),
+                  )
+                ],
+              ))
+        ],
       );
     }
 
     Widget getHeatWidget(String relayState) {
-      return SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-            color: getBackgroundColor(relayState),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: OwonTempHumi(
-                      localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
-                      localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
-                          showFan: getShowFan(_relayState),
-                    )),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
-                      child: OwonAdjustTemp(
-                        title: "Heat To",
-                        tempTitle:
-                        _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)
-                            :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+          color: getBackgroundColor(relayState),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: OwonTempHumi(
+                    localTemp: _tempUnit?OwonConvert.reduce100CToF(_localTemp) :OwonConvert.reduce100(_localTemp),
+                    localHumi: OwonConvert.reduce100ForHumidity(_localHumi),
+                        showFan: getShowFan(_relayState),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+                    child: OwonAdjustTemp(
+                      title: "Heat To",
+                      tempTitle:
+                      _tempUnit?OwonConvert.reduce100CToF(_OccupiedHeatingSetpoint)
+                          :OwonConvert.reduce100(_OccupiedHeatingSetpoint),
 
-                        upBtnPressed: () {
-                          if (_timer != null) {
-                            _timer.cancel();
-                            _timer = null;
+                      upBtnPressed: () {
+                        if (_timer != null) {
+                          _timer.cancel();
+                          _timer = null;
+                        }
+                        _timer = Timer(Duration(seconds: 1), () {
+                          setProperty(
+                              attribute: "OccupiedCoolingSetpoint",
+                              value: _OccupiedCoolingSetpoint);
+                          setProperty(
+                              attribute: "OccupiedHeatingSetpoint",
+                              value: _OccupiedHeatingSetpoint);
+                        });
+
+                        OwonLog.e("up");
+                        if(_tempUnit){
+                          OwonLog.e("up  heeat f=${OwonTemperature().c100ToF100(int.parse(_MaxHeatSetpointLimit))}");
+
+                          if(_heat_f >= OwonTemperature().c100ToF100(int.parse(_MaxHeatSetpointLimit)))return;
+
+                          _heat_f = _heat_f + 100;
+                          OwonLog.e("heat=$_heat_f   cool=$_cool_f");
+                          if(_cool_f - _heat_f < int.parse(_SetpointDeadBand)*2){
+                            _cool_f =  _heat_f + int.parse(_SetpointDeadBand)*2;
+                            OwonLog.e("_heat_f=$_heat_f   _cool_f=$_cool_f");
+
+                            _OccupiedCoolingSetpoint = OwonTemperature().f100ToC100(_cool_f).toString();
                           }
-                          _timer = Timer(Duration(seconds: 1), () {
-                            setProperty(
-                                attribute: "OccupiedCoolingSetpoint",
-                                value: _OccupiedCoolingSetpoint);
-                            setProperty(
-                                attribute: "OccupiedHeatingSetpoint",
-                                value: _OccupiedHeatingSetpoint);
-                          });
-
-                          OwonLog.e("up");
-                          if(_tempUnit){
-                            OwonLog.e("up  heeat f=${OwonTemperature().c100ToF100(int.parse(_MaxHeatSetpointLimit))}");
-
-                            if(_heat_f >= OwonTemperature().c100ToF100(int.parse(_MaxHeatSetpointLimit)))return;
-
-                            _heat_f = _heat_f + 100;
-                            OwonLog.e("heat=$_heat_f   cool=$_cool_f");
-                            if(_cool_f - _heat_f < int.parse(_SetpointDeadBand)*2){
-                              _cool_f =  _heat_f + int.parse(_SetpointDeadBand)*2;
-                              OwonLog.e("_heat_f=$_heat_f   _cool_f=$_cool_f");
-
-                              _OccupiedCoolingSetpoint = OwonTemperature().f100ToC100(_cool_f).toString();
-                            }
-                          }else{
-                            if(_heat_c >= int.parse(_MaxHeatSetpointLimit))return;
-                            _heat_c = _heat_c + 50;
-                            OwonLog.e("heat=$_heat_c   cool=$_cool_c");
-                            if(_cool_c -_heat_c < int.parse(_SetpointDeadBand)){
-                              _cool_c = _heat_c + int.parse(_SetpointDeadBand);
-                              _OccupiedCoolingSetpoint = _cool_c.toString();
-                            }
+                        }else{
+                          if(_heat_c >= int.parse(_MaxHeatSetpointLimit))return;
+                          _heat_c = _heat_c + 50;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+                          if(_cool_c -_heat_c < int.parse(_SetpointDeadBand)){
+                            _cool_c = _heat_c + int.parse(_SetpointDeadBand);
+                            _OccupiedCoolingSetpoint = _cool_c.toString();
                           }
-                          if(_tempUnit){
-                            _OccupiedHeatingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_heat_f.toString()));
-                          }else{
-                            _OccupiedHeatingSetpoint = _heat_c.toString();
+                        }
+                        if(_tempUnit){
+                          _OccupiedHeatingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_heat_f.toString()));
+                        }else{
+                          _OccupiedHeatingSetpoint = _heat_c.toString();
 
-                          }
-                          OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
+                        }
+                        OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
 
-                          setState(() {});
-                        },
-                        downBtnPressed: () {
-                          if (_timer != null) {
-                            _timer.cancel();
-                            _timer = null;
-                          }
-                          _timer = Timer(Duration(seconds: 1), () {
-                            setProperty(
-                                attribute: "OccupiedCoolingSetpoint",
-                                value: _OccupiedCoolingSetpoint);
-                            setProperty(
-                                attribute: "OccupiedHeatingSetpoint",
-                                value: _OccupiedHeatingSetpoint);
-                          });
+                        setState(() {});
+                      },
+                      downBtnPressed: () {
+                        if (_timer != null) {
+                          _timer.cancel();
+                          _timer = null;
+                        }
+                        _timer = Timer(Duration(seconds: 1), () {
+                          setProperty(
+                              attribute: "OccupiedCoolingSetpoint",
+                              value: _OccupiedCoolingSetpoint);
+                          setProperty(
+                              attribute: "OccupiedHeatingSetpoint",
+                              value: _OccupiedHeatingSetpoint);
+                        });
 
-                          OwonLog.e("down");
-                          if(_tempUnit){
-                            if(_heat_f <= OwonTemperature().c100ToF100(int.parse(_MinHeatSetpointLimit)))return;
+                        OwonLog.e("down");
+                        if(_tempUnit){
+                          if(_heat_f <= OwonTemperature().c100ToF100(int.parse(_MinHeatSetpointLimit)))return;
 
-                            _heat_f = _heat_f - 100;
-                            OwonLog.e("heatf=$_heat_f   coolf=$_cool_f");
+                          _heat_f = _heat_f - 100;
+                          OwonLog.e("heatf=$_heat_f   coolf=$_cool_f");
 //                          if(_heat_f - _cool_f < int.parse(_SetpointDeadBand)*2){
 //                            _cool_f = _heat_f - int.parse(_SetpointDeadBand)*2;
 //                            _OccupiedHeatingSetpoint = _heat_f.toString();
 //                          }
-                          }else{
-                            if(_heat_c <= int.parse(_MinHeatSetpointLimit))return;
-                            _heat_c = _heat_c - 50;
-                            OwonLog.e("heat=$_heat_c   cool=$_cool_c");
+                        }else{
+                          if(_heat_c <= int.parse(_MinHeatSetpointLimit))return;
+                          _heat_c = _heat_c - 50;
+                          OwonLog.e("heat=$_heat_c   cool=$_cool_c");
 //                          if(_heat_c - _cool_c < int.parse(_SetpointDeadBand)){
 //                             _cool_c =_heat_c  - int.parse(_SetpointDeadBand);
 //                            _OccupiedCoolingSetpoint = _cool_c.toString();
 //                          }
-                          }
-                          if(_tempUnit){
-                            OwonLog.e("====>heatf=$_heat_f   coolf=$_cool_f");
+                        }
+                        if(_tempUnit){
+                          OwonLog.e("====>heatf=$_heat_f   coolf=$_cool_f");
 
-                            OwonLog.e("---->${OwonConvert.reduce100(_heat_f.toString())}");
+                          OwonLog.e("---->${OwonConvert.reduce100(_heat_f.toString())}");
 
-                            _OccupiedHeatingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_heat_f.toString()));
-                          }else{
-                            _OccupiedHeatingSetpoint = _heat_c.toString();
+                          _OccupiedHeatingSetpoint = OwonConvert.zoom100FToC(OwonConvert.reduce100(_heat_f.toString()));
+                        }else{
+                          _OccupiedHeatingSetpoint = _heat_c.toString();
 
-                          }
-                          OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
-                          setState(() {});
-                        },
-                      ),
+                        }
+                        OwonLog.e("sheat=$_OccupiedHeatingSetpoint   scool=$_OccupiedCoolingSetpoint");
+                        setState(() {});
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              flex: 5,
             ),
-            Expanded(
-                flex: 6,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    OwonMode(
-                      rightIcon: OwonConvert.createSystemIcon(_systemMode, context),
-                      leftTitle: "System",
-                      rightTitle: OwonConvert.toSystemMode(_systemMode),
-                      onPressed: () {
-                        OwonLog.e("----");
-                        OwonBottomSheet.show(context, systemList, key: null)
-                            .then((val) {
-                          String desValue;
-                          if (val == 0) {
-                            desValue = "0";
-                          } else if (val == 1) {
-                            desValue = "1";
-                          } else if (val == 2) {
-                            desValue = "3";
-                          } else if (val == 3) {
-                            desValue = "4";
-                          } else if (val == 4) {
-                            desValue = "5";
-                          }
+            flex: 5,
+          ),
+          Expanded(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  OwonMode(
+                    rightIcon: OwonConvert.createSystemIcon(_systemMode, context),
+                    leftTitle: "System",
+                    rightTitle: OwonConvert.toSystemMode(_systemMode),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, systemList, key: null)
+                          .then((val) {
+                        String desValue;
+                        if (val == 0) {
+                          desValue = "0";
+                        } else if (val == 1) {
+                          desValue = "1";
+                        } else if (val == 2) {
+                          desValue = "3";
+                        } else if (val == 3) {
+                          desValue = "4";
+                        } else if (val == 4) {
+                          desValue = "5";
+                        }
+                        _justSetValue = desValue;
+                        print("--消失后的回调-->$val");
+                        setProperty(attribute: "SystemMode", value: desValue);
+                      });
+                    },
+                  ),
+                  OwonMode(
+                    leftTitle: "Fan",
+                    rightIcon: OwonConvert.createFanIcon(_fanMode, context),
+                    rightTitle: OwonConvert.toFanMode(_fanMode),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, fanList, key: null)
+                          .then((val) {
+                        print("--消失后的回调-->$val");
+                        String desValue;
+                        if (val == 0) {
+                          desValue = "4";
+                        } else if (val == 1) {
+                          desValue = "6";
+                        } else if (val == 2) {
+                          desValue = "5";
+                        }
+                        _justSetValue = desValue;
+                        setProperty(attribute: "FanMode", value: desValue);
+                      });
+                    },
+                  ),
+                  OwonMode(
+                    rightIcon: OwonConvert.createHoldIcon(
+                        setPointHold: _setPointHold,
+                        setPointHoldDuration: _setPointHoldDuration,context: context),
+                    leftTitle: "Hold",
+                    rightTitle: OwonConvert.toHoldMode(
+                        setPointHold: _setPointHold,
+                        setPointHoldDuration: _setPointHoldDuration),
+                    onPressed: () {
+                      OwonLog.e("----");
+                      OwonBottomSheet.show(context, holdList, key: null)
+                          .then((val) {
+                        print("--消失后的回调-->$val");
+                        String desValue;
+                        if (val == 0) {
+                          desValue = "0";
                           _justSetValue = desValue;
-                          print("--消失后的回调-->$val");
-                          setProperty(attribute: "SystemMode", value: desValue);
-                        });
-                      },
-                    ),
-                    OwonMode(
-                      leftTitle: "Fan",
-                      rightIcon: OwonConvert.createFanIcon(_fanMode, context),
-                      rightTitle: OwonConvert.toFanMode(_fanMode),
-                      onPressed: () {
-                        OwonLog.e("----");
-                        OwonBottomSheet.show(context, fanList, key: null)
-                            .then((val) {
-                          print("--消失后的回调-->$val");
-                          String desValue;
-                          if (val == 0) {
-                            desValue = "4";
-                          } else if (val == 1) {
-                            desValue = "6";
-                          } else if (val == 2) {
-                            desValue = "5";
-                          }
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                        } else if (val == 1) {
+                          desValue = "1";
                           _justSetValue = desValue;
-                          setProperty(attribute: "FanMode", value: desValue);
-                        });
-                      },
-                    ),
-                    OwonMode(
-                      rightIcon: OwonConvert.createHoldIcon(
-                          setPointHold: _setPointHold,
-                          setPointHoldDuration: _setPointHoldDuration,context: context),
-                      leftTitle: "Hold",
-                      rightTitle: OwonConvert.toHoldMode(
-                          setPointHold: _setPointHold,
-                          setPointHoldDuration: _setPointHoldDuration),
-                      onPressed: () {
-                        OwonLog.e("----");
-                        OwonBottomSheet.show(context, holdList, key: null)
-                            .then((val) {
-                          print("--消失后的回调-->$val");
-                          String desValue;
-                          if (val == 0) {
-                            desValue = "0";
-                            _justSetValue = desValue;
+                          _justSetPointHoldDurationValue = "65535";
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                          setProperty(
+                              attribute: "SetpointHoldDuration",
+                              value: "65535");
+                        } else if (val == 2) {
+                          desValue = "1";
+                          _justSetValue = desValue;
+                          _justSetPointHoldDurationValue = "1";
+                          setProperty(
+                              attribute: "SetpointHold", value: desValue);
+                          Future.delayed(Duration(milliseconds: 100), () {
                             setProperty(
-                                attribute: "SetpointHold", value: desValue);
-                          } else if (val == 1) {
-                            desValue = "1";
-                            _justSetValue = desValue;
-                            _justSetPointHoldDurationValue = "65535";
-                            setProperty(
-                                attribute: "SetpointHold", value: desValue);
-                            setProperty(
-                                attribute: "SetpointHoldDuration",
-                                value: "65535");
-                          } else if (val == 2) {
-                            desValue = "1";
-                            _justSetValue = desValue;
-                            _justSetPointHoldDurationValue = "1";
-                            setProperty(
-                                attribute: "SetpointHold", value: desValue);
-                            Future.delayed(Duration(milliseconds: 100), () {
-                              setProperty(
-                                  attribute: "SetpointHoldDuration", value: "1");
-                            });
-                          }
-                        });
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: getBottomWidget(),
-                    )
-                  ],
-                ))
-          ],
-        ),
+                                attribute: "SetpointHoldDuration", value: "1");
+                          });
+                        }
+                      });
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: getBottomWidget(),
+                  )
+                ],
+              ))
+        ],
       );
     }
 
     Widget getEHeatWidget(String relayState) {
-      return SingleChildScrollView(child: Column(
+      return Column(
         children: <Widget>[
           Expanded(
             child: Container(
@@ -1452,7 +1446,7 @@ class _ManagementPageState extends State<ManagementPage> {
                 ],
               ))
         ],
-      ),);
+      );
     }
 
     Widget getWidget({String systemMode, String relayState}) {
