@@ -97,7 +97,7 @@ class _ListPageState extends State<ListPage> {
       }
     });
     super.initState();
-    Future.delayed(Duration(milliseconds: 580), () {
+    Future.delayed(Duration(milliseconds: 650), () {
 //      OwonLoading(context).hide().then((e) {
         OwonLog.e("---show");
         OwonLoading(context).show();
