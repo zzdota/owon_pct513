@@ -38,17 +38,17 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
       mWifiUpgradeVersion = "",
       mDeviceId = "";
 
-  int mUpgradeCount = 0;
   int mUpgradeProgress = 0;
-
-  int mTotalFileByteCount = 0; //所有需要升级的文件字节数
-  int mTotalRecByteCount = 0; //下载完成的文件字节数
-  int mLastTimeProgress = 0; //上次上报的progress字段字
+  String mUpgradeByteProgress = "";
 
   FirmwareUpgradeModeEntity mWifiFirmwareUpgradeMode,
       mPCT513FirmwareUpgradeMode;
 
   var mOwonDialog;
+
+  bool isStartUpgrade = true;
+  int mStartUpgradeType = 1;
+  bool mPCT513UpgradeFlag = false, mWifiUpgradeFlag = false;
 
   @override
   void initState() {
@@ -68,6 +68,10 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
               setState(() {
                 mCurrentVersion = item["attrValue"];
               });
+            } else if (attr == "wifiversion") {
+              setState(() {
+                mWifiCurrentVersion = item["attrValue"];
+              });
             }
           });
           getDeviceUpgradeInfo(false);
@@ -81,53 +85,47 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
               if (firmwareUpgradeModeEntity.firmwaretype == "wifi") {
                 mWifiFirmwareUpgradeMode = firmwareUpgradeModeEntity;
                 setState(() {
-                  mWifiCurrentVersion = "WIFI_V0.0.1";
                   int lastVersion = int.parse(mWifiFirmwareUpgradeMode.version);
+                  mWifiUpgradeVersion =
+                      "${mWifiFirmwareUpgradeMode.firmwaretype.toUpperCase()}_V${lastVersion ~/ 1000}.${lastVersion ~/ 100}.${lastVersion % 10}";
+                  if (mWifiCurrentVersion == "" ||
+                      mWifiCurrentVersion == null) {
+                    mWifiCurrentVersion = mWifiUpgradeVersion;
+                  }
                   String buf = mWifiCurrentVersion
                       .substring(mWifiCurrentVersion.indexOf("V") + 1,
                           mWifiCurrentVersion.length)
                       .replaceAll(".", "");
+                  buf = buf.substring(0, buf.indexOf("_"));
                   OwonLog.e("=====>>>>buf$buf---->>>$lastVersion");
                   int version = int.parse(buf);
                   if (lastVersion > version) {
-                    mWifiUpgradeVersion =
-                        "${mWifiFirmwareUpgradeMode.firmwaretype.toUpperCase()}_V${lastVersion ~/ 1000}.${lastVersion ~/ 100}.${lastVersion % 10}";
-                    mUpgradeCount += 2;
-                    for (int i = 0;
-                        i < mWifiFirmwareUpgradeMode.files.length;
-                        i++) {
-                      mTotalFileByteCount +=
-                          mWifiFirmwareUpgradeMode.files[i].fileSize;
-                    }
-                    OwonLog.e("=====>>>>wifi mUpgradeCount$mUpgradeCount");
+                    mWifiUpgradeFlag = true;
                   } else {
                     mWifiUpgradeVersion = mWifiCurrentVersion;
+                    mWifiUpgradeFlag = false;
                   }
                 });
               } else if (firmwareUpgradeModeEntity.firmwaretype == "pct513") {
                 mPCT513FirmwareUpgradeMode = firmwareUpgradeModeEntity;
                 setState(() {
-                  mCurrentVersion = "PCT513_V0.0.1";
                   int lastVersion =
                       int.parse(mPCT513FirmwareUpgradeMode.version);
+                  mUpgradeVersion =
+                      "${mPCT513FirmwareUpgradeMode.firmwaretype.toUpperCase()}_V${lastVersion ~/ 1000}.${lastVersion ~/ 100}.${lastVersion % 10}";
+                  if (mCurrentVersion == null || mCurrentVersion == "") {
+                    mCurrentVersion = mUpgradeVersion;
+                  }
                   String buf = mCurrentVersion
                       .substring(mCurrentVersion.indexOf("V") + 1,
                           mCurrentVersion.length)
                       .replaceAll(".", "");
                   int version = int.parse(buf);
                   if (lastVersion > version) {
-                    mUpgradeVersion =
-                        "${mPCT513FirmwareUpgradeMode.firmwaretype.toUpperCase()}_V${lastVersion ~/ 1000}.${lastVersion ~/ 100}.${lastVersion % 10}";
-                    mUpgradeCount += 1;
-                    for (int i = 0;
-                        i < mPCT513FirmwareUpgradeMode.files.length;
-                        i++) {
-                      mTotalFileByteCount +=
-                          mPCT513FirmwareUpgradeMode.files[i].fileSize;
-                    }
-                    OwonLog.e("=====>>>>513mUpgradeCount$mUpgradeCount");
+                    mPCT513UpgradeFlag = true;
                   } else {
                     mUpgradeVersion = mCurrentVersion;
+                    mPCT513UpgradeFlag = false;
                   }
                 });
               }
@@ -136,40 +134,45 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
         }
       } else if (msg["type"] == "string") {
         String payload = msg["payload"];
-        if (topic.contains("upgradestate")) {
+        if (topic.contains("upgradestate") && isStartUpgrade) {
           Map<String, dynamic> state = jsonDecode(payload);
           FirmwareUpgradeStateModeEntity firmwareUpgradeStateModeEntity =
               FirmwareUpgradeStateModeEntity.fromJson(state);
           switch (firmwareUpgradeStateModeEntity.state) {
             case 0:
-              if (mUpgradeCount == 3) {
-                mUpgradeCount -=1;
-                startUpgrade();
-              } else {
-                showUpgradSuccess();
-              }
+//              if (mUpgradeCount == 3) {
+////                mUpgradeCount -= 1;
+////                startUpgrade();
+////              } else {
+//              showUpgradSuccess();
+//              }
               break;
             case 1:
-              OwonLog.e(
-                  "1111------->$mLastTimeProgress=====>>>${firmwareUpgradeStateModeEntity.progress}");
-              mTotalRecByteCount = mTotalRecByteCount +
-                  (firmwareUpgradeStateModeEntity.progress - mLastTimeProgress);
-
+              int mTotalFileByteCount = 0;
+              if (mStartUpgradeType == 0) {
+                return;
+              } else if (mStartUpgradeType == 1) {
+                //513
+                mTotalFileByteCount = mPCT513FirmwareUpgradeMode
+                    .files[firmwareUpgradeStateModeEntity.index].fileSize;
+              } else if (mStartUpgradeType == 2) {
+                //wifi
+                mTotalFileByteCount = mWifiFirmwareUpgradeMode
+                    .files[firmwareUpgradeStateModeEntity.index].fileSize;
+              }
               if (mOwonDialog == null) {
                 showUpgrading();
-                OwonLog.e("owon dialog is null");
               } else {
-                OwonLog.e("owon dialog is not null");
                 mStateSetter(() {
-                  mUpgradeProgress =
-                      ((mTotalRecByteCount / mTotalFileByteCount) * 100)
-                          .toInt();
-                  OwonLog.e(
-                      "---->mUpgradeProgress$mUpgradeProgress---->mTotalRecByteCount$mTotalRecByteCount---->mTotalFileByteCount$mTotalFileByteCount");
+                  mUpgradeProgress = ((firmwareUpgradeStateModeEntity.progress /
+                      mTotalFileByteCount) *
+                          100)
+                      .toInt();
+                  mUpgradeByteProgress = "${firmwareUpgradeStateModeEntity.progress} / $mTotalFileByteCount";
+                  OwonLog.e("---->mUpgradeProgress$mUpgradeProgress"
+                      "---->mTotalFileByteCount$mTotalFileByteCount");
                 });
               }
-              mLastTimeProgress = firmwareUpgradeStateModeEntity.progress;
-              OwonLog.e("2222------->$mLastTimeProgress");
               break;
             default:
               break;
@@ -208,10 +211,7 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
 
   getDeviceInfo() async {
     OwonLoading(context).show();
-    List attrsList = [
-      "deviceid",
-      "versionname",
-    ];
+    List attrsList = ["versionname", "wifiversion"];
     List paramList = [];
     for (int i = 0; i < attrsList.length; i++) {
       String p = attrsList[i];
@@ -233,7 +233,7 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
 
-  showConfirmUpgrade() {
+  showConfirmUpgrade(int type) {
     showDialog(
         context: context,
         //点击背景不消失
@@ -250,6 +250,8 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
               isShowTitleDivide: false,
               isShowBottomDivide: true,
               onPositivePressEvent: () {
+                isStartUpgrade = true;
+                mStartUpgradeType = type;
                 startUpgrade();
                 Navigator.pop(ctx);
               },
@@ -294,6 +296,8 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
               isShowBottomDivide: true,
               onCloseEvent: () {
                 Navigator.pop(ctx);
+                isStartUpgrade = false;
+                mStartUpgradeType = 0;
               },
               childWidget: Column(
                 children: <Widget>[
@@ -349,6 +353,15 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
                   ),
                   Text(
                     "$mUpgradeProgress%",
+                    style: TextStyle(
+                        color: OwonColor().getCurrent(ctx, "blue"),
+                        fontSize: 20.0),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "$mUpgradeByteProgress",
                     style: TextStyle(
                         color: OwonColor().getCurrent(ctx, "blue"),
                         fontSize: 20.0),
@@ -464,16 +477,14 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
   }
 
   startUpgrade() async {
-    OwonLog.e(
-        "----count$mUpgradeCount======>>>mTotalFileByteCount$mTotalFileByteCount");
     Map p = Map();
-    if (mUpgradeCount == 1 || mUpgradeCount == 3) {
+    if (mStartUpgradeType == 1) {
       p["firmwaretype"] = mPCT513FirmwareUpgradeMode.firmwaretype;
       p["version"] = mUpgradeVersion;
       p["filenum"] = mPCT513FirmwareUpgradeMode.files.length;
       p["file"] = mPCT513FirmwareUpgradeMode.files;
       p["url"] = mPCT513FirmwareUpgradeMode.url;
-    } else if (mUpgradeCount == 2) {
+    } else if (mStartUpgradeType == 2) {
       p["firmwaretype"] = mWifiFirmwareUpgradeMode.firmwaretype;
       p["version"] = mWifiUpgradeVersion;
       p["filenum"] = mWifiFirmwareUpgradeMode.files.length;
@@ -496,7 +507,6 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
         title: Text(S.of(context).device_info_title),
       ),
       body: Container(
-//        color: Colors.red,
         padding: EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
@@ -516,7 +526,7 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
                       height: 15,
                     ),
                     Text(
-                      "${S.of(context).device_info_current_version}$mCurrentVersion",
+                      "${S.of(context).device_info_current_version}",
                       style: TextStyle(
                           fontSize: 20,
                           color: OwonColor().getCurrent(context, "textColor")),
@@ -524,8 +534,18 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    Text(
-                        "${S.of(context).device_info_upgrade_version}$mUpgradeVersion",
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text("$mCurrentVersion",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: OwonColor()
+                                  .getCurrent(context, "blue"))),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text("${S.of(context).device_info_upgrade_version}",
                         style: TextStyle(
                             fontSize: 20,
                             color:
@@ -533,8 +553,50 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    Text(
-                        "${S.of(context).device_info_wifi_current_version}$mWifiCurrentVersion",
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text("$mUpgradeVersion",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: OwonColor()
+                                  .getCurrent(context, "blue"))),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    Container(
+                        height: OwonConstant.systemHeight,
+                        width: double.infinity,
+                        child: OwonTextIconButton.icon(
+//                      color: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(OwonConstant.cRadius),
+                            ),
+                            onPressed: () {
+                              if(mPCT513UpgradeFlag) {
+                                showConfirmUpgrade(1);
+                              } else {
+                                OwonToast.show(S.of(context).device_info_up_to_data);
+                              }
+                            },
+                            icon: SvgPicture.asset(
+                              OwonPic.dSettingUpgrade,
+                              width: 25,
+                              color: OwonColor()
+                                  .getCurrent(context, "textColor"),
+                            ),
+                            label: Text(
+                              S.of(context).device_info_upgrade,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 20),
+                            ),
+                            iconTextAlignment:
+                                TextIconAlignment.iconRightTextLeft)),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    Text("${S.of(context).device_info_wifi_current_version}",
                         style: TextStyle(
                             fontSize: 20,
                             color:
@@ -542,48 +604,69 @@ class _DeviceAboutPageState extends State<DeviceAboutPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    Text(
-                        "${S.of(context).device_info_wifi_upgrade_version}$mWifiUpgradeVersion",
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text("$mWifiCurrentVersion",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: OwonColor()
+                                  .getCurrent(context, "blue"))),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text("${S.of(context).device_info_wifi_upgrade_version}",
                         style: TextStyle(
                             fontSize: 20,
                             color:
                                 OwonColor().getCurrent(context, "textColor"))),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text("$mWifiUpgradeVersion",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: OwonColor()
+                                  .getCurrent(context, "blue"))),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    Container(
+                        height: OwonConstant.systemHeight,
+                        width: double.infinity,
+                        child: OwonTextIconButton.icon(
+//                      color: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(OwonConstant.cRadius),
+                            ),
+                            onPressed: () {
+                              if(mWifiUpgradeFlag) {
+                                showConfirmUpgrade(2);
+                              } else {
+                                OwonToast.show(S.of(context).device_info_up_to_data);
+                              }
+                            },
+                            icon: SvgPicture.asset(
+                              OwonPic.dSettingUpgrade,
+                              width: 25,
+                              color: OwonColor()
+                                  .getCurrent(context, "textColor"),
+                            ),
+                            label: Text(
+                              S.of(context).device_info_upgrade,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 20),
+                            ),
+                            iconTextAlignment:
+                                TextIconAlignment.iconRightTextLeft))
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 50),
-              child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  height: OwonConstant.systemHeight,
-                  width: double.infinity,
-                  child: OwonTextIconButton.icon(
-//                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(OwonConstant.cRadius),
-                      ),
-                      onPressed: () {
-                        if (mUpgradeCount == 0) {
-                          OwonToast.show("已是最新固件");
-                          return;
-                        } else {
-                          mTotalRecByteCount = 0;
-                          showConfirmUpgrade();
-                        }
-                      },
-                      icon: SvgPicture.asset(
-                        OwonPic.dSettingUpgrade,
-                        width: 25,
-                        color: OwonColor().getCurrent(context, "textColor"),
-                      ),
-                      label: Text(
-                        S.of(context).device_info_upgrade,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      iconTextAlignment: TextIconAlignment.iconRightTextLeft)),
-            )
           ],
         ),
       ),

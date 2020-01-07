@@ -153,6 +153,7 @@
   "device_info_confirm_title": "固件有新版，是否升级？",
   "device_info_update_btn": "立即升级",
   "device_info_late_update_btn": "稍后升级",
+  "device_info_up_to_data": "你的软件已是最新版本",
 
   "global_fahrenheit_unit": "℉",
   "global_celsius_unit": "℃",

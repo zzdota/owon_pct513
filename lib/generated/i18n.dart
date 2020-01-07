@@ -51,6 +51,7 @@ class S implements WidgetsLocalizations {
   String get device_info_late_update_btn => "Update Later";
   String get device_info_mac => "· Device Mac: ";
   String get device_info_title => "Device About";
+  String get device_info_up_to_data => "Your software is up to date";
   String get device_info_update_btn => "Update Now";
   String get device_info_upgrade => "Upgrade";
   String get device_info_upgrade_fail => "Upgrade unsuccessful";
@@ -388,6 +389,8 @@ class $zh extends S {
   String get global_hint_confirm_password => "再次确认密码";
   @override
   String get dSet_vacation => "假期设置";
+  @override
+  String get device_info_up_to_data => "你的软件已是最新版本";
   @override
   String get global_psw_retry_limit => "密码重试次数超出限制";
   @override

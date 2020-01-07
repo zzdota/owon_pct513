@@ -153,6 +153,7 @@
   "device_info_confirm_title": "There is a new version of the firmware. Is it upgraded?",
   "device_info_update_btn": "Update Now",
   "device_info_late_update_btn": "Update Later",
+  "device_info_up_to_data": "Your software is up to date",
 
   "global_fahrenheit_unit": "℉",
   "global_celsius_unit": "℃",
@@ -169,6 +170,6 @@
   "geofence_leaving_geofence": "When Leaving Geofence",
   "geofence_disable_geofence": "You can set up a geofence (i.e., a virtual perimeter) around your home and activate comfort settings upon entering or leaving the geofence.",
   "geofence_dialog_participating_device_title": "Select Participating Devices",
-  "geofence_and_more": " and more"
+  "geofence_and_more": " and more",
 
 }
