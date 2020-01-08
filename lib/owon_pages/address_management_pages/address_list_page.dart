@@ -71,7 +71,7 @@ class _AddressListPageState extends State<AddressListPage> {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                     AddressModelAddr addrModel = AddressModelAddr(addrname: "");
 
-                    return AddressEditPage(addrModel,true);
+                    return AddressEditPage(addrModel,FromPage.list);
                   }));
                 },
                 icon: Icon(

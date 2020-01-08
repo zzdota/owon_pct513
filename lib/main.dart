@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_list_page.dart';
+import 'package:owon_pct513/owon_pages/list_pages/list_page.dart';
 import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
 import 'package:provider/provider.dart';
 import 'generated/i18n.dart';
@@ -84,7 +85,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: "/",
       routes: <String, WidgetBuilder>{
         "/": (context) => LoginPage(),
-        "/addressList":(context)=>AddressListPage(null),
+        "/listPage":(context)=>ListPage(),
       },
     );
   }

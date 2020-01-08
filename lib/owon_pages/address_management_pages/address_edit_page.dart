@@ -15,11 +15,17 @@ import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../generated/i18n.dart';
+enum FromPage {
+  blank,
 
+  list,
+
+  devices
+}
 class AddressEditPage extends StatefulWidget {
   AddressModelAddr addrModel;
-  bool isFromAdd;
-  AddressEditPage(this.addrModel,this.isFromAdd);
+  FromPage isFromPage;
+  AddressEditPage(this.addrModel,this.isFromPage);
   @override
   _AddressEditPageState createState() => _AddressEditPageState();
 }
@@ -42,18 +48,28 @@ class _AddressEditPageState extends State<AddressEditPage> {
         Map<String, dynamic> payload = msg["payload"];
 
         if (payload["command"] == "addr.add") {
-          OwonLoading(context).hide().then((e) {
-            OwonToast.show(S.of(context).global_save_success);
-            Navigator.of(context).pop();
-          });
-          OwonLog.e("----回复的payload=$payload");
+
+          if(widget.isFromPage == FromPage.blank){
+            OwonLoading(context).hide().then((e) {
+              OwonToast.show(S.of(context).global_save_success);
+              Navigator.of(context)..pop()..pop();
+            });
+            OwonLog.e("----回复的payload=$payload");
+          }else if(widget.isFromPage == FromPage.list){
+            OwonLoading(context).hide().then((e) {
+              OwonToast.show(S.of(context).global_save_success);
+              Navigator.of(context)..pop();
+            });
+            OwonLog.e("----回复的payload=$payload");
+          }
+
 
         }else if (payload["command"] == "addr.update") {
           OwonLoading(context).hide().then((e) {
             OwonToast.show(S.of(context).global_save_success);
-            Navigator.of(context).pop();
+            Navigator.of(context)..pop();
           });
-          OwonLog.e("----回复的payload=$payload");
+          OwonLog.e("----回复update的payload=$payload");
 
         }
       } else if (msg["type"] == "string") {
@@ -130,11 +146,14 @@ class _AddressEditPageState extends State<AddressEditPage> {
 //                return AddressEditPage();
 //              }));
                OwonLoading(context).show();
-              if(widget.isFromAdd) {
+              if(widget.isFromPage == FromPage.list) {
                 addAddress();
 
-              }else{
+              }else if(widget.isFromPage == FromPage.devices){
                 updateAddress();
+
+              }else if(widget.isFromPage == FromPage.blank){
+                addAddress();
 
               }
             },

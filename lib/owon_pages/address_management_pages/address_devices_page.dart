@@ -63,11 +63,11 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
               OwonLog.e("----回复的payload=$payload");
 
             }else if (payload["command"] == "addr.update") {
-              OwonLoading(context).hide().then((e) {
-                OwonToast.show(S.of(context).global_save_success);
-                Navigator.of(context).pop();
-              });
-              OwonLog.e("----回复的payload=$payload");
+//              OwonLoading(context).hide().then((e) {
+//                OwonToast.show(S.of(context).global_save_success);
+//                Navigator.of(context).pop();
+//              });
+//              OwonLog.e("----回复的payload=$payload");
 
             }else if(topic.startsWith("reply") && payload.containsKey("addrs")){
               OwonLoading(context).hide().then((e) {
@@ -115,7 +115,7 @@ class _AddressDevicesPageState extends State<AddressDevicesPage> {
           FlatButton(
             onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return AddressEditPage(widget.addrModel,false);
+                return AddressEditPage(widget.addrModel,FromPage.devices);
               }));
             },
             child: Text(

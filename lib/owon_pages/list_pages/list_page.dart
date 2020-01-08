@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/owon_pages/address_management_pages/address_blank_page.dart';
+import 'package:owon_pct513/owon_pages/address_management_pages/address_edit_page.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_list_page.dart';
+import 'package:owon_pct513/owon_pages/device_setting_pages/device_about_progress_dialog_page.dart';
 import 'package:owon_pct513/owon_pages/management_page/management_page.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
@@ -48,24 +51,32 @@ class _ListPageState extends State<ListPage> {
           Future.delayed(Duration(milliseconds: 50), () {
             OwonLog.e("---dismiss");
 
-            OwonLoading(context).dismiss();
-          });
-          setState(() {
-            _addrModels = AddressModelEntity.fromJson(payload);
-            _addressModel = _addrModels.addrs.first;
-            if (_addrModels.addrs.length == 0 ||
-                _addrModels.addrs.length == null) {
-              noDeviceTip = S.of(context).list_no_device;
-            }
-            _addrModels.addrs.forEach((item) {
-              item.devlist.forEach((deviceItem) {
-                String deviceId = deviceItem.deviceid;
-                String deviceTopic = "device/$deviceId/#";
+            OwonLoading(context).hide().then((e){
+              setState(() {
+                _addrModels = AddressModelEntity.fromJson(payload);
+                if(_addrModels.addrs.length == 0){
 
-                OwonMqtt.getInstance().subscribeMessage(deviceTopic);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddressBlankPage()));
+                  return;
+                }
+                _addressModel = _addrModels.addrs.first;
+                if (_addrModels.addrs.length == 0 ||
+                    _addrModels.addrs.length == null) {
+                  noDeviceTip = S.of(context).list_no_device;
+                }
+                _addrModels.addrs.forEach((item) {
+                  item.devlist.forEach((deviceItem) {
+                    String deviceId = deviceItem.deviceid;
+                    String deviceTopic = "device/$deviceId/#";
+
+                    OwonMqtt.getInstance().subscribeMessage(deviceTopic);
+                  });
+                });
               });
             });
           });
+
         }else if(topic.startsWith("reply") && payload["command"] == "device.unbind"){
           OwonLoading(context).hide().then((e) {
             OwonLog.e("---show");
