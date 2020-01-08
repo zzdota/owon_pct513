@@ -3,8 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../res/owon_themeColor.dart';
 
 class OwonTextField {
-  static Widget textField(BuildContext context,
-      TextEditingController textEditingController, String hint, String imageUrl, FocusNode focusNode,
+  static Widget textField(
+      BuildContext context,
+      TextEditingController textEditingController,
+      String hint,
+      String imageUrl,
+      FocusNode focusNode,
       bool offstage,
       {double width = double.infinity}) {
     return Container(
@@ -45,8 +49,7 @@ class OwonTextField {
               child: IconButton(
                 icon: Icon(
                   Icons.clear,
-                  color: OwonColor().getCurrent(
-                      context, "textColor"),
+                  color: OwonColor().getCurrent(context, "textColor"),
                 ),
                 onPressed: () {
                   textEditingController.clear();

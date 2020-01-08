@@ -71,64 +71,68 @@ class _ForgotPageState extends State<ForgotPage> {
     startCountdownTimer();
     OwonLoading(context).show();
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
-        OwonApiHttp().getVerifyCode(_userName, 2), (value) async {
-      OwonLog.e(value);
-      GetVerifyCodeModelEntity getVerifyCodeModelEntity =
-          GetVerifyCodeModelEntity.fromJson(value);
-      switch (int.parse(getVerifyCodeModelEntity.code)) {
-        case 100:
-          if (RegexUtil.isEmail(_userName)) {
-            OwonToast.show(S.of(context).global_get_verify_code_email_success);
-          } else {
-            OwonToast.show(S.of(context).global_get_verify_code_phone_success);
-          }
-          break;
-        case 110:
-          OwonToast.show(S.of(context).global_unknown);
-          break;
-        case 302:
-          OwonToast.show(S.of(context).global_get_verify_code_phone_num_error);
-          break;
-        case 303:
-          OwonToast.show(S.of(context).global_account_exist);
-          break;
-        case 301:
-        case 304:
-        case 305:
-          OwonToast.show(S.of(context).global_get_verify_code_often);
-          break;
-        case 307:
-          OwonToast.show(S.of(context).global_get_verify_code_fail);
-          break;
-        case 308:
-          OwonToast.show(S.of(context).global_not_account);
-          break;
-        case 309:
-          OwonToast.show(S.of(context).global_lock_account);
-          break;
-        case 310:
-          OwonToast.show(S.of(context).global_not_agentid);
-          break;
-      }
-      OwonLoading(context).dismiss();
-      if (_countDownTimerUtil != null &&
-          int.parse(getVerifyCodeModelEntity.code) != 100) {
-        setState(() {
-          _countDownTimerUtil.cancel();
-          _countDownTimerUtil = null;
-          _countDownBtnTxt = S.of(context).global_get_verify_code;
-        });
-      }
+        OwonApiHttp().getVerifyCode(_userName, 2), (value) {
+      OwonLoading(context).hide().then((v) {
+        GetVerifyCodeModelEntity getVerifyCodeModelEntity =
+            GetVerifyCodeModelEntity.fromJson(value);
+        switch (int.parse(getVerifyCodeModelEntity.code)) {
+          case 100:
+            if (RegexUtil.isEmail(_userName)) {
+              OwonToast.show(
+                  S.of(context).global_get_verify_code_email_success);
+            } else {
+              OwonToast.show(
+                  S.of(context).global_get_verify_code_phone_success);
+            }
+            break;
+          case 110:
+            OwonToast.show(S.of(context).global_unknown);
+            break;
+          case 302:
+            OwonToast.show(
+                S.of(context).global_get_verify_code_phone_num_error);
+            break;
+          case 303:
+            OwonToast.show(S.of(context).global_account_exist);
+            break;
+          case 301:
+          case 304:
+          case 305:
+            OwonToast.show(S.of(context).global_get_verify_code_often);
+            break;
+          case 307:
+            OwonToast.show(S.of(context).global_get_verify_code_fail);
+            break;
+          case 308:
+            OwonToast.show(S.of(context).global_not_account);
+            break;
+          case 309:
+            OwonToast.show(S.of(context).global_lock_account);
+            break;
+          case 310:
+            OwonToast.show(S.of(context).global_not_agentid);
+            break;
+        }
+        if (_countDownTimerUtil != null &&
+            int.parse(getVerifyCodeModelEntity.code) != 100) {
+          setState(() {
+            _countDownTimerUtil.cancel();
+            _countDownTimerUtil = null;
+            _countDownBtnTxt = S.of(context).global_get_verify_code;
+          });
+        }
+      });
     }, (value) {
-      OwonToast.show(S.of(context).global_get_verify_code_fail);
-      OwonLoading(context).dismiss();
-      if (_countDownTimerUtil != null) {
-        setState(() {
-          _countDownTimerUtil.cancel();
-          _countDownTimerUtil = null;
-          _countDownBtnTxt = S.of(context).global_get_verify_code;
-        });
-      }
+      OwonLoading(context).hide().then((v) {
+        OwonToast.show(S.of(context).global_get_verify_code_fail);
+        if (_countDownTimerUtil != null) {
+          setState(() {
+            _countDownTimerUtil.cancel();
+            _countDownTimerUtil = null;
+            _countDownBtnTxt = S.of(context).global_get_verify_code;
+          });
+        }
+      });
     });
   }
 
@@ -202,34 +206,36 @@ class _ForgotPageState extends State<ForgotPage> {
     }
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().recoveryPassword(_userName, _newPassword, _verifyCode),
-        (value) async {
-      ResetPswModelEntity resetPswModelEntity =
-          ResetPswModelEntity.fromJson(value);
-      switch (int.parse(resetPswModelEntity.code)) {
-        case 100:
-          OwonToast.show(S.of(context).reset_psw_success);
-          Navigator.pop(context);
-          break;
-        case 110:
-          OwonToast.show(S.of(context).global_unknown);
-          break;
-        case 301:
-          OwonToast.show(S.of(context).global_not_account);
-          break;
-        case 304:
-          OwonToast.show(S.of(context).global_lock_account);
-          break;
-        case 306:
-          OwonToast.show(S.of(context).global_verify_code_error);
-          break;
-        case 307:
-          OwonToast.show(S.of(context).global_psw_retry_limit);
-          break;
-      }
-      OwonLoading(context).dismiss();
+        (value) {
+          OwonLoading(context).hide().then((v){
+            ResetPswModelEntity resetPswModelEntity =
+            ResetPswModelEntity.fromJson(value);
+            switch (int.parse(resetPswModelEntity.code)) {
+              case 100:
+                OwonToast.show(S.of(context).reset_psw_success);
+                Navigator.pop(context);
+                break;
+              case 110:
+                OwonToast.show(S.of(context).global_unknown);
+                break;
+              case 301:
+                OwonToast.show(S.of(context).global_not_account);
+                break;
+              case 304:
+                OwonToast.show(S.of(context).global_lock_account);
+                break;
+              case 306:
+                OwonToast.show(S.of(context).global_verify_code_error);
+                break;
+              case 307:
+                OwonToast.show(S.of(context).global_psw_retry_limit);
+                break;
+            }
+          });
     }, (value) {
-      OwonToast.show(S.of(context).reset_psw_fail);
-      OwonLoading(context).dismiss();
+      OwonLoading(context).hide().then((v){
+        OwonToast.show(S.of(context).reset_psw_fail);
+      });
     });
   }
 

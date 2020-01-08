@@ -59,31 +59,33 @@ class _ChangePageState extends State<ChangePage> {
     OwonLoading(context).show();
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().changePassword(userName, _oldPassword, _newPassword),
-        (value) async {
-      ChangePasswordEntity changePswModelEntity =
-          ChangePasswordEntity.fromJson(value);
-      switch (int.parse(changePswModelEntity.code)) {
-        case 100:
-          OwonToast.show(S.of(context).change_psw_success);
-          Navigator.pop(context);
-          break;
-        case 110:
-          OwonToast.show(S.of(context).global_unknown);
-          break;
-        case 301:
-          OwonToast.show(S.of(context).global_not_account);
-          break;
-        case 303:
-          OwonToast.show(S.of(context).change_psw_old_psw_error);
-          break;
-        case 304:
-          OwonToast.show(S.of(context).global_lock_account);
-          break;
-      }
-      OwonLoading(context).dismiss();
+        (value) {
+      OwonLoading(context).hide().then((v) {
+        ChangePasswordEntity changePswModelEntity =
+            ChangePasswordEntity.fromJson(value);
+        switch (int.parse(changePswModelEntity.code)) {
+          case 100:
+            OwonToast.show(S.of(context).change_psw_success);
+            Navigator.pop(context);
+            break;
+          case 110:
+            OwonToast.show(S.of(context).global_unknown);
+            break;
+          case 301:
+            OwonToast.show(S.of(context).global_not_account);
+            break;
+          case 303:
+            OwonToast.show(S.of(context).change_psw_old_psw_error);
+            break;
+          case 304:
+            OwonToast.show(S.of(context).global_lock_account);
+            break;
+        }
+      });
     }, (value) {
-      OwonToast.show(S.of(context).change_psw_fail);
-      OwonLoading(context).dismiss();
+      OwonLoading(context).hide().then((v){
+        OwonToast.show(S.of(context).change_psw_fail);
+      });
     });
   }
 

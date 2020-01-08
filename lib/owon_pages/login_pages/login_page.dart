@@ -193,52 +193,55 @@ class _LoginPageState extends State<LoginPage> {
     OwonLoading(context).show();
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
         OwonApiHttp().login(_userName, _password), (value) {
-        OwonLoading(context).hide().then((v) async{
-          LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
-          switch (int.parse(loginModelEntity.code)) {
-            case 100:
-              SharedPreferences pre = await SharedPreferences.getInstance();
-              pre.setString(
-                  OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
-              pre.setInt(OwonConstant.mQTTPort, loginModelEntity.response.mqttport);
-              pre.setInt(
-                  OwonConstant.mQTTPortS, loginModelEntity.response.mqttsslport);
-              if (!RegexUtil.isEmail(_userName)) {
-                if(_userName.contains("-")) {
-                  pre.setString(OwonConstant.userName, _userName);
-                } else {
-                  pre.setString(OwonConstant.userName, _userNameCountryCode + _userName);
-                }
-              } else {
+      OwonLoading(context).hide().then((v) async {
+        LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
+        switch (int.parse(loginModelEntity.code)) {
+          case 100:
+            SharedPreferences pre = await SharedPreferences.getInstance();
+            pre.setString(
+                OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
+            pre.setInt(
+                OwonConstant.mQTTPort, loginModelEntity.response.mqttport);
+            pre.setInt(
+                OwonConstant.mQTTPortS, loginModelEntity.response.mqttsslport);
+            if (!RegexUtil.isEmail(_userName)) {
+              if (_userName.contains("-")) {
                 pre.setString(OwonConstant.userName, _userName);
+              } else {
+                pre.setString(
+                    OwonConstant.userName, _userNameCountryCode + _userName);
               }
-              pre.setString(OwonConstant.password, _password);
-              pre.setString(
-                  OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
-              initMqtt(pre);
-              break;
-            case 110:
-              OwonToast.show(S.of(context).login_fail);
-              break;
-            case 301:
-              OwonToast.show(S.of(context).login_no_account);
-              break;
-            case 302:
-              OwonToast.show(
-                  "${S.of(context).login_retry_limit}${loginModelEntity.response.retryRemainTime} ${S.of(context).login_retry_time}");
-              break;
-            case 303:
-              OwonToast.show(
-                  "${S.of(context).login_wrong_psw}, ${loginModelEntity.response.retryPswRemainCout} ${S.of(context).login_retry_time_alert}");
-              break;
-            case 304:
-              OwonToast.show(S.of(context).login_lock_account);
-              break;
-          }
-        });
+            } else {
+              pre.setString(OwonConstant.userName, _userName);
+            }
+            pre.setString(OwonConstant.password, _password);
+            pre.setString(
+                OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
+            initMqtt(pre);
+            break;
+          case 110:
+            OwonToast.show(S.of(context).login_fail);
+            break;
+          case 301:
+            OwonToast.show(S.of(context).login_no_account);
+            break;
+          case 302:
+            OwonToast.show(
+                "${S.of(context).login_retry_limit}${loginModelEntity.response.retryRemainTime} ${S.of(context).login_retry_time}");
+            break;
+          case 303:
+            OwonToast.show(
+                "${S.of(context).login_wrong_psw}, ${loginModelEntity.response.retryPswRemainCout} ${S.of(context).login_retry_time_alert}");
+            break;
+          case 304:
+            OwonToast.show(S.of(context).login_lock_account);
+            break;
+        }
+      });
     }, (value) {
-      OwonLog.e("error-------$value");
-      OwonLoading(context).dismiss();
+      OwonLoading(context).hide().then((v) {
+        OwonToast.show(S.of(context).login_fail);
+      });
     });
   }
 
@@ -257,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
         .then((v) {
       OwonLog.e("res=$v");
       if (v.returnCode == MqttConnectReturnCode.connectionAccepted) {
-        OwonLoading(context).hide().then((item){
+        OwonLoading(context).hide().then((item) {
 //          OwonLoading(context).dismiss();
           OwonLog.e("恭喜你~ ====mqtt连接成功");
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -265,9 +268,8 @@ class _LoginPageState extends State<LoginPage> {
           }));
           pre.setString(OwonConstant.clientID, clientId);
           startListen();
-          toSubscribe(clientId,userName);
+          toSubscribe(clientId, userName);
         });
-
       } else {
         OwonLog.e("有事做了~ ====mqtt连接失败!!!");
         OwonToast.show(S.of(context).login_fail);
@@ -275,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  toSubscribe(String clientID,String userName) {
+  toSubscribe(String clientID, String userName) {
     String topic = "reply/cloud/$clientID";
     OwonMqtt.getInstance().subscribeMessage(topic);
 
@@ -284,7 +286,6 @@ class _LoginPageState extends State<LoginPage> {
 
     String accountTopic = "account/$userName/attribute/#";
     OwonMqtt.getInstance().subscribeMessage(accountTopic);
-
   }
 
   startListen() {
@@ -296,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
     final String topic = data[0].topic;
     if (topic.contains("reply/cloud") || topic.startsWith("account")) {
       final String pt =
-      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       String desString = "topic is <$topic>, payload is <-- $pt -->";
       OwonLog.e("json =$desString");
       Map p = Map();
@@ -335,7 +336,7 @@ class _LoginPageState extends State<LoginPage> {
     getExistUserInfo();
     setSuffixIconStatus();
 //    applyPermission();
-//    getPhoneCountryCode();
+    getPhoneCountryCode();
 
     super.initState();
   }
@@ -352,32 +353,6 @@ class _LoginPageState extends State<LoginPage> {
     ScreenUtil.instance = ScreenUtil(
         width: OwonConstant.designWidth, height: OwonConstant.designHeight)
       ..init(context);
-    _useController.addListener(() {
-      _userName = _useController.text;
-      OwonLog.e("--->>>listener$_userName");
-      setState(() {
-        if (!TextUtil.isEmpty(_useController.text)) {
-          try {
-            if (int.parse(_userName) is num && _userName.length < 12) {
-              _countryCodeIsVisibity = true;
-              if (_userName.length == 1) {
-                getPhoneCountryCode();
-              }
-            } else {
-              _countryCodeIsVisibity = false;
-            }
-          } catch (e) {
-            _countryCodeIsVisibity = false;
-          }
-        } else {
-          _countryCodeIsVisibity = false;
-        }
-      });
-    });
-
-    _pwdController.addListener(() {
-      _password = _pwdController.text;
-    });
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -438,64 +413,83 @@ class _LoginPageState extends State<LoginPage> {
                               child: Stack(
                                 children: <Widget>[
                                   TextField(
-                                      controller: _useController,
-                                      focusNode: _useFocusNode,
-                                      maxLines: 1,
-                                      maxLength: 20,
-                                      autofocus: false,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: OwonColor()
-                                              .getCurrent(context, "textColor"),
-                                          fontSize: 20.0),
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                        counterText: "",
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 20.0),
-                                        filled: true,
-                                        fillColor: OwonColor()
-                                            .getCurrent(context, "itemColor"),
-                                        prefixIcon: Icon(
-                                          Icons.account_circle,
-                                          color: OwonColor()
-                                              .getCurrent(context, "orange"),
-                                        ),
-                                        suffixIcon: Offstage(
-                                          offstage: _userNameIsEmpty,
-                                          child: IconButton(
-                                            icon: Icon(
-                                              Icons.clear,
-                                              color: OwonColor().getCurrent(
-                                                  context, "textColor"),
-                                            ),
-                                            onPressed: () {
-                                              _useController.clear();
-                                            },
-                                          ),
-                                        ),
-                                        hintText:
-                                            S.of(context).global_hint_user,
-                                        hintStyle: TextStyle(
-                                            fontSize: 14,
+                                    controller: _useController,
+                                    focusNode: _useFocusNode,
+                                    maxLines: 1,
+                                    maxLength: 20,
+                                    autofocus: false,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: OwonColor()
+                                            .getCurrent(context, "textColor"),
+                                        fontSize: 20.0),
+                                    keyboardType: TextInputType.text,
+                                    decoration: InputDecoration(
+                                      counterText: "",
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 20.0),
+                                      filled: true,
+                                      fillColor: OwonColor()
+                                          .getCurrent(context, "itemColor"),
+                                      prefixIcon: Icon(
+                                        Icons.account_circle,
+                                        color: OwonColor()
+                                            .getCurrent(context, "orange"),
+                                      ),
+                                      suffixIcon: Offstage(
+                                        offstage: _userNameIsEmpty,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.clear,
                                             color: OwonColor().getCurrent(
-                                                context, "textColor")),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: OwonColor().getCurrent(
-                                                  context, "borderNormal")),
-                                          borderRadius: BorderRadius.circular(
-                                              OwonConstant.cRadius),
+                                                context, "textColor"),
+                                          ),
+                                          onPressed: () {
+                                            _useController.clear();
+                                          },
                                         ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: OwonColor().getCurrent(
-                                                  context, "borderNormal")),
-                                          borderRadius: BorderRadius.circular(
-                                              OwonConstant.cRadius),
-                                        ),
-                                      )),
+                                      ),
+                                      hintText: S.of(context).global_hint_user,
+                                      hintStyle: TextStyle(
+                                          fontSize: 14,
+                                          color: OwonColor().getCurrent(
+                                              context, "textColor")),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: OwonColor().getCurrent(
+                                                context, "borderNormal")),
+                                        borderRadius: BorderRadius.circular(
+                                            OwonConstant.cRadius),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: OwonColor().getCurrent(
+                                                context, "borderNormal")),
+                                        borderRadius: BorderRadius.circular(
+                                            OwonConstant.cRadius),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      _userName = value;
+                                      setState(() {
+                                        if (!TextUtil.isEmpty(value)) {
+                                          try {
+                                            if (int.parse(_userName) is num &&
+                                                _userName.length < 12) {
+                                              _countryCodeIsVisibity = true;
+                                            } else {
+                                              _countryCodeIsVisibity = false;
+                                            }
+                                          } catch (e) {
+                                            _countryCodeIsVisibity = false;
+                                          }
+                                        } else {
+                                          _countryCodeIsVisibity = false;
+                                        }
+                                      });
+                                    },
+                                  ),
                                   Positioned(
                                     right: 40.0,
                                     top: 10.0,
@@ -574,6 +568,9 @@ class _LoginPageState extends State<LoginPage> {
                                       color: OwonColor()
                                           .getCurrent(context, "textColor")),
                                 ),
+                                onChanged: (value) {
+                                  _password = value;
+                                },
                               ),
                             ),
                             Padding(
@@ -626,11 +623,7 @@ class _LoginPageState extends State<LoginPage> {
                               margin: EdgeInsets.only(
                                   left: 20.0, right: 20.0, top: 10),
                               child: OwonTextIconButton.icon(
-                                  onPressed: (){
-                                    _useController.removeListener((){});
-                                    _pwdController.removeListener((){});
-                                    _login();
-                                  },
+                                  onPressed: _login,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           OwonConstant.cRadius)),
