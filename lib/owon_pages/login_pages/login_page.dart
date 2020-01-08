@@ -192,40 +192,50 @@ class _LoginPageState extends State<LoginPage> {
     }
     OwonLoading(context).show();
     OwonHttp.getInstance().post(OwonConstant.foreignServerHttp,
-        OwonApiHttp().login(_userName, _password), (value) async {
-      LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
-      switch (int.parse(loginModelEntity.code)) {
-        case 100:
-          SharedPreferences pre = await SharedPreferences.getInstance();
-          pre.setString(
-              OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
-          pre.setInt(OwonConstant.mQTTPort, loginModelEntity.response.mqttport);
-          pre.setInt(
-              OwonConstant.mQTTPortS, loginModelEntity.response.mqttsslport);
-          pre.setString(OwonConstant.userName, _userName);
-          pre.setString(OwonConstant.password, _password);
-          pre.setString(
-              OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
-          initMqtt(pre);
-          break;
-        case 110:
-          OwonToast.show(S.of(context).login_fail);
-          break;
-        case 301:
-          OwonToast.show(S.of(context).login_no_account);
-          break;
-        case 302:
-          OwonToast.show(
-              "${S.of(context).login_retry_limit}${loginModelEntity.response.retryRemainTime} ${S.of(context).login_retry_time}");
-          break;
-        case 303:
-          OwonToast.show(
-              "${S.of(context).login_wrong_psw}, ${loginModelEntity.response.retryPswRemainCout} ${S.of(context).login_retry_time_alert}");
-          break;
-        case 304:
-          OwonToast.show(S.of(context).login_lock_account);
-          break;
-      }
+        OwonApiHttp().login(_userName, _password), (value) {
+        OwonLoading(context).hide().then((v) async{
+          LoginModelEntity loginModelEntity = LoginModelEntity.fromJson(value);
+          switch (int.parse(loginModelEntity.code)) {
+            case 100:
+              SharedPreferences pre = await SharedPreferences.getInstance();
+              pre.setString(
+                  OwonConstant.mQTTUrl, loginModelEntity.response.mqttserver);
+              pre.setInt(OwonConstant.mQTTPort, loginModelEntity.response.mqttport);
+              pre.setInt(
+                  OwonConstant.mQTTPortS, loginModelEntity.response.mqttsslport);
+              if (!RegexUtil.isEmail(_userName)) {
+                if(_userName.contains("-")) {
+                  pre.setString(OwonConstant.userName, _userName);
+                } else {
+                  pre.setString(OwonConstant.userName, _userNameCountryCode + _userName);
+                }
+              } else {
+                pre.setString(OwonConstant.userName, _userName);
+              }
+              pre.setString(OwonConstant.password, _password);
+              pre.setString(
+                  OwonConstant.md5Password, EnDecodeUtil.encodeMd5(_password));
+              initMqtt(pre);
+              break;
+            case 110:
+              OwonToast.show(S.of(context).login_fail);
+              break;
+            case 301:
+              OwonToast.show(S.of(context).login_no_account);
+              break;
+            case 302:
+              OwonToast.show(
+                  "${S.of(context).login_retry_limit}${loginModelEntity.response.retryRemainTime} ${S.of(context).login_retry_time}");
+              break;
+            case 303:
+              OwonToast.show(
+                  "${S.of(context).login_wrong_psw}, ${loginModelEntity.response.retryPswRemainCout} ${S.of(context).login_retry_time_alert}");
+              break;
+            case 304:
+              OwonToast.show(S.of(context).login_lock_account);
+              break;
+          }
+        });
     }, (value) {
       OwonLog.e("error-------$value");
       OwonLoading(context).dismiss();
@@ -344,6 +354,7 @@ class _LoginPageState extends State<LoginPage> {
       ..init(context);
     _useController.addListener(() {
       _userName = _useController.text;
+      OwonLog.e("--->>>listener$_userName");
       setState(() {
         if (!TextUtil.isEmpty(_useController.text)) {
           try {
@@ -615,7 +626,11 @@ class _LoginPageState extends State<LoginPage> {
                               margin: EdgeInsets.only(
                                   left: 20.0, right: 20.0, top: 10),
                               child: OwonTextIconButton.icon(
-                                  onPressed: _login,
+                                  onPressed: (){
+                                    _useController.removeListener((){});
+                                    _pwdController.removeListener((){});
+                                    _login();
+                                  },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           OwonConstant.cRadius)),
