@@ -42,8 +42,8 @@ class _AddressBlankPageState extends State<AddressBlankPage> {
                     imageWidget: Padding(
                       padding: const EdgeInsets.only(right: 20),
                       child: Image.asset(
-                        OwonPic.addressHomeColorful,
-                        width: 90,
+                        OwonPic.addressNoHome,
+                        width: 70,
                       ),
                     ),
                     subtitleStyle: TextStyle(
@@ -52,8 +52,8 @@ class _AddressBlankPageState extends State<AddressBlankPage> {
 
             Container(
               child: Image.asset(
-                OwonPic.addressHomeColorful,
-                width: 200,
+                OwonPic.addressNoHouse,
+                width: 250,
               ),
             ),
             Container(
@@ -79,10 +79,7 @@ class _AddressBlankPageState extends State<AddressBlankPage> {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => AddressEditPage(widget.addrModel, FromPage.blank)));
                       },
-                      icon: Icon(
-                        Icons.save_alt,
-                        color: Colors.white,
-                      ),
+                      icon: Image.asset(OwonPic.addressNoSmile,width: 30,),
                       label: Text(
                         S.of(context).global_save,
                         style: TextStyle(color: Colors.white, fontSize: 20),

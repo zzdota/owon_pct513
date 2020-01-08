@@ -115,6 +115,9 @@ class OwonPic {
   static String addressLocation = "assets/images/address/address_loction.png";
   static String addressNoDevice = "assets/images/address/address_noDevices.png";
   static String addressShowLocal = "assets/images/address/address_show_local.png";
+  static String addressNoHome = "assets/images/address/no_device_home.png";
+  static String addressNoHouse = "assets/images/address/no_device_house.png";
+  static String addressNoSmile = "assets/images/address/no_device_smile.png";
 
   static String successIcon = "assets/images/success_icon.svg";
   static String failIcon = "assets/images/fail_icon.svg";

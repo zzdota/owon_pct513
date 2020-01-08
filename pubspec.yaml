@@ -195,6 +195,9 @@ flutter:
     - assets/images/address/address_loction.png
     - assets/images/address/address_noDevices.png
     - assets/images/address/address_show_local.png
+    - assets/images/address/no_device_home.png
+    - assets/images/address/no_device_house.png
+    - assets/images/address/no_device_smile.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
