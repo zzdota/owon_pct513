@@ -3,14 +3,16 @@ class FirmwareUpgradeStateModeEntity {
 	int progress;
 	int state;
 	int filesize;
+	int filenum;
 
-	FirmwareUpgradeStateModeEntity({this.index, this.progress, this.state, this.filesize});
+	FirmwareUpgradeStateModeEntity({this.index, this.progress, this.state, this.filesize, this.filenum});
 
 	FirmwareUpgradeStateModeEntity.fromJson(Map<String, dynamic> json) {
 		index = json['index'];
 		progress = json['progress'];
 		state = json['state'];
-		filesize = json['filesize'];
+		filesize = json['file_size'];
+		filenum = json['file_num'];
 	}
 
 	Map<String, dynamic> toJson() {
@@ -18,7 +20,8 @@ class FirmwareUpgradeStateModeEntity {
 		data['index'] = this.index;
 		data['progress'] = this.progress;
 		data['state'] = this.state;
-		data['filesize'] = this.filesize;
+		data['file_size'] = this.filesize;
+		data['file_num'] = this.filenum;
 		return data;
 	}
 }

@@ -336,7 +336,29 @@ class _LoginPageState extends State<LoginPage> {
     getExistUserInfo();
     setSuffixIconStatus();
 //    applyPermission();
-    getPhoneCountryCode();
+//    getPhoneCountryCode();
+    Future.delayed(Duration(milliseconds: 1000),(){
+      setState(() {
+        if (!TextUtil.isEmpty(_useController.text)) {
+          try {
+            if (int.parse(_useController.text) is num &&
+                _userName.length < 12) {
+              _countryCodeIsVisibity = true;
+              if (_countryCode == null ||
+                  _countryCode.isEmpty) {
+                getPhoneCountryCode();
+              }
+            } else {
+              _countryCodeIsVisibity = false;
+            }
+          } catch (e) {
+            _countryCodeIsVisibity = false;
+          }
+        } else {
+          _countryCodeIsVisibity = false;
+        }
+      });
+    });
 
     super.initState();
   }
@@ -478,6 +500,10 @@ class _LoginPageState extends State<LoginPage> {
                                             if (int.parse(_userName) is num &&
                                                 _userName.length < 12) {
                                               _countryCodeIsVisibity = true;
+                                              if (_countryCode == null ||
+                                                  _countryCode.isEmpty) {
+                                                getPhoneCountryCode();
+                                              }
                                             } else {
                                               _countryCodeIsVisibity = false;
                                             }

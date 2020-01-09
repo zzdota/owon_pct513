@@ -36,7 +36,7 @@ class ShowCommonAlert extends Dialog {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(20.0),
       child: Material(
         type: MaterialType.transparency,
         child: Column(
@@ -48,11 +48,11 @@ class ShowCommonAlert extends Dialog {
                 color: Color(0xffffffff), //可以自定义一个颜色传过来
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
+                    Radius.circular(15.0),
                   ),
                 ),
               ),
-              margin: const EdgeInsets.all(12.0),
+              margin: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
                   //标题
@@ -75,30 +75,29 @@ class ShowCommonAlert extends Dialog {
                         )
                       : Container(),
                   //标题下的分隔线
-                  Container(
-                    color: isShowTitleDivide
-                        ? OwonColor().getCurrent(context, "blue")
-                        : Color.fromARGB(0xff, 0xff, 0xff, 0xff),
-                    margin:
-                        EdgeInsets.only(bottom: isShowTitleDivide ? 10.0 : 0),
-                    height: 1.0,
-                  ),
+                  isShowTitleDivide
+                      ? Container(
+                          color: OwonColor().getCurrent(context, "blue"),
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          height: 1.0,
+                        )
+                      : Container(),
                   //中间显示的Widget
                   Container(
                     constraints: BoxConstraints(minHeight: 80.0),
                     child: Padding(
-                      padding: const EdgeInsets.only(left:20.0,right: 20.0),
+                      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                       child: childWidget,
                     ),
                   ),
                   //底部的分隔线
-                  Container(
-                    color: isShowBottomDivide
-                        ? OwonColor().getCurrent(context, "blue")
-                        : Color.fromARGB(0xff, 0xff, 0xff, 0xff),
-                    margin: EdgeInsets.only(top: isShowTitleDivide ? 10.0 : 0),
-                    height: 1.0,
-                  ),
+                  isShowBottomDivide
+                      ? Container(
+                          color: OwonColor().getCurrent(context, "blue"),
+                          margin: EdgeInsets.only(top: 10.0),
+                          height: 1.0,
+                        )
+                      : Container(),
                   //底部的确认取消按钮
                   this._buildBottomButtonGroup(context),
                 ],
@@ -114,10 +113,12 @@ class ShowCommonAlert extends Dialog {
     var widgets = <Widget>[];
     if (negativeText != null && negativeText.isNotEmpty) {
       widgets.add(Expanded(flex: 1, child: _buildBottomCancelButton(context)));
+    }
+    if (negativeText != null && positiveText != null) {
       widgets.add(Container(
         color: isShowBottomDivide
             ? OwonColor().getCurrent(context, "blue")
-            : OwonColor().getCurrent(context, "blue"),
+            : Color(0xffffffff),
         height: 60.0,
         width: 1,
       ));
@@ -126,6 +127,7 @@ class ShowCommonAlert extends Dialog {
       widgets
           .add(Expanded(flex: 1, child: _buildBottomPositiveButton(context)));
     }
+
     return Container(
       height: 60.0,
       child: Row(
