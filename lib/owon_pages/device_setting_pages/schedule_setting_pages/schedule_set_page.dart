@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/component/owon_wheel_chooser.dart';
 import '../../../owon_providers/owon_evenBus/list_evenbus.dart';
 import '../../../owon_utils/owon_loading.dart';
 import '../../../owon_utils/owon_mqtt.dart';
@@ -38,6 +39,7 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
   TextEditingController vc = TextEditingController();
   int _heatFValue = 26, _coolFValue = 26;
   double _heatCValue = 26.0, _coolCValue = 26.0;
+  double listHeight = 180.0, listWidth = 50.0;
 
   @override
   void initState() {
@@ -258,49 +260,9 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                               width: 20,
                             ),
                             Container(
-                              margin: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                              width: 100,
-                              child: widget.mTempUnit
-                                  ? OwonNumberPicker.integer(
-                                      initialValue: _heatFValue,
-                                      minValue: 41,
-                                      maxValue: 86,
-                                      selectItemFontColor: OwonColor()
-                                          .getCurrent(context, "textColor"),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  width: 1,
-                                                  color: OwonColor().getCurrent(
-                                                      context, "blue")),
-                                              top: BorderSide(
-                                                  width: 1,
-                                                  color: OwonColor().getCurrent(
-                                                      context, "blue")))),
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _heatFValue = newValue;
-                                        });
-                                      })
-                                  : OwonNumberPicker.decimal(
-                                      initialValue: _heatCValue,
-                                      minValue: 5,
-                                      maxValue: 30,
-                                      listViewWidth: 50,
-                                      selectItemFontColor: OwonColor()
-                                          .getCurrent(context, "textColor"),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  width: 1,
-                                                  color: OwonColor().getCurrent(context, "blue")),
-                                              top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _heatCValue = newValue;
-                                        });
-                                      }),
-                            ),
+                                margin: EdgeInsets.fromLTRB(10, 40, 0, 0),
+                                width: 100,
+                                child: heatPicker()),
                           ],
                         ),
                         Row(
@@ -311,49 +273,9 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
                               width: 20,
                             ),
                             Container(
-                              margin: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                              width: 100,
-                              child: widget.mTempUnit
-                                  ? OwonNumberPicker.integer(
-                                      initialValue: _coolFValue,
-                                      minValue: 45,
-                                      maxValue: 88,
-                                      selectItemFontColor: OwonColor()
-                                          .getCurrent(context, "textColor"),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  width: 1,
-                                                  color: OwonColor().getCurrent(
-                                                      context, "blue")),
-                                              top: BorderSide(
-                                                  width: 1,
-                                                  color: OwonColor().getCurrent(
-                                                      context, "blue")))),
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _coolFValue = newValue;
-                                        });
-                                      })
-                                  : OwonNumberPicker.decimal(
-                                      initialValue: _coolCValue,
-                                      minValue: 7,
-                                      maxValue: 32,
-                                      listViewWidth: 50,
-                                      selectItemFontColor: OwonColor()
-                                          .getCurrent(context, "textColor"),
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  width: 1,
-                                                  color: OwonColor().getCurrent(context, "blue")),
-                                              top: BorderSide(width: 1, color: OwonColor().getCurrent(context, "blue")))),
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _coolFValue = newValue;
-                                        });
-                                      }),
-                            ),
+                                margin: EdgeInsets.fromLTRB(10, 40, 0, 0),
+                                width: 100,
+                                child: coolPicker()),
                           ],
                         ),
                       ],
@@ -406,5 +328,38 @@ class _ScheduleSettingPageState extends State<ScheduleSettingPage> {
           widget.mScheduleListModel["week${widget.mWeek}startTime$mode"] % 60;
       return "${hour.toString().padLeft(2, '0')} : ${min.toString().padLeft(2, '0')}";
     }
+  }
+
+  Widget heatPicker() {
+    return widget.mTempUnit
+        ? WheelChooser.intPicker((newValue) {
+            setState(() {
+              _heatFValue = int.parse(newValue);
+              _coolFValue = _heatFValue + 2;
+            });
+          }, _heatFValue, 41, 86,
+            listHeight: listHeight, listWidth: listWidth, step: 1)
+        : WheelChooser.doublePicker((newValue) {
+            setState(() {
+              _heatCValue = double.parse(newValue);
+            });
+          }, _heatCValue, 5.0, 30.0,
+            listHeight: listHeight, listWidth: listWidth, step: 0.5);
+  }
+
+  Widget coolPicker() {
+    return widget.mTempUnit
+        ? WheelChooser.intPicker((newValue) {
+            setState(() {
+              _coolFValue = int.parse(newValue);
+            });
+          }, _coolFValue, 45, 88,
+            listHeight: listHeight, listWidth: listWidth, step: 1)
+        : WheelChooser.doublePicker((newValue) {
+            setState(() {
+              _coolCValue = double.parse(newValue);
+            });
+          }, _coolCValue, 7.0, 32.0,
+            listHeight: listHeight, listWidth: listWidth, step: 0.5);
   }
 }
