@@ -31,6 +31,7 @@ class _ListPageState extends State<ListPage> {
   final SlidableController slidableController = SlidableController();
   EasyRefreshController refreshController = EasyRefreshController();
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
+  SharedPreferences msharepreferencesutil;
   AddressModelEntity _addrModels = AddressModelEntity(
       addrs: [AddressModelAddr(addrid: 1, addrname: "默认地址1")]);
   AddressModelAddr _addressModel =
@@ -148,7 +149,9 @@ class _ListPageState extends State<ListPage> {
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, "configtipspage");
+                },
                 icon: Icon(
                   Icons.add,
                   color: OwonColor().getCurrent(context, "textColor"),

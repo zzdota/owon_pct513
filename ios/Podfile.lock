@@ -1,7 +1,11 @@
 PODS:
+  - "app_settings (3.0.0+1)":
+    - Flutter
   - connectivity (0.0.1):
     - Flutter
     - Reachability
+  - esptouch_plug (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_native_timezone (0.0.1):
     - Flutter
@@ -32,7 +36,9 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
+  - esptouch_plug (from `.symlinks/plugins/esptouch_plug/ios`)
   - Flutter (from `Flutter`)
   - flutter_native_timezone (from `.symlinks/plugins/flutter_native_timezone/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -52,8 +58,12 @@ SPEC REPOS:
     - Reachability
 
 EXTERNAL SOURCES:
+  app_settings:
+    :path: ".symlinks/plugins/app_settings/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
+  esptouch_plug:
+    :path: ".symlinks/plugins/esptouch_plug/ios"
   Flutter:
     :path: Flutter
   flutter_native_timezone:
@@ -80,7 +90,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_web/ios"
 
 SPEC CHECKSUMS:
+  app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
+  esptouch_plug: 9b71d2317c4197dc5191323ecde444bc2d7c9e0f
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_native_timezone: e72ff1900460ff57cfd331d1758050c9269f3e99
   fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b

@@ -36,6 +36,22 @@ class S implements WidgetsLocalizations {
   String get change_psw_old_psw_error => "Incorrect Current password";
   String get change_psw_success => "Password changed successfully";
   String get change_psw_title => "Change Password";
+  String get configfailedpage_retry => "按步骤重试";
+  String get configfailedpage_tip => "设备无响应\n\n确认设备已重置，灯在快闪\n\n检查Wi-Fi是否为2.4G\n\n核对Wi-Fi密码是否正确";
+  String get configfailedpage_title => "Wizard";
+  String get configoperatepage_setting => "更改网络";
+  String get configoperatepage_tips => "连接Wi-Fi\n\n输入家中Wi-Fi密码\n\n仅支持2.4GWi-Fi网络";
+  String get configoperatepage_tips_5g => "连接Wi-Fi\n\n不支持5G网络\n\n请更改2.4GWi-Fi网络";
+  String get configoperatepage_tips_nonetwork => "无Wi-Fi\n\n\n手机未连接Wi-Fi\n\n请连接Wi-Fi";
+  String get configoperatepage_title => "Wizard";
+  String get configsuccesspage_tip => "添加设备成功";
+  String get configtipspage_tips => "Before We Begin\n\n温控器完成向导配置后点击手机配网或点击设备的WiFi图标进行重新连接\n\n点击下一步";
+  String get configtipspage_title => "Wizard";
+  String get configwaitingpage_step1 => "找到设备";
+  String get configwaitingpage_step2 => "设备注册到智能云";
+  String get configwaitingpage_step3 => "设备初始化";
+  String get configwaitingpage_tip => "正在连接\n\n路由器和手机设备尽量靠近并将设备进入配网状态\n\n(设置Wi-Fi或接线向导后)";
+  String get configwaitingpage_title => "Wizard";
   String get dSet_device_info => "Device Info";
   String get dSet_device_setting => "Device Setting";
   String get dSet_fan_set => "风扇运行时间闸";
@@ -63,6 +79,9 @@ class S implements WidgetsLocalizations {
   String get device_max => "55 min/h";
   String get device_min => "0 min/h";
   String get device_unit => "min/h";
+  String get general_complete => "Finish";
+  String get general_next => "Next";
+  String get general_rename => "Rename";
   String get geofence_and_more => " and more";
   String get geofence_dialog_participating_device_title => "Select Participating Devices";
   String get geofence_disable_geofence => "You can set up a geofence (i.e., a virtual perimeter) around your home and activate comfort settings upon entering or leaving the geofence.";
@@ -210,6 +229,8 @@ class $zh extends S {
   @override
   String get global_verify_code_remaining1 => "剩余";
   @override
+  String get configoperatepage_setting => "更改网络";
+  @override
   String get reset_psw_fail => "重置密码失败";
   @override
   String get global_verify_code_remaining2 => " 秒";
@@ -223,6 +244,8 @@ class $zh extends S {
   String get global_delete_device => "删除设备";
   @override
   String get schedule_mode_away => "外出";
+  @override
+  String get general_complete => "结束";
   @override
   String get sensor_about_occupied_or => "· 是否有人: ";
   @override
@@ -268,6 +291,8 @@ class $zh extends S {
   @override
   String get change_psw_enter_old_psw_null => "请输入您的旧密码";
   @override
+  String get configwaitingpage_title => "Wizard";
+  @override
   String get global_get_verify_code_fail => "验证码发送失败";
   @override
   String get change_psw_old_psw => "旧密码";
@@ -290,6 +315,8 @@ class $zh extends S {
   @override
   String get global_get_verify_code => "校验码";
   @override
+  String get configfailedpage_title => "Wizard";
+  @override
   String get device_info_wifi_upgrade_version => "· Wifi可升级版本: ";
   @override
   String get global_get_verify_code_phone_num_error => "手机号错误";
@@ -306,11 +333,15 @@ class $zh extends S {
   @override
   String get schedule_mode_wake => "起床";
   @override
+  String get configoperatepage_title => "Wizard";
+  @override
   String get global_enter_psw_not_match => "输入密码不一致，请重新输入";
   @override
   String get app_test => "test";
   @override
   String get login_welcome => "Welcome";
+  @override
+  String get configtipspage_title => "Wizard";
   @override
   String get global_wed => "周三";
   @override
@@ -325,6 +356,8 @@ class $zh extends S {
   String get sensor_list_unoccupied => "Unoccupied";
   @override
   String get geofence_no_action => "No action";
+  @override
+  String get configoperatepage_tips => "连接Wi-Fi\n\n输入家中Wi-Fi密码\n\n仅支持2.4GWi-Fi网络";
   @override
   String get global_delete => "删除";
   @override
@@ -362,7 +395,11 @@ class $zh extends S {
   @override
   String get login_retry_time => "分钟后才能重试";
   @override
+  String get general_next => "下一步";
+  @override
   String get global_register_account_fail => "账号注册失败";
+  @override
+  String get configfailedpage_retry => "按步骤重试";
   @override
   String get global_save_fail => "保存失败";
   @override
@@ -380,15 +417,29 @@ class $zh extends S {
   @override
   String get sensor_list_occupied => "Occupied";
   @override
+  String get configoperatepage_tips_5g => "连接Wi-Fi\n\n不支持5G网络\n\n请更改2.4GWi-Fi网络";
+  @override
   String get set_help => "帮助";
   @override
   String get global_mon => "周一";
   @override
+  String get configwaitingpage_step1 => "找到设备";
+  @override
   String get set_appearance => "主题";
+  @override
+  String get configoperatepage_tips_nonetwork => "无Wi-Fi\n\n\n手机未连接Wi-Fi\n\n请连接Wi-Fi";
+  @override
+  String get configwaitingpage_step2 => "设备注册到智能云";
+  @override
+  String get configwaitingpage_step3 => "设备初始化";
+  @override
+  String get configfailedpage_tip => "设备无响应\n\n确认设备已重置，灯在快闪\n\n检查Wi-Fi是否为2.4G\n\n核对Wi-Fi密码是否正确";
   @override
   String get global_hint_confirm_password => "再次确认密码";
   @override
   String get dSet_vacation => "假期设置";
+  @override
+  String get general_rename => "重命名";
   @override
   String get device_info_up_to_data => "你的软件已是最新版本";
   @override
@@ -456,6 +507,10 @@ class $zh extends S {
   @override
   String get device_info_upgrade => "升级";
   @override
+  String get configwaitingpage_tip => "正在连接\n\n路由器和手机设备尽量靠近并将设备进入配网状态\n\n(设置Wi-Fi或接线向导后)";
+  @override
+  String get configtipspage_tips => "Before We Begin\n\n温控器完成向导配置后点击手机配网或点击设备的WiFi图标进行重新连接\n\n点击下一步";
+  @override
   String get dSet_temp => "温度单位选择";
   @override
   String get change_psw_fail => "修改密码失败";
@@ -471,6 +526,8 @@ class $zh extends S {
   String get dSet_temp_unit => "温度单位";
   @override
   String get reset_psw_title => "重置密码";
+  @override
+  String get configsuccesspage_tip => "添加设备成功";
   @override
   String get global_get_verify_code_often => "操作过于频繁，请稍后在尝试";
   @override

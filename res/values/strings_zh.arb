@@ -170,6 +170,31 @@
   "geofence_leaving_geofence": "When Leaving Geofence",
   "geofence_disable_geofence": "You can set up a geofence (i.e., a virtual perimeter) around your home and activate comfort settings upon entering or leaving the geofence.",
   "geofence_dialog_participating_device_title": "Select Participating Devices",
-  "geofence_and_more": " and more"
+  "geofence_and_more": " and more",
+
+  "general_next": "下一步",
+  "general_rename": "重命名",
+  "general_complete": "结束",
+
+  "configtipspage_title": "Wizard",
+  "configtipspage_tips": "Before We Begin\n\n温控器完成向导配置后点击手机配网或点击设备的WiFi图标进行重新连接\n\n点击下一步",
+
+  "configoperatepage_title": "Wizard",
+  "configoperatepage_tips": "连接Wi-Fi\n\n输入家中Wi-Fi密码\n\n仅支持2.4GWi-Fi网络",
+  "configoperatepage_tips_nonetwork": "无Wi-Fi\n\n\n手机未连接Wi-Fi\n\n请连接Wi-Fi",
+  "configoperatepage_tips_5g": "连接Wi-Fi\n\n不支持5G网络\n\n请更改2.4GWi-Fi网络",
+  "configoperatepage_setting": "更改网络",
+
+  "configwaitingpage_title": "Wizard",
+  "configwaitingpage_tip": "正在连接\n\n路由器和手机设备尽量靠近并将设备进入配网状态\n\n(设置Wi-Fi或接线向导后)",
+  "configwaitingpage_step1": "找到设备",
+  "configwaitingpage_step2": "设备注册到智能云",
+  "configwaitingpage_step3": "设备初始化",
+
+  "configfailedpage_title": "Wizard",
+  "configfailedpage_tip": "设备无响应\n\n确认设备已重置，灯在快闪\n\n检查Wi-Fi是否为2.4G\n\n核对Wi-Fi密码是否正确",
+  "configfailedpage_retry": "按步骤重试",
+
+  "configsuccesspage_tip": "添加设备成功"
 
 }

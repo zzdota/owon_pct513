@@ -47,6 +47,10 @@ dependencies:
   cool_ui: ^0.3.1
   flutter_picker: ^1.1.0
   infinite_listview: ^1.0.1+1
+
+  esptouch_plug:
+    path: ../owon_pct513/localplugs/esptouch_plug
+  app_settings: 3.0.0+1
 #  google_maps_flutter: ^0.5.21
 #  firebase_core: 0.4.0
 #  cloud_firestore: ^0.12.10
@@ -198,6 +202,15 @@ flutter:
     - assets/images/address/no_device_home.png
     - assets/images/address/no_device_house.png
     - assets/images/address/no_device_smile.png
+
+    - assets/images/config/divideline_hori.png
+    - assets/images/config/config_tips_img.png
+    - assets/images/config/config_tips_nonetwork.png
+    - assets/images/config/config_tips_5g.png
+    - assets/images/config/config_tipnumber_bg.png
+    - assets/images/config/config_failed_img.png
+    - assets/images/config/config_success_icon.png
+    - assets/images/config/config_success_img.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -122,5 +122,14 @@ class OwonPic {
   static String successIcon = "assets/images/success_icon.svg";
   static String failIcon = "assets/images/fail_icon.svg";
   static String geofenceIcon = "assets/images/setting_geofence_icon.png";
+
+  static String mDivideLineHori = "assets/images/config/divideline_hori.png";
+  static String mConfigTipsImg = "assets/images/config/config_tips_img.png";
+  static String mConfigTipsNonetwork = "assets/images/config/config_tips_nonetwork.png";
+  static String mConfigTips5G = "assets/images/config/config_tips_5g.png";
+  static String mConfigTipnumberBG = "assets/images/config/config_tipnumber_bg.png";
+  static String mConfigFailedImg = "assets/images/config/config_failed_img.png";
+  static String mConfigSuccessIcon = "assets/images/config/config_success_icon.png";
+  static String mConfigSuccessImg = "assets/images/config/config_success_img.png";
 }
 

@@ -41,4 +41,8 @@ class OwonConstant {
       "^[a-zA-Z0-9][\\sa-zA-Z0-9_@]{2,13}[a-zA-Z0-9_@]\$";
   static const String passwordRegexString =
       "^[a-zA-Z0-9`~!@#\\\$\\%\\^&\\*\\(\\)_\\+\\-\\=\\{\\}\\|\\[\\]:\';'\\<\\>\\?,.]{6,16}\$";
+
+  static  String mqttServerIp = "192.168.1.90";//配置向导ip
+  static  int mqttServerPort = 1883; //配置向导非加密端口
+  static  int mqttServerSSLPort = 8883; //配置向导加密端口
 }

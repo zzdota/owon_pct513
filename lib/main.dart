@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:owon_pct513/owon_pages/address_management_pages/address_list_page.dart';
-import 'package:owon_pct513/owon_pages/list_pages/list_page.dart';
-import 'package:owon_pct513/owon_pages/login_pages/login_page.dart';
+import 'owon_pages/list_pages/list_page.dart';
+import 'owon_pages/login_pages/login_page.dart';
 import 'package:provider/provider.dart';
 import 'generated/i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'owon_pages/guide_pages/config_failed_page.dart';
+import 'owon_pages/guide_pages/config_operate_page.dart';
+import 'owon_pages/guide_pages/config_success_page.dart';
+import 'owon_pages/guide_pages/config_tips_page.dart';
+import 'owon_pages/guide_pages/config_waiting_page.dart';
 import 'owon_providers/theme_provider.dart';
 import 'res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,6 +90,11 @@ class _MyAppState extends State<MyApp> {
       routes: <String, WidgetBuilder>{
         "/": (context) => LoginPage(),
         "/listPage":(context)=>ListPage(),
+        "configtipspage":(context) => ConfigTipsPage(),
+        "configoperatepage":(context) => ConfigOperatePage(),
+        "configwaitingpage":(context) => ConfigWaitingPage(),
+        "configfailedpage":(context) => ConfigFailedPage(),
+        "configsuccesspage":(context) => ConfigSuccessPage(),
       },
     );
   }
