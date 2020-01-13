@@ -51,6 +51,8 @@ dependencies:
   esptouch_plug:
     path: ../owon_pct513/localplugs/esptouch_plug
   app_settings: 3.0.0+1
+  location: ^2.3.5
+
 #  google_maps_flutter: ^0.5.21
 #  firebase_core: 0.4.0
 #  cloud_firestore: ^0.12.10

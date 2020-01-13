@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/component/owon_header.dart';
@@ -15,6 +16,8 @@ import 'package:owon_pct513/res/owon_sequence.dart';
 import 'package:owon_pct513/res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../generated/i18n.dart';
+import 'package:location/location.dart';
+
 enum FromPage {
   blank,
 
@@ -33,7 +36,10 @@ class AddressEditPage extends StatefulWidget {
 class _AddressEditPageState extends State<AddressEditPage> {
   var _homeVC = TextEditingController();
   var _addressVC = TextEditingController();
+  LocationData currentLocation ;
+
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
+  StreamSubscription<LocationData> _locationSubscription;
 
   @override
   void initState() {
@@ -83,6 +89,38 @@ class _AddressEditPageState extends State<AddressEditPage> {
         OwonLog.e("----上报的payload=$payload");
       } else if (msg["type"] == "raw") {}
     });
+
+
+
+    getMyLocation();
+  }
+
+  getMyLocation() async {
+    var location = new Location();
+    var error = "";
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      currentLocation = await location.getLocation() ;
+      OwonLog.e("位置信息${currentLocation.longitude}-----${currentLocation.latitude}");
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'Permission denied';
+        print("---e=$error");
+        OwonToast.show("您没有获取地理位置的权限,请先去开启权限");
+
+      }
+      currentLocation = null;
+    }
+
+
+   _locationSubscription = location.onLocationChanged().listen((LocationData currentLocation) {
+      print(currentLocation.latitude);
+      print(currentLocation.longitude);
+//      OwonToast.show("${currentLocation.latitude} ----${currentLocation.longitude}");
+       OwonLog.e("位置更新${currentLocation.longitude}-----${currentLocation.latitude}");
+
+   });
+
   }
 
   addAddress() async {
@@ -133,6 +171,7 @@ class _AddressEditPageState extends State<AddressEditPage> {
   void dispose() {
     super.dispose();
     _listEvenBusSubscription.cancel();
+    _locationSubscription.cancel();
   }
 
   @override

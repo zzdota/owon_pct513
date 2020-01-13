@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:owon_pct513/component/owon_pickerView.dart';
+//import 'package:owon_pct513/component/owon_pickerView.dart';
 import 'package:owon_pct513/component/owon_timeTextfield.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
 import 'package:owon_pct513/owon_api/model/vaction_model_entity.dart';
@@ -10,6 +10,7 @@ import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
+import 'package:owon_pct513/owon_utils/owon_temperature.dart';
 import 'package:owon_pct513/owon_utils/owon_text_icon_button.dart';
 import 'package:owon_pct513/owon_utils/owon_toast.dart';
 import 'package:owon_pct513/res/owon_constant.dart';
@@ -17,8 +18,9 @@ import 'package:owon_pct513/res/owon_picture.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../generated/i18n.dart';
 import '../../../res/owon_themeColor.dart';
-import 'package:flutter_picker/flutter_picker.dart';
 import '../../../owon_utils/owon_convert.dart';
+import 'package:owon_pct513/component/owon_wheel_chooser.dart';
+
 
 class VacationSettingPage extends StatefulWidget {
   VactionModelEntity sensorListModelEntity;
@@ -45,7 +47,10 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
   TextEditingController _returnDayVc = TextEditingController(text: "hehe");
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
 
-  int _heatValue, _coolValue;
+
+  int _heatFValue = 26, _coolFValue = 26;
+  double _heatCValue = 26.0, _coolCValue = 26.0;
+  double listHeight = 180.0, listWidth = 50.0;
   @override
   void initState() {
     if (!widget.isFromAdd) {
@@ -58,20 +63,30 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
           widget.paraModel.eMonth, widget.paraModel.eDay);
       _returnDayVc.text =
           createTimeString(widget.paraModel.eHour, widget.paraModel.eMin);
-      _heatValue = (widget.devModel.tempUnit)
-          ? double.parse(
-                  OwonConvert.reduce100CToF(widget.paraModel.heat.toString()))
-              .floor()
-          : double.parse(
-                  OwonConvert.reduce100(widget.paraModel.heat.toString()))
-              .floor();
-      _coolValue = (widget.devModel.tempUnit)
-          ? double.parse(
-                  OwonConvert.reduce100CToF(widget.paraModel.cool.toString()))
-              .floor()
-          : double.parse(
-                  OwonConvert.reduce100(widget.paraModel.cool.toString()))
-              .floor();
+
+      _heatCValue =  double.parse(
+          OwonConvert.reduce100(widget.paraModel.heat.toString()));
+      _heatFValue = int.parse(
+          OwonConvert.reduce100CToF(widget.paraModel.heat.toString()));
+
+      _coolCValue =  double.parse(
+          OwonConvert.reduce100(widget.paraModel.cool.toString()));
+      _coolFValue = int.parse(
+          OwonConvert.reduce100CToF(widget.paraModel.cool.toString()));
+//      _heatValue = (widget.devModel.tempUnit)
+//          ? double.parse(
+//                  OwonConvert.reduce100CToF(widget.paraModel.heat.toString()))
+//              .floor()
+//          : double.parse(
+//                  OwonConvert.reduce100(widget.paraModel.heat.toString()))
+//              .floor();
+//      _coolValue = (widget.devModel.tempUnit)
+//          ? double.parse(
+//                  OwonConvert.reduce100CToF(widget.paraModel.cool.toString()))
+//              .floor()
+//          : double.parse(
+//                  OwonConvert.reduce100(widget.paraModel.cool.toString()))
+//              .floor();
     } else {
       DateTime now = DateTime.now();
       widget.paraModel = VactionModelPara();
@@ -100,20 +115,30 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
           widget.paraModel.eMonth, widget.paraModel.eDay);
       _returnDayVc.text =
           createTimeString(widget.paraModel.eHour, widget.paraModel.eMin);
-      _heatValue = (widget.devModel.tempUnit)
-          ? double.parse(
-                  OwonConvert.reduce100CToF(widget.paraModel.heat.toString()))
-              .floor()
-          : double.parse(
-                  OwonConvert.reduce100(widget.paraModel.heat.toString()))
-              .floor();
-      _coolValue = (widget.devModel.tempUnit)
-          ? double.parse(
-                  OwonConvert.reduce100CToF(widget.paraModel.cool.toString()))
-              .floor()
-          : double.parse(
-                  OwonConvert.reduce100(widget.paraModel.cool.toString()))
-              .floor();
+      _heatCValue =  double.parse(
+                  OwonConvert.reduce100(widget.paraModel.heat.toString()));
+      _heatFValue = int.parse(
+                  OwonConvert.reduce100CToF(widget.paraModel.heat.toString()));
+
+      _coolCValue =  double.parse(
+          OwonConvert.reduce100(widget.paraModel.cool.toString()));
+      _coolFValue = int.parse(
+          OwonConvert.reduce100CToF(widget.paraModel.cool.toString()));
+
+//      _heatValue = (widget.devModel.tempUnit)
+//          ? double.parse(
+//                  OwonConvert.reduce100CToF(widget.paraModel.heat.toString()))
+//              .floor()
+//          : double.parse(
+//                  OwonConvert.reduce100(widget.paraModel.heat.toString()))
+//              .floor();
+//      _coolValue = (widget.devModel.tempUnit)
+//          ? double.parse(
+//                  OwonConvert.reduce100CToF(widget.paraModel.cool.toString()))
+//              .floor()
+//          : double.parse(
+//                  OwonConvert.reduce100(widget.paraModel.cool.toString()))
+//              .floor();
     }
     _listEvenBusSubscription =
         ListEventBus.getDefault().register<Map<dynamic, dynamic>>((msg) {
@@ -175,10 +200,29 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
     List<int> sdayList = createTimeList(_departDayVc.text);
     List<int> eyearList = createYearList(_returnYearVc.text);
     List<int> edayList = createTimeList(_returnDayVc.text);
-    int heat1 = (_heatValue * 100) >> 8;
-    int heat2 = _heatValue * 100 - (heat1 << 8);
-    int cool1 = (_coolValue * 100) >> 8;
-    int cool2 = _coolValue * 100 - (cool1 << 8);
+
+    int heat1 ;
+    int heat2 ;
+    int cool1 ;
+    int cool2 ;
+    if(widget.devModel.tempUnit){
+      heat1 = (OwonTemperature().fToC(_heatFValue) * 100).toInt() >> 8;
+      heat2 = (OwonTemperature().fToC(_heatFValue) * 100).toInt() - (heat1 << 8);
+      cool1 = (OwonTemperature().fToC(_coolFValue) * 100).toInt() >> 8;
+      cool2 = (OwonTemperature().fToC(_coolFValue) * 100).toInt() - (cool1 << 8);
+
+    }else {
+
+     heat1 = (_heatCValue * 100).toInt() >> 8;
+     heat2 = (_heatCValue * 100).toInt() - (heat1 << 8);
+     cool1 = (_coolCValue * 100).toInt() >> 8;
+     cool2 = (_coolCValue * 100).toInt() - (cool1 << 8);
+    }
+
+//    int heat1 = (_heatValue * 100) >> 8;
+//    int heat2 = _heatValue * 100 - (heat1 << 8);
+//    int cool1 = (_coolValue * 100) >> 8;
+//    int cool2 = _coolValue * 100 - (cool1 << 8);
     totalList.addAll(syearList);
     totalList.addAll(sdayList);
     totalList.addAll(eyearList);
@@ -415,30 +459,32 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                         width: 20,
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                        margin: EdgeInsets.fromLTRB(30, 45, 0, 0),
                         width: 60,
-                        child: OwonNumberPicker.integer(
-                            initialValue: _heatValue,
-                            minValue: 0,
-                            maxValue: 100,
-                            selectItemFontColor:
-                                OwonColor().getCurrent(context, "textColor"),
-                            decoration: BoxDecoration(
-//                        color: Colors.white,
-                                border: Border(
-                                    bottom: BorderSide(
-                                        width: 1,
-                                        color: OwonColor()
-                                            .getCurrent(context, "blue")),
-                                    top: BorderSide(
-                                        width: 1,
-                                        color: OwonColor()
-                                            .getCurrent(context, "blue")))),
-                            onChanged: (newValue) {
-                              setState(() {
-                                _heatValue = newValue;
-                              });
-                            }),
+                        child:
+                          heatPicker()
+//                        OwonNumberPicker.integer(
+//                            initialValue: _heatValue,
+//                            minValue: 0,
+//                            maxValue: 100,
+//                            selectItemFontColor:
+//                                OwonColor().getCurrent(context, "textColor"),
+//                            decoration: BoxDecoration(
+////                        color: Colors.white,
+//                                border: Border(
+//                                    bottom: BorderSide(
+//                                        width: 1,
+//                                        color: OwonColor()
+//                                            .getCurrent(context, "blue")),
+//                                    top: BorderSide(
+//                                        width: 1,
+//                                        color: OwonColor()
+//                                            .getCurrent(context, "blue")))),
+//                            onChanged: (newValue) {
+//                              setState(() {
+//                                _heatValue = newValue;
+//                              });
+//                            }),
                       ),
                     ],
                   ),
@@ -450,30 +496,32 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
                         width: 20,
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                        margin: EdgeInsets.fromLTRB(30, 45, 0, 0),
                         width: 60,
-                        child: OwonNumberPicker.integer(
-                            initialValue: _coolValue,
-                            minValue: 0,
-                            maxValue: 100,
-                            selectItemFontColor:
-                                OwonColor().getCurrent(context, "textColor"),
-                            decoration: BoxDecoration(
-//                        color: Colors.white,
-                                border: Border(
-                                    bottom: BorderSide(
-                                        width: 1,
-                                        color: OwonColor()
-                                            .getCurrent(context, "blue")),
-                                    top: BorderSide(
-                                        width: 1,
-                                        color: OwonColor()
-                                            .getCurrent(context, "blue")))),
-                            onChanged: (newValue) {
-                              setState(() {
-                                _coolValue = newValue;
-                              });
-                            }),
+                        child:
+                          coolPicker()
+//                        OwonNumberPicker.integer(
+//                            initialValue: _coolValue,
+//                            minValue: 0,
+//                            maxValue: 100,
+//                            selectItemFontColor:
+//                                OwonColor().getCurrent(context, "textColor"),
+//                            decoration: BoxDecoration(
+////                        color: Colors.white,
+//                                border: Border(
+//                                    bottom: BorderSide(
+//                                        width: 1,
+//                                        color: OwonColor()
+//                                            .getCurrent(context, "blue")),
+//                                    top: BorderSide(
+//                                        width: 1,
+//                                        color: OwonColor()
+//                                            .getCurrent(context, "blue")))),
+//                            onChanged: (newValue) {
+//                              setState(() {
+//                                _coolValue = newValue;
+//                              });
+//                            }),
                       ),
                     ],
                   ),
@@ -610,5 +658,39 @@ class _VacationSettingPageState extends State<VacationSettingPage> {
     } else if (mon == "Dec") {
       return 12;
     }
+  }
+
+
+  Widget heatPicker() {
+    return widget.devModel.tempUnit
+        ? WheelChooser.intPicker((newValue) {
+      setState(() {
+        _heatFValue = int.parse(newValue);
+        _coolFValue = _heatFValue + 2;
+      });
+    }, _heatFValue, 41, 86,
+        listHeight: listHeight, listWidth: listWidth, step: 1)
+        : WheelChooser.doublePicker((newValue) {
+      setState(() {
+        _heatCValue = double.parse(newValue);
+      });
+    }, _heatCValue, 5.0, 30.0,
+        listHeight: listHeight, listWidth: listWidth, step: 0.5);
+  }
+
+  Widget coolPicker() {
+    return widget.devModel.tempUnit
+        ? WheelChooser.intPicker((newValue) {
+      setState(() {
+        _coolFValue = int.parse(newValue);
+      });
+    }, _coolFValue, 45, 88,
+        listHeight: listHeight, listWidth: listWidth, step: 1)
+        : WheelChooser.doublePicker((newValue) {
+      setState(() {
+        _coolCValue = double.parse(newValue);
+      });
+    }, _coolCValue, 7.0, 32.0,
+        listHeight: listHeight, listWidth: listWidth, step: 0.5);
   }
 }
