@@ -62,6 +62,7 @@ class _ListPageState extends State<ListPage> {
                   return;
                 }
                 _addressModel = _addrModels.addrs.first;
+                msharepreferencesutil.setInt("addrid", _addressModel.addrid);
                 if (_addrModels.addrs.length == 0 ||
                     _addrModels.addrs.length == null) {
                   noDeviceTip = S.of(context).list_no_device;
@@ -119,8 +120,12 @@ class _ListPageState extends State<ListPage> {
   }
 
   toGetList() async {
-    SharedPreferences pre = await SharedPreferences.getInstance();
-    var clientID = pre.get(OwonConstant.clientID);
+    if(msharepreferencesutil == null){
+      msharepreferencesutil = await SharedPreferences.getInstance();
+    }
+    var clientID = msharepreferencesutil.get(OwonConstant.clientID);
+//    SharedPreferences pre = await SharedPreferences.getInstance();
+//    var clientID = pre.get(OwonConstant.clientID);
 
     String topic = "api/cloud/$clientID";
     Map p = Map();
@@ -437,6 +442,7 @@ class _ListPageState extends State<ListPage> {
         onTap: () {
           print("-----$value");
           _addressModel = value;
+          msharepreferencesutil.setInt("addrid", _addressModel.addrid);
           if (_addressModel.devlist.length == 0 ||
               _addressModel.devlist.length == null) {
             noDeviceTip = S.of(context).list_no_device;
