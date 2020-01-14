@@ -17,6 +17,7 @@ import 'package:owon_pct513/res/owon_themeColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../generated/i18n.dart';
 import 'package:location/location.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 enum FromPage {
   blank,
@@ -40,6 +41,60 @@ class _AddressEditPageState extends State<AddressEditPage> {
 
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   StreamSubscription<LocationData> _locationSubscription;
+
+
+
+  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController googleMapController;
+  GoogleMap gMap ;
+  Set<Marker> _markers = Set<Marker>();
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(24.431435605012002, 118.11507750962065),
+    zoom: 14.4746,
+  );
+
+
+
+
+
+  GoogleMap getMap(){
+
+    gMap = GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: _kGooglePlex,
+      onMapCreated: (GoogleMapController controller) {
+        googleMapController = controller;
+        _controller.complete(controller);
+      },
+      markers: _markers,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: true,
+    );
+    return gMap;
+  }
+
+  Future<void> _updateMapUI(double lat,double lon) async {
+    CameraPosition currentCameraPosition = CameraPosition(
+      target: LatLng(lat, lon),
+      zoom: 19.151926040649414);
+
+    Marker myMarker = Marker(markerId: MarkerId("12"),position: LatLng(lat, lon),infoWindow: InfoWindow(title: "newHome"),);
+
+
+
+    _markers.clear();
+    _markers.add(myMarker);
+    setState(() {
+
+    });
+    final GoogleMapController controller = await _controller.future;
+
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(currentCameraPosition));
+    googleMapController.animateCamera(CameraUpdate.newLatLng(LatLng(lat, lon)));
+
+
+
+  }
 
   @override
   void initState() {
@@ -101,7 +156,10 @@ class _AddressEditPageState extends State<AddressEditPage> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       currentLocation = await location.getLocation() ;
-      OwonLog.e("位置信息${currentLocation.longitude}-----${currentLocation.latitude}");
+      OwonLog.e("位置信息${currentLocation.latitude} -----${currentLocation.longitude}");
+
+      _updateMapUI(currentLocation.latitude, currentLocation.longitude);
+
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'Permission denied';
@@ -114,10 +172,9 @@ class _AddressEditPageState extends State<AddressEditPage> {
 
 
    _locationSubscription = location.onLocationChanged().listen((LocationData currentLocation) {
-      print(currentLocation.latitude);
-      print(currentLocation.longitude);
-//      OwonToast.show("${currentLocation.latitude} ----${currentLocation.longitude}");
-       OwonLog.e("位置更新${currentLocation.longitude}-----${currentLocation.latitude}");
+
+      OwonToast.show("${currentLocation.latitude} ----${currentLocation.longitude}");
+      OwonLog.e("位置更新${currentLocation.latitude} -----${currentLocation.longitude}");
 
    });
 
@@ -162,7 +219,6 @@ class _AddressEditPageState extends State<AddressEditPage> {
     var msg = JsonEncoder.withIndent("  ").convert(p);
     OwonMqtt.getInstance().publishMessage(topic, msg);
   }
-
 
 
 
@@ -305,15 +361,28 @@ class _AddressEditPageState extends State<AddressEditPage> {
 //                  color: OwonColor().getCurrent(context, "textColor")),
                           )),
                     ),
-                    Container(
-                        margin: EdgeInsets.only(left: 30),
-                        width: 60,
-                        child: Image.asset(
-                          OwonPic.addressShowLocal,
-                          width: 50,
-                        )),
+                    GestureDetector(
+                      onTap: (){
+                        _updateMapUI(24.431435605012002, 118.11507750962065);
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(left: 30),
+                          width: 60,
+                          child: Image.asset(
+                            OwonPic.addressShowLocal,
+                            width: 50,
+                          )),
+                    ),
                   ],
                 )),
+            Expanded(
+              child: Container(
+
+                child:
+                  getMap()
+
+              ),
+            )
           ],
         ),
       ),
