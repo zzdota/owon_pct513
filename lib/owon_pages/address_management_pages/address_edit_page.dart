@@ -5,7 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:owon_pct513/component/owon_header.dart';
 import 'package:owon_pct513/owon_api/model/address_model_entity.dart';
+import 'package:owon_pct513/owon_pages/address_management_pages/address_envebus.dart';
+import 'package:owon_pct513/owon_pages/address_management_pages/address_info_model_entity.dart';
+import 'package:owon_pct513/owon_pages/address_management_pages/address_search_delegate.dart';
 import 'package:owon_pct513/owon_providers/owon_evenBus/list_evenbus.dart';
+import 'package:owon_pct513/owon_utils/owon_http.dart';
 import 'package:owon_pct513/owon_utils/owon_loading.dart';
 import 'package:owon_pct513/owon_utils/owon_log.dart';
 import 'package:owon_pct513/owon_utils/owon_mqtt.dart';
@@ -41,6 +45,7 @@ class _AddressEditPageState extends State<AddressEditPage> {
 
   StreamSubscription<Map<dynamic, dynamic>> _listEvenBusSubscription;
   StreamSubscription<LocationData> _locationSubscription;
+  StreamSubscription<AddressInfoModelEntity> _addressEvenBusSubscription;
 
 
 
@@ -91,7 +96,10 @@ class _AddressEditPageState extends State<AddressEditPage> {
 
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(currentCameraPosition));
     googleMapController.animateCamera(CameraUpdate.newLatLng(LatLng(lat, lon)));
-
+String url = "https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCT52AvaaHzpUTkv7u2yLNDdg7krg0q6wI";
+OwonHttp.getInstance().get(url, (va){
+  OwonLog.e("------>${va.toString()}");
+}, (){});
 
 
   }
@@ -99,6 +107,20 @@ class _AddressEditPageState extends State<AddressEditPage> {
   @override
   void initState() {
     super.initState();
+    _addressEvenBusSubscription =
+        AddressEventBus.getDefault().register<AddressInfoModelEntity>((msg){
+          OwonLog.e("----选择的地址=${msg.address}");
+
+
+          _updateMapUI(msg.latitude, msg.longitude);
+          _addressVC.text = msg.address;
+          setState(() {
+
+          });
+        });
+
+
+
     _homeVC.text = (widget.addrModel.addrname == null?"":widget.addrModel.addrname);
     _addressVC.text = (widget.addrModel.addrdesc== null?"":widget.addrModel.addrdesc);
     _listEvenBusSubscription =
@@ -228,6 +250,7 @@ class _AddressEditPageState extends State<AddressEditPage> {
     super.dispose();
     _listEvenBusSubscription.cancel();
     _locationSubscription.cancel();
+    _addressEvenBusSubscription.cancel();
   }
 
   @override
@@ -324,6 +347,11 @@ class _AddressEditPageState extends State<AddressEditPage> {
                   children: <Widget>[
                     Expanded(
                       child: TextField(
+                        onTap: (){
+                          showSearch(context: context, delegate: SearchBarDelegate()).then((value){
+                            OwonLog.e("传回来的值为--${value.toString()}");
+                          });
+                        },
 //          autofocus: true,
                           style: TextStyle(
                               color: OwonColor().getCurrent(
@@ -337,11 +365,16 @@ class _AddressEditPageState extends State<AddressEditPage> {
                               Icons.edit,
                               color: OwonColor().getCurrent(context, "orange"),
                             ),
-                            labelText: S.of(context).dSet_rename_tip,
-                            labelStyle: TextStyle(
-                                fontSize: 17,
-                                color: OwonColor()
-                                    .getCurrent(context, "textColor")),
+//                            labelText: S.of(context).dSet_rename_tip,
+//                            labelStyle: TextStyle(
+//                                fontSize: 17,
+//                                color: OwonColor()
+//                                    .getCurrent(context, "textColor")),
+                            hintText: S.of(context).dSet_rename_tip,
+                            hintStyle: TextStyle(
+                              fontSize: 17,
+                                color:Colors.grey
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 15.0),
                             filled: false,

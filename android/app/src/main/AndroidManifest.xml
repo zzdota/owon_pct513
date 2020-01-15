@@ -39,6 +39,9 @@
         </activity>
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDWN_R1X5xOg-arQWNdMl11WxLaiBXRo0k"/>
+            android:value="AIzaSyAK8yvqaSi3QpohoZy6RsZbw0doRUG0Fx8"/>
+<!-- xianzi       AIzaSyDWN_R1X5xOg-arQWNdMl11WxLaiBXRo0k-->
+
+<!-- new       AIzaSyAK8yvqaSi3QpohoZy6RsZbw0doRUG0Fx8-->
     </application>
 </manifest>
