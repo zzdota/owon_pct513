@@ -1471,7 +1471,7 @@ class _ManagementPageState extends State<ManagementPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("PCT513"),
+        title: Text(widget.devModel.devname),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings),
