@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:owon_pct513/component/owon_popover/owon_popover_button.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_blank_page.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_edit_page.dart';
 import 'package:owon_pct513/owon_pages/address_management_pages/address_list_page.dart';
@@ -384,7 +385,7 @@ class _ListPageState extends State<ListPage> {
   Widget _buildPopoverButton(AddressModelAddr addrModel, List addrList ) {
     String btnTitle = addrModel.addrname;
     return Container(
-        child: CupertinoPopoverButton(
+        child: OwonPopoverButton(
           onTap: (){
             OwonLog.e("=====>");
             _isDown = false;
